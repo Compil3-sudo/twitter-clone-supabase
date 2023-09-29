@@ -1,8 +1,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import Login from "./login/page";
 import { cookies } from "next/headers";
-import ComposeTweet from "@/components/ComposeTweet";
-import Tweet from "@/components/Tweet";
+import ComposeTweet from "@/components/client-components/ComposeTweet";
+import Tweet from "@/components/client-components/Tweet";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ export default async function Home() {
       <h1>-</h1>
       <h1>-</h1>
       {tweets?.map((tweet) => (
-        <Tweet user={user} tweet={tweet} />
+        <Tweet key={tweet.id} user={user} tweet={tweet} />
       ))}
       <h1>-</h1>
       <h1>-</h1>

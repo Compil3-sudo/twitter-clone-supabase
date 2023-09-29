@@ -1,5 +1,5 @@
-import NestedRepliesServer from "@/components/NestedRepliesServer";
-import Tweet from "@/components/Tweet";
+import NestedRepliesServer from "@/components/server-components/NestedRepliesServer";
+import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

@@ -1,6 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import NestedRepliesClient from "./NestedRepliesClient";
+import NestedRepliesClient from "../client-components/NestedRepliesClient";
 
 const NestedRepliesServer = async ({ parentReply }: any) => {
   const supabase = createServerComponentClient({ cookies });
