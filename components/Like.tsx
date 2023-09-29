@@ -8,10 +8,11 @@ const Like = ({ user, tweet }: any) => {
 
   const toggleLikeTweet = async () => {
     if (tweet.author_has_liked) {
-      const { data, error } = await supabase.from("likes").delete().match({
-        tweet_id: tweet.id,
-        user_id: user.id,
-      });
+      const { data, error } = await supabase
+        .from("likes")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("tweet_id", tweet.id);
 
       if (error) console.log(error);
     } else {

@@ -3,6 +3,7 @@ import Login from "./login/page";
 import { cookies } from "next/headers";
 import ComposeTweet from "@/components/ComposeTweet";
 import Like from "@/components/Like";
+import ComposeReply from "@/components/ComposeReply";
 
 export const dynamic = "force-dynamic";
 
@@ -41,12 +42,17 @@ export default async function Home() {
       <h1>-</h1>
       <h1>-</h1>
       {tweets?.map((tweet) => (
-        <div key={tweet.id} className="p-10">
+        <div key={tweet.id} className="p-10 flex flex-col">
           <p>Author: {tweet.author.username}</p>
           <p>Tweet: {tweet.text}</p>
           <p>Likes Count: {tweet.likes}</p>
           <p>Liked by Author: {tweet.author_has_liked ? "true" : "false"}</p>
-          <Like user={user} tweet={tweet} />
+          <div className="self-start">
+            <Like user={user} tweet={tweet} />
+          </div>
+          <div className="self-start">
+            <ComposeReply user={user} tweet={tweet} />
+          </div>
         </div>
       ))}
       <h1>-</h1>
