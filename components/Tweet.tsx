@@ -4,8 +4,10 @@ import React from "react";
 import Like from "./Like";
 import ComposeReply from "./ComposeReply";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Tweet = ({ user, tweet }: any) => {
+  const path = usePathname();
   return (
     <>
       <div className="p-10 flex flex-col">
@@ -18,9 +20,13 @@ const Tweet = ({ user, tweet }: any) => {
         </div>
 
         {/* remove this when path is already on tweet */}
-        <div className="self-start">
-          <Link href="/tweet">GO TO TWEET</Link>
-        </div>
+        {path === "/" && (
+          <div className="self-start">
+            <Link href={`${tweet.author.username}/tweet/${tweet.id}`}>
+              GO TO TWEET
+            </Link>
+          </div>
+        )}
         <div className="self-start">
           <ComposeReply user={user} tweet={tweet} />
         </div>
