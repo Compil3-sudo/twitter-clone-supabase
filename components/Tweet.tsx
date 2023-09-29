@@ -16,6 +16,8 @@ const Tweet = ({ user, tweet }: any) => {
         <div className="self-start">
           <Like user={user} tweet={tweet} />
         </div>
+
+        {/* remove this when path is already on tweet */}
         <div className="self-start">
           <Link href="/tweet">GO TO TWEET</Link>
         </div>

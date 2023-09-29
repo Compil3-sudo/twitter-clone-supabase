@@ -2,8 +2,6 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import Login from "./login/page";
 import { cookies } from "next/headers";
 import ComposeTweet from "@/components/ComposeTweet";
-import Like from "@/components/Like";
-import ComposeReply from "@/components/ComposeReply";
 import Tweet from "@/components/Tweet";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +24,12 @@ export default async function Home() {
     ),
     likes: tweet.likes.length,
   }));
+
+  // IMPORTANT:
+  // ROUTING: - dynamic tweet page
+  // /username/tweet/[tweetId]
+  // CLICK ON REPLY:
+  // /REPLYAUTHOR-USERNAME/tweet/[replyId]
 
   return (
     <>
