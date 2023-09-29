@@ -30,7 +30,7 @@ const ComposeReply = ({ user, tweet }: any) => {
         ref={replyTextRef}
         type="text"
         style={{ color: "black" }}
-        placeholder="Send Reply"
+        placeholder="Post your reply"
       />
 
       <button onClick={sendReply}>REPLY</button>

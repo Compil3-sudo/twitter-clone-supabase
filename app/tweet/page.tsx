@@ -1,8 +1,10 @@
+import NestedRepliesServer from "@/components/NestedRepliesServer";
 import Tweet from "@/components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
+
 const TweetPage = async () => {
   const supabase = createServerComponentClient({ cookies });
 
@@ -44,14 +46,21 @@ const TweetPage = async () => {
       <Tweet user={user} tweet={firstTestTweet} />
       {tweetReplies.data?.map((reply) => (
         <div key={reply.id} className="px-10">
-          <p className="py-2">{reply.text}</p>
-          {reply.nestedReplies.length > 0
-            ? reply.nestedReplies.map((item: any) => (
-                <p key={item.id} className="px-8">
-                  {item.text}
-                </p>
-              ))
-            : null}
+          <p className="py-2">
+            {/* on reply btn click
+                - go to a new Tweet Page
+                - pass the reply as a "main parent reply" prop
+                - if the tweet has a "main parent reply": change the view
+                  - main parent reply has a line => directly under tweet content
+                - this becomes the "tweetReplies" basically
+                - add (insert) nested replies to the main reply
+            */}
+            {reply.text} <button className="text-green-500">REPLYBUTTON</button>
+          </p>
+
+          {reply.nestedReplies.length > 0 && (
+            <NestedRepliesServer parentReply={reply} />
+          )}
         </div>
       ))}
     </>
