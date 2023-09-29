@@ -30,7 +30,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-950 text-foreground`}>
+      <body
+        className={`${inter.className} grid h-screen place-items-center bg-slate-950 text-foreground`}
+      >
         {children}
       </body>
     </html>

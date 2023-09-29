@@ -1,57 +1,29 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { redirect } from "next/navigation";
 import Login from "./login/page";
 import { cookies } from "next/headers";
-import ComposeTweet from "@/components/client-components/ComposeTweet";
-import Tweet from "@/components/client-components/Tweet";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function LoginPage() {
   const supabase = createServerComponentClient({ cookies });
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
 
-  const { data, error } = await supabase
-    .from("tweets")
-    .select("*, author: profiles(*), likes(*)");
+  if (error) console.log(error);
 
-  const tweets = data?.map((tweet) => ({
-    ...tweet,
-    author_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === user?.id
-    ),
-    likes: tweet.likes.length,
-  }));
+  console.log(session);
 
-  // IMPORTANT:
-  // ROUTING: - dynamic tweet page
-  // /username/tweet/[tweetId]
-  // CLICK ON REPLY:
-  // /REPLYAUTHOR-USERNAME/tweet/[replyId]
+  if (session) redirect("/home");
 
   return (
-    <>
-      <h1>Hello World</h1>
-      <h1>-</h1>
-      <h1>-</h1>
-      <h1>-</h1>
-      <h1>-</h1>
-      {/* currently also contains logout - separate later */}
-      <Login />
-      <h1>-</h1>
-      <h1>-</h1>
-      <h2>Create new Tweet</h2>
-      <ComposeTweet user={user} />
-      <h1>-</h1>
-      <h1>-</h1>
-      {tweets?.map((tweet) => (
-        <Tweet key={tweet.id} user={user} tweet={tweet} />
-      ))}
-      <h1>-</h1>
-      <h1>-</h1>
-      <pre>{JSON.stringify(tweets, null, 2)}</pre>
-    </>
+    <div className="container mx-auto my-auto px-16 py-16">
+      <div className="flex justify-center">
+        <Login />
+      </div>
+    </div>
   );
 }

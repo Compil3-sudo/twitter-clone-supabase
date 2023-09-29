@@ -6,17 +6,28 @@
 // import Link from "next/link";
 // import Messages from "./messages";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const supabase = createClientComponentClient();
+  const router = useRouter();
+
   async function signInWithGitHub() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
+      options: {
+        // redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: "http://localhost:3000/auth/callback",
+      },
     });
-  }
 
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
+    console.log("data from github signin: ", data);
+    if (error) {
+      console.log(error);
+    }
+    // else {
+    //   router.push("/home");
+    // }
   }
 
   return (
@@ -61,12 +72,6 @@ export default function Login() {
         className="bg-blue-500 rounded px-4 py-2 text-white mb-2"
       >
         Login with Github
-      </button>
-      <button
-        onClick={signOut}
-        className="bg-blue-500 rounded px-4 py-2 text-white mb-2"
-      >
-        Log Out
       </button>
     </div>
   );
