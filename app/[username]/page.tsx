@@ -50,6 +50,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     currentUser?.user_metadata.user_name === userProfile.username;
 
   let isUserFollowingProfile;
+  let commonFollowers = [];
 
   if (!ownProfile) {
     // who is the current user following
@@ -62,6 +63,24 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     isUserFollowingProfile = !!userFollowing?.find(
       (followedId) => followedId.followed_id === userProfile.id
     );
+
+    // determine whether the userProfile is being followed
+    // by people who the current user is also following
+    const userProfileFollowers =
+      followers?.map((follower) => follower.follower_id) || [];
+    const userFollowingIds =
+      userFollowing?.map((following) => following.followed_id) || [];
+
+    // find common followers
+    commonFollowers = userProfileFollowers.filter((followerId) =>
+      userFollowingIds.includes(followerId)
+    );
+
+    // make text - 1 commonFollower:
+    // followed by user
+    // 2: followed by userA and userB
+    // 3: followed by user1, user2 and user3
+    // >3: followed by userA, userB and commonFollowers.length other you follow
   }
 
   const { data: userTweets } = await supabase
@@ -74,7 +93,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
       <div>ProfilePage of {userProfile.username}</div>
       <pre>{JSON.stringify(userProfile, null, 2)}</pre>
       {/* {currentUser?.user_metadata.user_name !== userProfile.username ? ( */}
-      {!ownProfile ? (
+      {!ownProfile && (
         <div>
           <FollowButton
             isUserFollowingProfile={isUserFollowingProfile}
@@ -82,7 +101,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
             currentUserId={currentUser?.id}
           />
         </div>
-      ) : null}
+      )}
       <div>
         <p>Joined {userProfile.created_at}</p>
       </div>
@@ -90,10 +109,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
         <h2>{following ? following.length : 0} Following</h2>
         <h2>{followers ? followers.length : 0} Followers</h2>
       </div>
-      <div>
-        <h2>Not follwed by anyone you're following</h2>
-        <h2>Followed by ... and x others you follow</h2>
-      </div>
+      {!ownProfile && (
+        <div>
+          {commonFollowers.length === 0 ? (
+            <h2>Not follwed by anyone you're following</h2>
+          ) : (
+            <h2>Followed by ... and x others you follow</h2>
+          )}
+        </div>
+      )}
       <h1>Tweets of {userProfile.username}</h1>
       <pre>{JSON.stringify(userTweets, null, 2)}</pre>
     </>
