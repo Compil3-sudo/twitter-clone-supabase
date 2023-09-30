@@ -37,12 +37,12 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   } = await supabase.auth.getUser();
 
   const { data: following, error: followingError } = await supabase
-    .from("following")
+    .from("followers")
     .select("*")
     .eq("follower_id", userProfile.id);
 
   const { data: followers, error: followersError } = await supabase
-    .from("following")
+    .from("followers")
     .select("*")
     .eq("followed_id", userProfile.id);
 
@@ -54,7 +54,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   if (!ownProfile) {
     // who is the current user following
     const { data: userFollowing, error: userFollowingError } = await supabase
-      .from("following")
+      .from("followers")
       .select("*")
       .eq("follower_id", currentUser?.id);
 
