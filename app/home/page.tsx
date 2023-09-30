@@ -38,22 +38,24 @@ export default async function Home() {
 
   return (
     <>
-      <h1>Hello World</h1>
-      <h1>-</h1>
-      <h1>-</h1>
-      <Logout />
-      <h1>-</h1>
-      <h1>-</h1>
-      <h2>Create new Tweet</h2>
-      <ComposeTweet user={user} />
-      <h1>-</h1>
-      <h1>-</h1>
-      {tweets?.map((tweet) => (
-        <Tweet key={tweet.id} user={user} tweet={tweet} />
-      ))}
-      <h1>-</h1>
-      <h1>-</h1>
-      <pre>{JSON.stringify(tweets, null, 2)}</pre>
+      <div className="flex flex-col items-center mt-16">
+        <h1>Hello World</h1>
+        <h1>-</h1>
+        <h1>-</h1>
+        <Logout />
+        <h1>-</h1>
+        <h1>-</h1>
+        <h2>Create new Tweet</h2>
+        <ComposeTweet user={user} />
+        <h1>-</h1>
+        <h1>-</h1>
+        {tweets?.map((tweet) => (
+          <Tweet key={tweet.id} user={user} tweet={tweet} />
+        ))}
+        <h1>-</h1>
+        <h1>-</h1>
+        <pre>{JSON.stringify(tweets, null, 2)}</pre>
+      </div>
     </>
   );
 }

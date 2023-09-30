@@ -15,8 +15,6 @@ export default async function LoginPage() {
 
   if (error) console.log(error);
 
-  console.log(session);
-
   if (session) redirect("/home");
 
   return (

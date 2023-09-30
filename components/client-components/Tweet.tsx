@@ -10,8 +10,10 @@ const Tweet = ({ user, tweet }: any) => {
   const path = usePathname();
   return (
     <>
-      <div className="p-10 flex flex-col">
-        <p>Author: {tweet.author.username}</p>
+      <div className="p-10 flex flex-col w-full items-center">
+        <Link href={`${tweet.author.username}`}>
+          <p className="py-2">Author: {tweet.author.username}</p>
+        </Link>
         <p>Tweet: {tweet.text}</p>
         <p>Likes Count: {tweet.likes}</p>
         <p>Liked by Author: {tweet.author_has_liked ? "true" : "false"}</p>
