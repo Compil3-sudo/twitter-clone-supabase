@@ -20,7 +20,7 @@ export default async function Home() {
 
   const tweets = data?.map((tweet) => ({
     ...tweet,
-    author_has_liked: !!tweet.likes.find(
+    user_has_liked: !!tweet.likes.find(
       (like: any) => like.user_id === user?.id
     ),
     likes: tweet.likes.length,

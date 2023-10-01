@@ -1,13 +1,13 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import React from "react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Like = ({ user, tweet }: any) => {
   const supabase = createClientComponentClient();
 
   const toggleLikeTweet = async () => {
-    if (tweet.author_has_liked) {
+    if (tweet.user_has_liked) {
       const { data, error } = await supabase
         .from("likes")
         .delete()
@@ -25,9 +25,24 @@ const Like = ({ user, tweet }: any) => {
     }
   };
 
+  const heartColor = tweet.user_has_liked ? "#ef4444" : "";
+
   return (
     <>
-      <button onClick={toggleLikeTweet}>Like this Tweet</button>
+      <button
+        onClick={toggleLikeTweet}
+        style={{ color: heartColor }}
+        className="group flex items-center hover:text-red-500 transition duration-200"
+      >
+        <div className="group-hover:bg-red-500/10 p-2 rounded-full">
+          {tweet.user_has_liked ? (
+            <AiFillHeart size={20} />
+          ) : (
+            <AiOutlineHeart size={20} />
+          )}
+        </div>
+        <div className="text-sm px-1 justify-center">{tweet.likes}</div>
+      </button>
     </>
   );
 };

@@ -44,7 +44,7 @@ const TweetPage = async ({
 
   const mappedTweet = {
     ...tweet,
-    author_has_liked: !!tweet.likes.find(
+    user_has_liked: !!tweet.likes.find(
       (like: any) => like.user_id === user?.id
     ),
     likes: tweet.likes.length,
