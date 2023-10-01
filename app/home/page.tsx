@@ -2,11 +2,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import ComposeTweet from "@/components/client-components/ComposeTweet";
 import Tweet from "@/components/client-components/Tweet";
-import Logout from "../auth/sign-out/Logout";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { BsThreeDots } from "react-icons/bs";
+import LeftSidebar from "@/components/LeftSidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -39,59 +36,10 @@ export default async function Home() {
   // CLICK ON REPLY:
   // /REPLYAUTHOR-USERNAME/tweet/[replyId]
 
-  const navigationList = [
-    "Logo",
-    "Home",
-    "Explore",
-    "Notifications",
-    "Messages",
-    "Lists ?",
-    "Communities ?",
-    "Bookmarks (favs)",
-  ];
-
   return (
     <>
       <div className="flex">
-        {/* left sidebar */}
-        <div className="flex flex-col max-w-xl flex-grow items-end">
-          <div className="top-0 fixed flex flex-col h-full justify-between px-2">
-            <div className="flex flex-col text-xl">
-              <div className="flex flex-col items-start my-4 mx-4 space-y-4">
-                {navigationList.map((item) => (
-                  <div className="px-4 rounded-full hover:bg-green-500 transition duration-200">
-                    <Link href={`/${item.toLowerCase()}`}>{item}</Link>
-                  </div>
-                ))}
-              </div>
-              <button>Post</button>
-            </div>
-            <div className="self-center mb-2">
-              <Logout />
-              <div className="rounded-full hover:bg-white/20 p-2 mb-3">
-                <div className="grid gap-2 grid-flow-col items-center">
-                  <Image
-                    src={user.user_metadata.avatar_url}
-                    height={40}
-                    width={40}
-                    alt="Profile Image"
-                    className="rounded-full"
-                  />
-                  <div className="flex flex-col">
-                    <h2 className="">{user.user_metadata.name}</h2>
-                    <h2 className="text-gray-500">
-                      @{user.user_metadata.user_name}
-                    </h2>
-                  </div>
-                  <div className="items-center pl-8 pr-1">
-                    <BsThreeDots />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <LeftSidebar user={user} />
         {/* infinite tweets feed */}
         <main className="flex flex-col max-w-[600px] w-full h-full mx-2 border-l border-r">
           {/* TOP HEADER */}
