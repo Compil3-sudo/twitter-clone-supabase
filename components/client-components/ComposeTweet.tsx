@@ -1,7 +1,7 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ComposeTweet = ({ user }: any) => {
   const supabase = createClientComponentClient();
@@ -9,8 +9,31 @@ const ComposeTweet = ({ user }: any) => {
   const tweetMaxLength = 280;
   const characterLimit = 350;
   const maxTextAreaHeight = 300;
+  const [remainingChars, setRemainingChars] = useState(tweetMaxLength);
+  const [remainingCharsColor, setRemainingCharsColor] = useState("yellow");
+
+  const countCharacters = () => {
+    setRemainingChars(tweetMaxLength - tweetTextRef.current!.value.length);
+  };
+
+  useEffect(() => {
+    tweetTextRef.current!.addEventListener("input", countCharacters);
+
+    if (remainingChars <= 0) {
+      setRemainingCharsColor("red");
+    } else if (remainingChars >= 1 && remainingChars <= 20) {
+      setRemainingCharsColor("yellow");
+    }
+
+    return () => {
+      tweetTextRef.current!.removeEventListener("input", countCharacters);
+    };
+  }, [tweetTextRef.current?.value.length]);
 
   const handleChange = () => {
+    // making the entire text red looks ugly
+    // don't know how to only make the part > tweetMaxLength red
+
     // if (
     //   tweetTextRef.current &&
     //   tweetTextRef.current.value.length >= tweetMaxLength
@@ -65,13 +88,24 @@ const ComposeTweet = ({ user }: any) => {
             />
           </div>
 
-          <button
-            className="self-end rounded-full bg-blue-500 py-2 px-4"
-            style={{ marginBottom: "8px" }}
-            onClick={postTweet}
-          >
-            Post
-          </button>
+          <div className="flex flex-row self-end justify-center">
+            {remainingChars <= 20 && (
+              <p
+                className="py-2 px-4"
+                style={{ color: `${remainingCharsColor}` }}
+              >
+                {remainingChars}
+              </p>
+            )}
+
+            <button
+              className="self-end rounded-full bg-blue-500 py-2 px-4"
+              style={{ marginBottom: "8px" }}
+              onClick={postTweet}
+            >
+              Post
+            </button>
+          </div>
         </div>
       </div>
     </>
