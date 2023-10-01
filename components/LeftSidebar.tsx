@@ -15,19 +15,23 @@ import {
 import { IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
 import Logo from "public/static/rares_favicon-light-32x32.png";
 import Logout from "@/app/auth/sign-out/Logout";
+import { useState } from "react";
 
 type NavigationItem = {
   text: string;
   icon: React.ReactNode;
-  iconFill?: React.ReactNode;
+  iconFill: React.ReactNode;
   logo?: StaticImageData;
 };
 
 const LeftSidebar = ({ user }: any) => {
+  const [activeNav, setActiveNav] = useState("Home");
+
   const navigationList: NavigationItem[] = [
     {
       text: "",
       icon: null,
+      iconFill: null,
       logo: Logo,
     },
     {
@@ -80,8 +84,19 @@ const LeftSidebar = ({ user }: any) => {
             {navigationList.map((item) => (
               <div
                 key={item.text}
+                onClick={() =>
+                  item.text === ""
+                    ? setActiveNav("Home") // if you click on Logo => activate Home
+                    : setActiveNav(item.text)
+                }
                 className="px-4 py-2 rounded-full hover:bg-white/20 transition duration-200"
               >
+                {item.logo && (
+                  <Link href={"/home"}>
+                    <img src={item.logo.src} />
+                  </Link>
+                )}
+
                 <Link
                   href={`/${
                     item.text === "Profile"
@@ -89,12 +104,10 @@ const LeftSidebar = ({ user }: any) => {
                       : item.text.toLowerCase()
                   }`}
                 >
-                  <Link href={"/home"}>
-                    {item.logo && <img src={item.logo.src} />}
-                  </Link>
-
                   <div className="flex items-center">
-                    <div>{item.icon}</div>
+                    <div>
+                      {item.text === activeNav ? item.iconFill : item.icon}
+                    </div>
                     <div className="px-2">{item.text}</div>
                   </div>
                 </Link>
