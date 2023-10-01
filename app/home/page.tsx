@@ -47,12 +47,12 @@ export default async function Home() {
         {/* right sidebar */}
         <div>
           <div className="top-0 fixed py-2">
-            <div className="flex bg-[#16181C] rounded-full p-2 mx-4 px-4 items-center space-x-3 outline outline-transparent outline-1 active:outline-blue-500 focus:outline-blue-500">
-              <BiSearch />
+            <div className="group flex bg-[#16181C] rounded-full p-2 mx-4 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
+              <BiSearch className="group-focus-within:text-blue-500" />
               <input
                 type="text"
                 placeholder="Search"
-                className="bg-[#16181C] outline-none"
+                className="bg-[#16181C] outline-none focus:bg-slate-950"
               />
             </div>
           </div>
