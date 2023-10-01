@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import LeftSidebar from "@/components/LeftSidebar";
 import InfiniteFeed from "@/components/InfiniteFeed";
+import { BiSearch } from "react-icons/bi";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,16 @@ export default async function Home() {
 
         {/* right sidebar */}
         <div>
-          <div className="top-0 fixed">some content</div>
+          <div className="top-0 fixed py-2">
+            <div className="flex bg-[#16181C] rounded-full p-2 mx-4 px-4 items-center space-x-3 outline outline-transparent outline-1 active:outline-blue-500 focus:outline-blue-500">
+              <BiSearch />
+              <input
+                type="text"
+                placeholder="Search"
+                className="bg-[#16181C] outline-none"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>
