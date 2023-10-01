@@ -71,7 +71,7 @@ export default async function Home() {
         </div>
 
         {/* infinite tweets feed */}
-        <div className="max-w-[600px] w-full h-full mx-0 border-l border-r">
+        <main className="flex flex-col max-w-[600px] w-full h-full mx-2 border-l border-r">
           {/* TOP HEADER */}
           <div className="top-0 sticky flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
             <div className="flex flex-col w-full">
@@ -91,8 +91,9 @@ export default async function Home() {
             </div>
           </div>
           {/* TOP HEADER */}
+          <ComposeTweet user={user} />
+          {/* TWEETS FEED */}
           <div className="flex flex-col items-center">
-            <ComposeTweet user={user} />
             <h1>.</h1>
             <h1>.</h1>
             {tweets?.map((tweet) => (
@@ -104,7 +105,9 @@ export default async function Home() {
               {JSON.stringify(tweets, null, 2)}
             </pre>
           </div>
-        </div>
+          {/* TWEETS FEED */}
+        </main>
+        {/* infinite tweets feed */}
 
         {/* right sidebar */}
         <div>

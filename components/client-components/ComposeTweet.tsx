@@ -71,55 +71,56 @@ const ComposeTweet = ({ user }: any) => {
 
   return (
     <>
-      <div
-        className="flex flex-row w-full space-x-4 border-b"
-        style={{ padding: "16px 8px 0px 8px" }}
-      >
-        <div className="flex flex-grow w-[40px] h-[40px]">
-          <div className="rounded-full w-10 h-10">
-            <Image
-              src={user.user_metadata.avatar_url}
-              width={40}
-              height={40}
-              alt="Profile Image"
-            />
-          </div>
+      <div className="flex items-stretch py-4 px-4 space-x-2 border-b relative">
+        <div className="flex-none">
+          <Image
+            src={user.user_metadata.avatar_url}
+            width={40}
+            height={40}
+            className="rounded-full"
+            alt="Profile Image"
+          />
         </div>
-        <div className="flex flex-col w-full px-4">
-          <div className="flex flex-col border-b">
-            <textarea
-              ref={tweetTextRef}
-              onChange={handleChange}
-              maxLength={characterLimit}
-              style={{
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                resize: "none",
-                padding: "8px 0 0 0",
-                // add invisible scrollbar
-              }}
-              placeholder="What is happening?!"
-            />
-          </div>
+        <div
+          className="flex flex-col w-full"
+          style={{ padding: "8px 8px 0px 8px" }}
+        >
+          <div className="flex flex-col w-full">
+            <div className="flex flex-col border-b">
+              <textarea
+                ref={tweetTextRef}
+                onChange={handleChange}
+                maxLength={characterLimit}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  resize: "none",
+                  padding: "8px 0 0 0",
+                  // add invisible scrollbar
+                }}
+                placeholder="What is happening?!"
+              />
+            </div>
 
-          <div className="flex flex-col items-end my-4">
-            <div className="flex">
-              {remainingChars <= 20 && (
-                <p
-                  className="py-2 px-4"
-                  style={{ color: `${remainingCharsColor}` }}
+            <div className="flex flex-col items-end mt-4">
+              <div className="flex">
+                {remainingChars <= 20 && (
+                  <p
+                    className="py-2 px-4"
+                    style={{ color: `${remainingCharsColor}` }}
+                  >
+                    {remainingChars}
+                  </p>
+                )}
+
+                <button
+                  className="rounded-full bg-blue-500 py-2 px-4"
+                  onClick={postTweet}
                 >
-                  {remainingChars}
-                </p>
-              )}
-
-              <button
-                className="rounded-full bg-blue-500 py-2 px-4"
-                onClick={postTweet}
-              >
-                Post
-              </button>
+                  Post
+                </button>
+              </div>
             </div>
           </div>
         </div>
