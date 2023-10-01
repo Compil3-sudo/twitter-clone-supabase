@@ -55,6 +55,20 @@ export default async function Home() {
                 className="bg-[#16181C] outline-none focus:bg-slate-950"
               />
             </div>
+            <div className="flex flex-col bg-[#16181C] rounded-xl mx-4 px-4 p-2 mt-5 space-y-4">
+              <h2>Who to Follow</h2>
+              <div>Profile 1</div>
+              <div>Profile 2</div>
+              <div>Profile 3</div>
+              <div>Profile 4</div>
+            </div>
+            <div className="flex flex-col bg-[#16181C] rounded-xl mx-4 px-4 p-2 mt-5 space-y-4">
+              <h2>Trending</h2>
+              <div>Trend 1</div>
+              <div>Trend 2</div>
+              <div>Trend 3</div>
+              <div>Trend 4</div>
+            </div>
           </div>
         </div>
       </div>
