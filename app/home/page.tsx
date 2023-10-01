@@ -26,7 +26,8 @@ export default async function Home() {
 
   const { data, error } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(*)");
+    .select("*, author: profiles(*), likes(*)")
+    .order("created_at", { ascending: false });
 
   const tweets = data?.map((tweet) => ({
     ...tweet,
@@ -76,7 +77,7 @@ export default async function Home() {
           <div className="flex flex-col items-center">
             {tweets?.map((tweet) => (
               // <Tweet key={tweet.id} user={user} tweet={tweet} />
-              <div className="flex py-2 px-4 space-x-2 border-b">
+              <div className="flex w-full py-2 px-4 space-x-2 border-b">
                 {/* Tweet Author Profile Image */}
                 <div className="flex-none pt-2">
                   <Image
@@ -89,7 +90,7 @@ export default async function Home() {
                 </div>
                 {/* Tweet Author Profile Image */}
 
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col w-full space-y-2">
                   {/* Tweet header - author - name @username * created_x time ago */}
                   <header className="flex flex-row space-x-4 justify-center items-center">
                     <div>{tweet.author.name}</div>
@@ -109,16 +110,9 @@ export default async function Home() {
                   {/* Tweet header - author - name @username * created_x time ago */}
 
                   {/* Tweet content */}
-                  <div className="">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Omnis alias quia obcaecati vero maiores nulla ut, soluta
-                    excepturi molestiae distinctio quos recusandae, laudantium
-                    rem pariatur minus suscipit totam aliquid. Odit
-                    consequuntur, corporis assumenda dolores nisi reiciendis ab,
-                    blanditiis maxime optio fugiat, officiis nostrum totam
-                    deserunt soluta et exercitationem aut. Enim?
-                  </div>
-                  <div className="bg-gray-600 rounded-2xl h-20 py-2">Media</div>
+                  <div className="">{tweet.text}</div>
+                  {/* add tweet media - image / video ? later */}
+                  {/* <div className="bg-gray-600 rounded-2xl h-20 py-2">Media</div> */}
                   {/* Tweet content */}
 
                   {/* Tweet Footer */}
@@ -143,7 +137,9 @@ export default async function Home() {
                           <AiOutlineHeart size={20} />
                           {/* <AiHeartFill /> */}
                         </div>
-                        <div className="text-sm px-1 justify-center">2,799</div>
+                        <div className="text-sm px-1 justify-center">
+                          {tweet.likes}
+                        </div>
                       </div>
                       <div className="group flex items-center hover:text-blue-500 transition duration-200">
                         <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
