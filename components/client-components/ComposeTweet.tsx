@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const ComposeTweet = ({ user }: any) => {
@@ -71,7 +72,7 @@ const ComposeTweet = ({ user }: any) => {
 
   return (
     <>
-      <div className="flex items-stretch py-4 px-4 space-x-2 border-b relative">
+      <div className="flex py-4 px-4 space-x-2 border-b">
         <div className="flex-none">
           <Image
             src={user.user_metadata.avatar_url}
@@ -81,8 +82,9 @@ const ComposeTweet = ({ user }: any) => {
             alt="Profile Image"
           />
         </div>
+
         <div
-          className="flex flex-col w-full"
+          className="flex flex-col w-full flex-grow"
           style={{ padding: "8px 8px 0px 8px" }}
         >
           <div className="flex flex-col w-full">
