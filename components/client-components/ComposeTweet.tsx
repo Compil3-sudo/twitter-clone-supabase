@@ -1,6 +1,7 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 const ComposeTweet = ({ user }: any) => {
@@ -26,7 +27,9 @@ const ComposeTweet = ({ user }: any) => {
     }
 
     return () => {
-      tweetTextRef.current!.removeEventListener("input", countCharacters);
+      if (tweetTextRef.current) {
+        tweetTextRef.current.removeEventListener("input", countCharacters);
+      }
     };
   }, [tweetTextRef.current?.value.length]);
 
@@ -68,9 +71,21 @@ const ComposeTweet = ({ user }: any) => {
 
   return (
     <>
-      <div className="flex flex-row p-2 w-full space-x-4 border-b">
-        <div className="rounded-full bg-white w-10 h-10 p-2">img</div>
-        <div className="flex flex-col space-y-4 w-full px-2">
+      <div
+        className="flex flex-row w-full space-x-4 border-b"
+        style={{ padding: "16px 8px 0px 8px" }}
+      >
+        <div className="flex flex-grow w-[40px] h-[40px]">
+          <div className="rounded-full w-10 h-10">
+            <Image
+              src={user.user_metadata.avatar_url}
+              width={40}
+              height={40}
+              alt="Profile Image"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col w-full px-4">
           <div className="flex flex-col border-b">
             <textarea
               ref={tweetTextRef}
@@ -88,23 +103,24 @@ const ComposeTweet = ({ user }: any) => {
             />
           </div>
 
-          <div className="flex flex-row self-end justify-center">
-            {remainingChars <= 20 && (
-              <p
-                className="py-2 px-4"
-                style={{ color: `${remainingCharsColor}` }}
-              >
-                {remainingChars}
-              </p>
-            )}
+          <div className="flex flex-col items-end my-4">
+            <div className="flex">
+              {remainingChars <= 20 && (
+                <p
+                  className="py-2 px-4"
+                  style={{ color: `${remainingCharsColor}` }}
+                >
+                  {remainingChars}
+                </p>
+              )}
 
-            <button
-              className="self-end rounded-full bg-blue-500 py-2 px-4"
-              style={{ marginBottom: "8px" }}
-              onClick={postTweet}
-            >
-              Post
-            </button>
+              <button
+                className="rounded-full bg-blue-500 py-2 px-4"
+                onClick={postTweet}
+              >
+                Post
+              </button>
+            </div>
           </div>
         </div>
       </div>
