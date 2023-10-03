@@ -22,9 +22,9 @@ const ComposeTweet = ({ user }: any) => {
     tweetTextRef.current!.addEventListener("input", countCharacters);
 
     if (remainingChars <= 0) {
-      setRemainingCharsColor("red");
+      setRemainingCharsColor("red-500");
     } else if (remainingChars >= 1 && remainingChars <= 20) {
-      setRemainingCharsColor("yellow");
+      setRemainingCharsColor("yellow-500");
     }
 
     return () => {
@@ -83,24 +83,15 @@ const ComposeTweet = ({ user }: any) => {
           />
         </div>
 
-        <div
-          className="flex flex-col w-full flex-grow"
-          style={{ padding: "8px 8px 0px 8px" }}
-        >
+        <div className="flex flex-col w-full flex-grow px-2 pt-2">
           <div className="flex flex-col w-full">
             <div className="flex flex-col border-b">
               <textarea
                 ref={tweetTextRef}
                 onChange={handleChange}
                 maxLength={characterLimit}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  resize: "none",
-                  padding: "8px 0 0 0",
-                  // add invisible scrollbar
-                }}
+                // add invisible scrollbar
+                className="bg-transparent border-none outline-none resize-none pt-2"
                 placeholder="What is happening?!"
               />
             </div>
@@ -108,10 +99,7 @@ const ComposeTweet = ({ user }: any) => {
             <div className="flex flex-col items-end mt-4">
               <div className="flex">
                 {remainingChars <= 20 && (
-                  <p
-                    className="py-2 px-4"
-                    style={{ color: `${remainingCharsColor}` }}
-                  >
+                  <p className={`py-2 px-4 text-${remainingCharsColor}`}>
                     {remainingChars}
                   </p>
                 )}

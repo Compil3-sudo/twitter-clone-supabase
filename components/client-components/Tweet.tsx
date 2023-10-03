@@ -29,8 +29,8 @@ const Tweet = ({ user, tweet }: any) => {
         className="flex w-full py-2 px-4 space-x-2 border-b" // cursor not pointing ? next Link or router ?
       >
         {/* Tweet Author Profile Image */}
-        <Link href={tweetAuthorProfilePageUrl}>
-          <div className="flex-none pt-2 z-10">
+        <div className="flex-none pt-2">
+          <Link href={tweetAuthorProfilePageUrl}>
             <Image
               src={tweet.author.avatar_url}
               width={40}
@@ -38,8 +38,8 @@ const Tweet = ({ user, tweet }: any) => {
               className="rounded-full"
               alt="Profile Image"
             />
-          </div>
-        </Link>
+          </Link>
+        </div>
         {/* Tweet Author Profile Image */}
 
         <div className="flex flex-col w-full space-y-2">

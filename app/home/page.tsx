@@ -19,7 +19,7 @@ export default async function Home() {
     .select("*, author: profiles(*), likes(*)")
     .order("created_at", { ascending: false });
 
-  const tweets = data?.map((tweet) => ({
+  const tweets = data?.map((tweet: any) => ({
     ...tweet,
     user_has_liked: !!tweet.likes.find(
       (like: any) => like.user_id === user?.id

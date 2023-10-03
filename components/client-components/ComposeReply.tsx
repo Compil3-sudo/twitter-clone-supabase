@@ -29,7 +29,7 @@ const ComposeReply = ({ user, tweet }: any) => {
       <input
         ref={replyTextRef}
         type="text"
-        style={{ color: "black" }}
+        className="text-black"
         placeholder="Post your reply"
       />
 

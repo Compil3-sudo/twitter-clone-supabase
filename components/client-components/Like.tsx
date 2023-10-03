@@ -25,14 +25,13 @@ const Like = ({ user, tweet }: any) => {
     }
   };
 
-  const heartColor = tweet.user_has_liked ? "#ef4444" : "";
+  const heartColor = tweet.user_has_liked ? "text-red-500" : "";
 
   return (
     <>
       <button
         onClick={toggleLikeTweet}
-        style={{ color: heartColor }}
-        className="group flex items-center hover:text-red-500 transition duration-200"
+        className={`group flex items-center ${heartColor} hover:text-red-500 transition duration-200`}
       >
         <div className="group-hover:bg-red-500/10 p-2 rounded-full">
           {tweet.user_has_liked ? (
