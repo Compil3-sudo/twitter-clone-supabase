@@ -3,7 +3,6 @@
 import Like from "./Like";
 import ComposeReply from "./ComposeReply";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { BsThreeDots } from "react-icons/bs";
 import { BiMessageRounded, BiRepost } from "react-icons/bi";
@@ -12,45 +11,58 @@ import { IoIosStats } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
 const Tweet = ({ user, tweet }: any) => {
-  const path = usePathname();
   const router = useRouter();
-  const tweetAuthorProfilePageUrl = `${tweet.author.username}`;
 
   const navigateToTweet = () => {
     router.push(`${user.user_metadata.user_name}/tweet/${tweet.id}`);
   };
 
-  // <Link href={`${tweet.author.username}/tweet/${tweet.id}`}>GO TO TWEET</Link>;
+  // should I use nextJs Link component instead ?
+  const navigateToUserProfile = (event: React.MouseEvent) => {
+    // without this it would redirect to the Tweet view page
+    event.stopPropagation(); // Prevent the click event from propagating to the parent div
+    router.push(`${tweet.author.username}`);
+  };
+
   //  <ComposeReply user={user} tweet={tweet} />;
 
   return (
     <>
       <div
-        className="flex w-full py-2 px-4 space-x-2 border-b" // cursor not pointing ? next Link or router ?
+        onClick={navigateToTweet}
+        className="flex w-full py-2 px-4 space-x-2 border-b cursor-pointer"
       >
         {/* Tweet Author Profile Image */}
         <div className="flex-none pt-2">
-          <Link href={tweetAuthorProfilePageUrl}>
-            <Image
-              src={tweet.author.avatar_url}
-              width={40}
-              height={40}
-              className="rounded-full"
-              alt="Profile Image"
-            />
-          </Link>
+          <Image
+            src={tweet.author.avatar_url}
+            width={40}
+            height={40}
+            className="rounded-full"
+            alt="Profile Image"
+            onClick={navigateToUserProfile}
+          />
         </div>
         {/* Tweet Author Profile Image */}
 
         <div className="flex flex-col w-full space-y-2">
           {/* Tweet header - author - name @username * created_x time ago */}
           <header className="flex flex-row space-x-4 justify-center items-center">
-            <Link href={tweetAuthorProfilePageUrl}>{tweet.author.name}</Link>
-            <Link href={tweetAuthorProfilePageUrl}>
-              <div className="text-gray-500">@{tweet.author.username}</div>
-            </Link>
+            <div
+              className="hover:underline transition duration-200"
+              onClick={navigateToUserProfile}
+            >
+              {tweet.author.name}
+            </div>
+
+            <div className="text-gray-500" onClick={navigateToUserProfile}>
+              @{tweet.author.username}
+            </div>
+
             <div className="text-gray-500"> - </div>
-            <div className="text-gray-500">{tweet.created_at.slice(0, 10)}</div>
+            <div className="text-gray-500 hover:underline transition duration-200">
+              {tweet.created_at.slice(0, 10)}
+            </div>
             <div className="flex flex-col flex-grow">
               <div className="self-end rounded-full p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10">
                 <BsThreeDots />
