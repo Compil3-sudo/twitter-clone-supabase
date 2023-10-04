@@ -15,14 +15,14 @@ const FollowButton = ({
     if (followStatus) {
       // the currentUser wants to UN-follow the userProfile
       setFollowStatus(false);
-      await supabase.from("following").delete().match({
+      await supabase.from("followers").delete().match({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
     } else {
       // the currentUser wants to follow the userProfile
       setFollowStatus(true);
-      await supabase.from("following").insert({
+      await supabase.from("followers").insert({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
@@ -31,7 +31,10 @@ const FollowButton = ({
 
   // Follow(bg-white & hover-lighter)/Following (bg-black & hover-red - unfollow)
   return (
-    <button onClick={toggleFollow}>
+    <button
+      onClick={toggleFollow}
+      className="rounded-full text-black font-medium bg-[#EFF3F4] px-4 py-1"
+    >
       {followStatus ? "Following" : "Follow"}
     </button>
   );

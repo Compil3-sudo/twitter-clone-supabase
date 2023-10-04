@@ -6,6 +6,7 @@ import InfiniteFeed from "@/components/InfiniteFeed";
 import { BiSearch } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
+import FollowButton from "@/components/client-components/FollowButton";
 
 export const dynamic = "force-dynamic";
 
@@ -32,9 +33,28 @@ export default async function Home() {
     likes: tweet.likes.length,
   }));
 
+  // TODO: improve algorithm suggestion, based on mutual connections
+  // could add other factors ?
+
+  // for now just get 3 profiles and exclude the authenticated user
+  // only suggest "unknown" profile => auth user is not already following them
+  const { data: userFollowing, error: userFollowingError } = await supabase
+    .from("followers")
+    .select("followed_id")
+    .eq("follower_id", user.id);
+
+  const followingIds = userFollowing?.map((entry) => entry.followed_id);
+
+  console.log(followingIds);
+
   const { data: followProfiles, error: followProfilesError } = await supabase
     .from("profiles")
-    .select("*");
+    .select("*")
+    .neq("id", user.id)
+    // .not("id", "cs", followingIds)
+    .limit(3);
+
+  console.log(followProfiles);
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -62,10 +82,9 @@ export default async function Home() {
             </div>
             <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-5">
               <h2 className="p-2 text-lg font-bold">Who to Follow</h2>
-              {followProfiles.map((followProfile: any) => (
+              {followProfiles?.map((followProfile: any) => (
                 <Link key={followProfile.id} href={`${followProfile.username}`}>
-                  {/* lst:rounded-b-xl also applied to first element WHY ? :( */}
-                  <div className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 last:rounded-b-xl">
+                  <div className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200">
                     <div className="flex-none my-auto">
                       <Image
                         src={followProfile.avatar_url}
@@ -85,14 +104,22 @@ export default async function Home() {
                         </h2>
                       </div>
                       <div className="flex flex-col w-fit justify-center items-end">
-                        <button className="rounded-full text-black font-medium bg-[#EFF3F4] px-4 py-1">
-                          Follow
-                        </button>
+                        <FollowButton
+                          userProfileId={followProfile.id}
+                          currentUserId={user.user_metadata.id}
+                          isUserFollowingProfile={false}
+                        />
                       </div>
                     </div>
                   </div>
                 </Link>
               ))}
+              <Link
+                href={"/"}
+                className="rounded-b-xl text-sky-500 hover:bg-white/10 transition duration-200 p-4"
+              >
+                Show more
+              </Link>
             </div>
             <div className="flex flex-col bg-[#16181C] rounded-xl px-4 p-2 mt-5 space-y-4">
               <h2>Trending</h2>
