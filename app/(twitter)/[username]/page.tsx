@@ -3,9 +3,14 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { BiMessageSquareDetail } from "react-icons/bi";
+import { BsThreeDots } from "react-icons/bs";
+import { IoIosNotificationsOutline } from "react-icons/io";
 import { VscArrowLeft } from "react-icons/vsc";
 // import { useParams } from "next/navigation";
 
+// TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
+// nextjs seems to make a static page => currently changes only occurr after refresh
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const supabase = createServerComponentClient({ cookies });
 
@@ -22,6 +27,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   if (!userProfile) {
     return (
       <>
+        {/* TODO: make this a bit prettier */}
         <div>back arrow profile</div>
         <div>Profile Image</div>
         <h1>@{params.username}</h1>
@@ -126,11 +132,30 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               flex-row - threeDots Message Notify FollowButton) */}
               <div></div>
               {ownProfile ? (
-                <button className="flex justify-start border border-slate-400 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
+                <button className="flex justify-start border border-gray-600 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
                   Set up profile
                 </button>
               ) : (
-                <div>a</div>
+                <div className="flex flex-row space-x-2 h-fit">
+                  {/* idk what to do here ? open some menu for - share profile ? copy link to profile ? mute / block / report ? */}
+                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
+                    <BsThreeDots size={20} />
+                  </button>
+                  {/* onClick - send direct message */}
+                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
+                    <BiMessageSquareDetail size={20} />
+                  </button>
+                  {/* onClick - activate notifications -> send notifications when user posts ? & change icon to filled bell */}
+                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
+                    <IoIosNotificationsOutline size={20} />
+                    {/* <IoIosNotifications size={20} /> */}
+                  </button>
+                  <FollowButton
+                    isUserFollowingProfile={isUserFollowingProfile}
+                    userProfileId={userProfile.id}
+                    currentUserId={currentUser?.id}
+                  />
+                </div>
               )}
             </div>
             <div className="flex flex-col mb-3">
@@ -138,37 +163,23 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               <h2 className="text-gray-500">@{userProfile.username}</h2>
             </div>
             <div>bio ?</div>
-            <div>links / joined at...</div>
-            <div>Follwing and followers</div>
+            <div>
+              links & <p>Joined {userProfile.created_at.slice(0, 10)}</p>
+            </div>
+            <div className="flex flex-row space-x-4">
+              <h2>{following ? following.length : 0} Following</h2>
+              <h2>{followers ? followers.length : 0} Followers</h2>
+            </div>
+            <div>
+              {commonFollowers.length === 0 ? (
+                <h2>Not follwed by anyone you're following</h2>
+              ) : (
+                <h2>Followed by ... and x others you follow</h2>
+              )}
+            </div>
           </div>
         </div>
-        <pre>{JSON.stringify(userProfile, null, 2)}</pre>
-        {/* {currentUser?.user_metadata.user_name !== userProfile.username ? ( */}
-        {!ownProfile && (
-          <div>
-            <FollowButton
-              isUserFollowingProfile={isUserFollowingProfile}
-              userProfileId={userProfile.id}
-              currentUserId={currentUser?.id}
-            />
-          </div>
-        )}
-        <div>
-          <p>Joined {userProfile.created_at}</p>
-        </div>
-        <div className="flex flex-row space-x-4">
-          <h2>{following ? following.length : 0} Following</h2>
-          <h2>{followers ? followers.length : 0} Followers</h2>
-        </div>
-        {!ownProfile && (
-          <div>
-            {commonFollowers.length === 0 ? (
-              <h2>Not follwed by anyone you're following</h2>
-            ) : (
-              <h2>Followed by ... and x others you follow</h2>
-            )}
-          </div>
-        )}
+
         <h1>Tweets of {userProfile.username}</h1>
         <pre>{JSON.stringify(userTweets, null, 2)}</pre>
       </div>
