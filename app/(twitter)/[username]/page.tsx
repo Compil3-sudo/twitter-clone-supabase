@@ -1,7 +1,9 @@
 import FollowButton from "@/components/client-components/FollowButton";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
+import { VscArrowLeft } from "react-icons/vsc";
 // import { useParams } from "next/navigation";
 
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
@@ -88,38 +90,88 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     .select("*")
     .eq("user_id", userProfile.id);
 
+  const numberOfPosts = userTweets?.length;
+
   return (
     <>
-      <div>ProfilePage of {userProfile.username}</div>
-      <pre>{JSON.stringify(userProfile, null, 2)}</pre>
-      {/* {currentUser?.user_metadata.user_name !== userProfile.username ? ( */}
-      {!ownProfile && (
-        <div>
-          <FollowButton
-            isUserFollowingProfile={isUserFollowingProfile}
-            userProfileId={userProfile.id}
-            currentUserId={currentUser?.id}
-          />
+      <div className="flex flex-col items-center">
+        {/* PROFILE HEADER */}
+        {/* onClick navigate back to top */}
+        <div className="z-10 top-0 sticky flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
+          <div className="p-2 hover:bg-white/10 rounded-full my-auto mx-2">
+            {/* onClick navigate one page back ../ */}
+            <VscArrowLeft size={20} />
+          </div>
+          <div className="flex flex-col px-6 py-1 font-medium">
+            <h2 className="text-xl">{userProfile.name}</h2>
+            <p className="text-gray-500 text-sm">
+              {numberOfPosts} {numberOfPosts === 1 ? "post" : "posts"}
+            </p>
+          </div>
         </div>
-      )}
-      <div>
-        <p>Joined {userProfile.created_at}</p>
-      </div>
-      <div className="flex flex-row space-x-4">
-        <h2>{following ? following.length : 0} Following</h2>
-        <h2>{followers ? followers.length : 0} Followers</h2>
-      </div>
-      {!ownProfile && (
-        <div>
-          {commonFollowers.length === 0 ? (
-            <h2>Not follwed by anyone you're following</h2>
-          ) : (
-            <h2>Followed by ... and x others you follow</h2>
-          )}
+        {/* PROFILE HEADER */}
+        <div className="flex flex-col w-full">
+          <div className="relative h-48 bg-slate-600 w-full">
+            <Image
+              src={userProfile.avatar_url}
+              width={140}
+              height={140}
+              alt={`${userProfile.name}'s Profile Image`}
+              className="rounded-full border-2 border-black absolute bottom-0 left-0 -mb-[70px] ml-4"
+            />
+          </div>
+          <div className="mb-4 pt-3 px-4 flex flex-col">
+            <div className="flex flex-row justify-between h-[70px]">
+              {/* image and ownProfile - (set up profile) OR !ownProfile - (flex
+              flex-row - threeDots Message Notify FollowButton) */}
+              <div></div>
+              {ownProfile ? (
+                <button className="flex justify-start border border-slate-400 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
+                  Set up profile
+                </button>
+              ) : (
+                <div>a</div>
+              )}
+            </div>
+            <div className="flex flex-col mb-3">
+              <h2 className="text-lg font-semibold">{userProfile.name}</h2>
+              <h2 className="text-gray-500">@{userProfile.username}</h2>
+            </div>
+            <div>bio ?</div>
+            <div>links / joined at...</div>
+            <div>Follwing and followers</div>
+          </div>
         </div>
-      )}
-      <h1>Tweets of {userProfile.username}</h1>
-      <pre>{JSON.stringify(userTweets, null, 2)}</pre>
+        <pre>{JSON.stringify(userProfile, null, 2)}</pre>
+        {/* {currentUser?.user_metadata.user_name !== userProfile.username ? ( */}
+        {!ownProfile && (
+          <div>
+            <FollowButton
+              isUserFollowingProfile={isUserFollowingProfile}
+              userProfileId={userProfile.id}
+              currentUserId={currentUser?.id}
+            />
+          </div>
+        )}
+        <div>
+          <p>Joined {userProfile.created_at}</p>
+        </div>
+        <div className="flex flex-row space-x-4">
+          <h2>{following ? following.length : 0} Following</h2>
+          <h2>{followers ? followers.length : 0} Followers</h2>
+        </div>
+        {!ownProfile && (
+          <div>
+            {commonFollowers.length === 0 ? (
+              <h2>Not follwed by anyone you're following</h2>
+            ) : (
+              <h2>Followed by ... and x others you follow</h2>
+            )}
+          </div>
+        )}
+        <h1>Tweets of {userProfile.username}</h1>
+        <pre>{JSON.stringify(userTweets, null, 2)}</pre>
+      </div>
     </>
   );
 };

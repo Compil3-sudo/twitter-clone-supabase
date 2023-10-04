@@ -4,7 +4,7 @@ import MainHeader from "@/components/client-components/MainHeader";
 
 const InfiniteFeed = ({ user, tweets }: any) => {
   return (
-    <main className="flex flex-col max-w-[600px] w-full h-full min-h-screen mx-2 border-l border-r">
+    <>
       <MainHeader />
       <ComposeTweet user={user} />
       {/* TWEETS FEED */}
@@ -14,7 +14,7 @@ const InfiniteFeed = ({ user, tweets }: any) => {
         ))}
       </div>
       {/* TWEETS FEED */}
-    </main>
+    </>
   );
 };
 

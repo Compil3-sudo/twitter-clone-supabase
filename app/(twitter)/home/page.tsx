@@ -38,13 +38,13 @@ export default async function Home() {
 
   return (
     <>
-      <div className="flex">
-        {/* <LeftSidebar user={user} /> */}
+      {/* <div className="flex"> */}
+      {/* <LeftSidebar user={user} /> */}
 
-        <InfiniteFeed user={user} tweets={tweets} />
+      <InfiniteFeed user={user} tweets={tweets} />
 
-        {/* <RightSidebar user={user.id} /> */}
-      </div>
+      {/* <RightSidebar user={user.id} /> */}
+      {/* </div> */}
     </>
   );
 }

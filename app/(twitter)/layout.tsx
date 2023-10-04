@@ -37,7 +37,9 @@ export default function TwitterLayout({
       >
         <div className="flex">
           <LeftSideBarServer />
-          {children}
+          <main className="flex flex-col max-w-[600px] w-full h-full min-h-screen mx-2 border-l border-r">
+            {children}
+          </main>
           <RightSidebar />
         </div>
       </body>

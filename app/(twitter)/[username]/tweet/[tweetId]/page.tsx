@@ -55,7 +55,7 @@ const TweetPage = async ({
     .select("*, nestedReplies: replies(*)")
     .eq("tweet_id", mappedTweet.id);
 
-  console.log(tweetReplies);
+  // console.log(tweetReplies);
 
   return (
     <>

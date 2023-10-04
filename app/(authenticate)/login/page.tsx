@@ -13,7 +13,7 @@ export default function Login() {
   const router = useRouter();
 
   async function signInWithGitHub() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
         redirectTo: `${location.origin}/auth/callback`,
@@ -21,10 +21,8 @@ export default function Login() {
       },
     });
 
-    console.log("data from github signin: ", data);
-    if (error) {
-      console.log(error);
-    }
+    if (error) console.log(error);
+
     // else {
     //   router.push("/home");
     // }

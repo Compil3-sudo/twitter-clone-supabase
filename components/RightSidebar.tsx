@@ -51,8 +51,8 @@ const RightSidebar = async () => {
       authenticated_user_id: userId, // Pass the authenticated user's ID
     });
 
-  console.log(followProfiles);
-  console.log(followProfilesError);
+  // console.log(followProfiles);
+  // console.log(followProfilesError);
 
   return (
     <div className="flex flex-col max-w-[350px] w-full mx-4">
