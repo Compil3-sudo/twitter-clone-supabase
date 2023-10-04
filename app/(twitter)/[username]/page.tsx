@@ -1,4 +1,5 @@
 import FollowButton from "@/components/client-components/FollowButton";
+import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Image from "next/image";
@@ -91,12 +92,23 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     // >3: followed by userA, userB and commonFollowers.length other you follow
   }
 
-  const { data: userTweets } = await supabase
+  // need to check if this tweet author is ok ?
+  // I think the author is bugged...need to fix it
+  const { data: profileTweets, error: userTweetsError } = await supabase
     .from("tweets")
-    .select("*")
-    .eq("user_id", userProfile.id);
+    .select("*, author: profiles(*), likes(*)")
+    .eq("user_id", userProfile.id)
+    .order("created_at", { ascending: false });
 
-  const numberOfPosts = userTweets?.length;
+  const numberOfPosts = profileTweets?.length;
+
+  const profileTweetsMapped = profileTweets?.map((tweet: any) => ({
+    ...tweet,
+    user_has_liked: !!tweet.likes.find(
+      (like: any) => like.user_id === userProfile?.id
+    ),
+    likes: tweet.likes.length,
+  }));
 
   return (
     <>
@@ -158,30 +170,40 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
                 </div>
               )}
             </div>
+
             <div className="flex flex-col mb-3">
               <h2 className="text-lg font-semibold">{userProfile.name}</h2>
               <h2 className="text-gray-500">@{userProfile.username}</h2>
             </div>
+
             <div>bio ?</div>
+
             <div>
               links & <p>Joined {userProfile.created_at.slice(0, 10)}</p>
             </div>
+
             <div className="flex flex-row space-x-4">
               <h2>{following ? following.length : 0} Following</h2>
               <h2>{followers ? followers.length : 0} Followers</h2>
             </div>
-            <div>
-              {commonFollowers.length === 0 ? (
-                <h2>Not follwed by anyone you're following</h2>
-              ) : (
-                <h2>Followed by ... and x others you follow</h2>
-              )}
-            </div>
+
+            {!ownProfile && (
+              <div>
+                {commonFollowers.length === 0 ? (
+                  <h2>Not follwed by anyone you're following</h2>
+                ) : (
+                  <h2>Followed by ... and x others you follow</h2>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
-        <h1>Tweets of {userProfile.username}</h1>
-        <pre>{JSON.stringify(userTweets, null, 2)}</pre>
+        <div className="flex flex-col items-center w-full">
+          {profileTweetsMapped?.map((tweet: any) => (
+            <Tweet key={tweet.id} user={userProfile} tweet={tweet} />
+          ))}
+        </div>
       </div>
     </>
   );
