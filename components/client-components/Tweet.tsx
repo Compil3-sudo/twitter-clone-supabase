@@ -24,6 +24,11 @@ const Tweet = ({ user, tweet }: any) => {
     router.push(`${tweet.author.username}`);
   };
 
+  const stopNavigationPropagation = (event: React.MouseEvent) => {
+    // without this it would redirect to the Tweet view page
+    event.stopPropagation(); // Prevent the click event from propagating to the parent div
+  };
+
   //  <ComposeReply user={user} tweet={tweet} />;
 
   return (
@@ -94,7 +99,9 @@ const Tweet = ({ user, tweet }: any) => {
                 <div className="text-sm px-1 justify-center">272</div>
               </div>
 
-              <Like user={user} tweet={tweet} />
+              <div onClick={stopNavigationPropagation}>
+                <Like user={user} tweet={tweet} />
+              </div>
 
               <div className="group flex items-center hover:text-blue-500 transition duration-200">
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
