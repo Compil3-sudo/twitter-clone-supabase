@@ -14,8 +14,8 @@ import {
 } from "react-icons/bi";
 import { IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
 import Logo from "public/static/rares_favicon-light-32x32.png";
-import Logout from "@/app/auth/sign-out/Logout";
 import { useState } from "react";
+import Logout from "@/app/(authenticate)/auth/sign-out/Logout";
 
 type NavigationItem = {
   text: string;
@@ -100,7 +100,7 @@ const LeftSidebar = ({ user }: any) => {
                 <Link
                   href={`/${
                     item.text === "Profile"
-                      ? user.user_metadata.user_name
+                      ? user?.user_metadata.user_name
                       : item.text.toLowerCase()
                   }`}
                 >
@@ -123,16 +123,16 @@ const LeftSidebar = ({ user }: any) => {
           <div className="rounded-full hover:bg-white/20 p-2 mb-3">
             <div className="grid gap-2 grid-flow-col items-center">
               <Image
-                src={user.user_metadata.avatar_url}
+                src={user?.user_metadata.avatar_url}
                 height={40}
                 width={40}
                 alt="Profile Image"
                 className="rounded-full"
               />
               <div className="flex flex-col">
-                <h2 className="">{user.user_metadata.name}</h2>
+                <h2 className="">{user?.user_metadata.name}</h2>
                 <h2 className="text-gray-500">
-                  @{user.user_metadata.user_name}
+                  @{user?.user_metadata.user_name}
                 </h2>
               </div>
               <div className="items-center pl-8 pr-1">

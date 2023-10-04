@@ -1,9 +1,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import LeftSidebar from "@/components/LeftSidebar";
+// import LeftSidebar from "@/components/LeftSidebar";
 import InfiniteFeed from "@/components/InfiniteFeed";
-import RightSidebar from "@/components/RightSidebar";
+// import RightSidebar from "@/components/RightSidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -39,11 +39,11 @@ export default async function Home() {
   return (
     <>
       <div className="flex">
-        <LeftSidebar user={user} />
+        {/* <LeftSidebar user={user} /> */}
 
         <InfiniteFeed user={user} tweets={tweets} />
 
-        <RightSidebar user={user.id} />
+        {/* <RightSidebar user={user.id} /> */}
       </div>
     </>
   );

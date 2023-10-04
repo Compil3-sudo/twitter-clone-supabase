@@ -9,8 +9,13 @@ import { BsThreeDots } from "react-icons/bs";
 
 export const dynamic = "force-dynamic";
 
-const RightSidebar = async ({ userId }: any) => {
+const RightSidebar = async () => {
   const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const userId = user?.id;
 
   // TODO: improve algorithm suggestion, based on mutual connections
   // could add other factors ?

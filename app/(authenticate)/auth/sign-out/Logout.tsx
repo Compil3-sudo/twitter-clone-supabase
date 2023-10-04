@@ -11,7 +11,8 @@ const Logout = () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) console.log(error);
-    router.refresh();
+
+    router.push("/");
   }
 
   return (

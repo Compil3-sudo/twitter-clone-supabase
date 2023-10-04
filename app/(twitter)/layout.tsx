@@ -1,6 +1,8 @@
-import "./globals.css";
+import LeftSideBarServer from "@/components/server-components/LeftSideBarServer";
+import "../globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import RightSidebar from "@/components/RightSidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function TwitterLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -33,7 +35,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} h-screen bg-slate-950 text-foreground`}
       >
-        {children}
+        <div className="flex">
+          <LeftSideBarServer />
+          {children}
+          <RightSidebar />
+        </div>
       </body>
     </html>
   );
