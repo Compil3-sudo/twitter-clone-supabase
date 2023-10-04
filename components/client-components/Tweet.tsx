@@ -69,7 +69,10 @@ const Tweet = ({ user, tweet }: any) => {
               {tweet.created_at.slice(0, 10)}
             </div>
             <div className="flex flex-col flex-grow">
-              <div className="self-end rounded-full p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10">
+              <div
+                onClick={stopNavigationPropagation}
+                className="self-end rounded-full p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10"
+              >
                 <BsThreeDots />
               </div>
             </div>
