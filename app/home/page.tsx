@@ -38,23 +38,37 @@ export default async function Home() {
 
   // for now just get 3 profiles and exclude the authenticated user
   // only suggest "unknown" profile => auth user is not already following them
-  const { data: userFollowing, error: userFollowingError } = await supabase
-    .from("followers")
-    .select("followed_id")
-    .eq("follower_id", user.id);
 
-  const followingIds = userFollowing?.map((entry) => entry.followed_id);
+  // SUPABASE FUNCTION
+  // CREATE OR REPLACE FUNCTION get_profiles_to_follow(authenticated_user_id UUID)
+  // RETURNS TABLE (
+  //   profile_id UUID,
+  //   username TEXT,
+  //   name TEXT,
+  //   avatar_url TEXT
+  // )
+  // AS $$
+  // BEGIN
+  //   RETURN QUERY
+  //   SELECT p.id AS profile_id, p.username, p.name, p.avatar_url
+  //   FROM profiles AS p
+  //   WHERE p.id != authenticated_user_id
+  //   AND p.id NOT IN (
+  //     SELECT f.followed_id
+  //     FROM followers AS f
+  //     WHERE f.follower_id = authenticated_user_id
+  //   )
+  //   LIMIT 3;
+  // END;
+  // $$ LANGUAGE plpgsql;
 
-  console.log(followingIds);
-
-  const { data: followProfiles, error: followProfilesError } = await supabase
-    .from("profiles")
-    .select("*")
-    .neq("id", user.id)
-    // .not("id", "cs", followingIds)
-    .limit(3);
+  const { data: followProfiles, error: followProfilesError } =
+    await supabase.rpc("get_profiles_to_follow", {
+      authenticated_user_id: user.id, // Pass the authenticated user's ID
+    });
 
   console.log(followProfiles);
+  console.log(followProfilesError);
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
