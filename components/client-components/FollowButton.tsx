@@ -15,17 +15,21 @@ const FollowButton = ({
     if (followStatus) {
       // the currentUser wants to UN-follow the userProfile
       setFollowStatus(false);
-      await supabase.from("followers").delete().match({
+      const { data, error } = await supabase.from("followers").delete().match({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
+      console.log(data);
+      console.log(error);
     } else {
       // the currentUser wants to follow the userProfile
       setFollowStatus(true);
-      await supabase.from("followers").insert({
+      const { data, error } = await supabase.from("followers").insert({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
+      console.log(data);
+      console.log(error);
     }
   };
 

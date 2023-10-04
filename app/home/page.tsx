@@ -42,7 +42,7 @@ export default async function Home() {
   // SUPABASE FUNCTION
   // CREATE OR REPLACE FUNCTION get_profiles_to_follow(authenticated_user_id UUID)
   // RETURNS TABLE (
-  //   profile_id UUID,
+  //   id UUID,
   //   username TEXT,
   //   name TEXT,
   //   avatar_url TEXT
@@ -50,7 +50,7 @@ export default async function Home() {
   // AS $$
   // BEGIN
   //   RETURN QUERY
-  //   SELECT p.id AS profile_id, p.username, p.name, p.avatar_url
+  //   SELECT p.id, p.username, p.name, p.avatar_url
   //   FROM profiles AS p
   //   WHERE p.id != authenticated_user_id
   //   AND p.id NOT IN (
@@ -97,36 +97,37 @@ export default async function Home() {
             <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-5">
               <h2 className="p-2 text-lg font-bold">Who to Follow</h2>
               {followProfiles?.map((followProfile: any) => (
-                <Link key={followProfile.id} href={`${followProfile.username}`}>
-                  <div className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200">
-                    <div className="flex-none my-auto">
-                      <Image
-                        src={followProfile.avatar_url}
-                        width={40}
-                        height={40}
-                        alt="Profile Image"
-                        className="rounded-full"
+                <div
+                  key={followProfile.id}
+                  className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200"
+                >
+                  <div className="flex-none my-auto">
+                    <Image
+                      src={followProfile.avatar_url}
+                      width={40}
+                      height={40}
+                      alt="Profile Image"
+                      className="rounded-full"
+                    />
+                  </div>
+                  <div className="flex w-full justify-between">
+                    <div className="flex flex-col w-full">
+                      <h2 className="hover:underline transition duration-200">
+                        {followProfile.name}
+                      </h2>
+                      <h2 className="text-gray-500">
+                        @{followProfile.username}
+                      </h2>
+                    </div>
+                    <div className="flex flex-col w-fit justify-center items-end">
+                      <FollowButton
+                        userProfileId={followProfile.id}
+                        currentUserId={user.id}
+                        isUserFollowingProfile={false}
                       />
                     </div>
-                    <div className="flex w-full justify-between">
-                      <div className="flex flex-col w-full">
-                        <h2 className="hover:underline transition duration-200">
-                          {followProfile.name}
-                        </h2>
-                        <h2 className="text-gray-500">
-                          @{followProfile.username}
-                        </h2>
-                      </div>
-                      <div className="flex flex-col w-fit justify-center items-end">
-                        <FollowButton
-                          userProfileId={followProfile.id}
-                          currentUserId={user.user_metadata.id}
-                          isUserFollowingProfile={false}
-                        />
-                      </div>
-                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
               <Link
                 href={"/"}
