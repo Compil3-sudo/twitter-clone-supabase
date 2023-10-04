@@ -85,14 +85,20 @@ const Tweet = ({ user, tweet }: any) => {
           {/* Tweet Footer */}
           <footer>
             <div className="flex text-gray-500 justify-between">
-              <div className="group flex items-center hover:text-blue-500 transition duration-200">
+              <div
+                onClick={stopNavigationPropagation}
+                className="group flex items-center hover:text-blue-500 transition duration-200"
+              >
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
                   <BiMessageRounded size={20} />
                 </div>
                 <div className="text-sm px-1 justify-center">120</div>
               </div>
 
-              <div className="group flex items-center hover:text-green-500 transition duration-200">
+              <div
+                onClick={stopNavigationPropagation}
+                className="group flex items-center hover:text-green-500 transition duration-200"
+              >
                 <div className="group-hover:bg-green-500/10 p-2 rounded-full">
                   <BiRepost size={20} />
                 </div>
@@ -103,13 +109,20 @@ const Tweet = ({ user, tweet }: any) => {
                 <Like user={user} tweet={tweet} />
               </div>
 
-              <div className="group flex items-center hover:text-blue-500 transition duration-200">
+              <div
+                onClick={stopNavigationPropagation}
+                className="group flex items-center hover:text-blue-500 transition duration-200"
+              >
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
                   <IoIosStats size={20} />
                 </div>
                 <div className="text-sm px-1 justify-center">247.4K</div>
               </div>
-              <div className="flex items-center hover:text-blue-500 transition duration-200 hover:bg-blue-500/10 p-2 rounded-full">
+
+              <div
+                onClick={stopNavigationPropagation}
+                className="flex items-center hover:text-blue-500 transition duration-200 hover:bg-blue-500/10 p-2 rounded-full"
+              >
                 <FiShare size={20} />
               </div>
             </div>
