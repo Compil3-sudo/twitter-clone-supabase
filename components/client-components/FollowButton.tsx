@@ -10,6 +10,15 @@ const FollowButton = ({
 }: any) => {
   const supabase = createClientComponentClient();
   const [followStatus, setFollowStatus] = useState(isUserFollowingProfile);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
 
   const toggleFollow = async () => {
     if (followStatus) {
@@ -37,9 +46,19 @@ const FollowButton = ({
   return (
     <button
       onClick={toggleFollow}
-      className="rounded-full text-black font-medium bg-[#EFF3F4] px-4 py-1"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`rounded-full font-medium px-4 py-1 border border-transparent ${
+        followStatus
+          ? "text-white bg-transparent border-slate-600 hover:border-red-700 hover:bg-red-800/30 hover:text-red-600 transition duration-200"
+          : "text-black bg-[#EFF3F4]"
+      }`}
     >
-      {followStatus ? "Following" : "Follow"}
+      {followStatus && !isHovering
+        ? "Following"
+        : followStatus
+        ? "Unfollow"
+        : "Follow"}
     </button>
   );
 };
