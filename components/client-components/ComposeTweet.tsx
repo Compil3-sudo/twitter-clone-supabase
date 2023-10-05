@@ -67,6 +67,8 @@ const ComposeTweet = ({ user }: any) => {
       });
 
       if (error) console.log(error);
+
+      tweetTextRef.current.value = "";
     }
   };
 

@@ -1,9 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-// import LeftSidebar from "@/components/LeftSidebar";
 import InfiniteFeed from "@/components/InfiniteFeed";
-// import RightSidebar from "@/components/RightSidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -18,18 +16,18 @@ export default async function Home() {
     redirect("/");
   }
 
-  const { data, error } = await supabase
-    .from("tweets")
-    .select("*, author: profiles(*), likes(*)")
-    .order("created_at", { ascending: false });
+  // const { data, error } = await supabase
+  //   .from("tweets")
+  //   .select("*, author: profiles(*), likes(*)")
+  //   .order("created_at", { ascending: false });
 
-  const tweets = data?.map((tweet: any) => ({
-    ...tweet,
-    user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === user?.id
-    ),
-    likes: tweet.likes.length,
-  }));
+  // const tweets = data?.map((tweet: any) => ({
+  //   ...tweet,
+  //   user_has_liked: !!tweet.likes.find(
+  //     (like: any) => like.user_id === user?.id
+  //   ),
+  //   likes: tweet.likes.length,
+  // }));
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -39,7 +37,7 @@ export default async function Home() {
 
   return (
     <>
-      <InfiniteFeed user={user} tweets={tweets} />
+      <InfiniteFeed user={user} />
     </>
   );
 }
