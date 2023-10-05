@@ -15,10 +15,10 @@ const getPagination = (page: number, size: number) => {
   return { from, to };
 };
 
-const InfiniteFeed = ({ user }: any) => {
-  const [tweets, setTweets] = useState<any[]>([]);
+const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
+  const [tweets, setTweets] = useState<any[]>(firstTweetsPage);
   const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const limit = 10; // Number of tweets to load per page
   const supabase = createClientComponentClient();
   const { from, to } = getPagination(page, limit);

@@ -16,18 +16,19 @@ export default async function Home() {
     redirect("/");
   }
 
-  // const { data, error } = await supabase
-  //   .from("tweets")
-  //   .select("*, author: profiles(*), likes(*)")
-  //   .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("tweets")
+    .select("*, author: profiles(*), likes(*)")
+    .order("created_at", { ascending: false })
+    .limit(10);
 
-  // const tweets = data?.map((tweet: any) => ({
-  //   ...tweet,
-  //   user_has_liked: !!tweet.likes.find(
-  //     (like: any) => like.user_id === user?.id
-  //   ),
-  //   likes: tweet.likes.length,
-  // }));
+  const tweets = data?.map((tweet: any) => ({
+    ...tweet,
+    user_has_liked: !!tweet.likes.find(
+      (like: any) => like.user_id === user?.id
+    ),
+    likes: tweet.likes.length,
+  }));
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -37,7 +38,7 @@ export default async function Home() {
 
   return (
     <>
-      <InfiniteFeed user={user} />
+      <InfiniteFeed user={user} firstTweetsPage={tweets} />
     </>
   );
 }
