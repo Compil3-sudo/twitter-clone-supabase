@@ -39,13 +39,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* <div className="flex"> */}
-      {/* <LeftSidebar user={user} /> */}
-
       <InfiniteFeed user={user} tweets={tweets} />
-
-      {/* <RightSidebar user={user.id} /> */}
-      {/* </div> */}
     </>
   );
 }

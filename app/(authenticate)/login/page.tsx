@@ -4,13 +4,11 @@
 // for email sign-up
 
 // import Link from "next/link";
-// import Messages from "./messages";
+import Messages from "./messages";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
 
 export default function Login() {
   const supabase = createClientComponentClient();
-  const router = useRouter();
 
   async function signInWithGitHub() {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -22,15 +20,20 @@ export default function Login() {
     });
 
     if (error) console.log(error);
-
-    // else {
-    //   router.push("/home");
-    // }
   }
 
   return (
     <div className="flex flex-col w-fit self-center px-8 sm:max-w-md justify-center gap-2">
-      {/* <form
+      <h1>Change between login / create account</h1>
+      <h1>
+        Change this into a modal and ask for each detail after email is
+        confirmed
+      </h1>
+      <h2>make default profile picture</h2>
+      <h2>
+        generate random unique username based on name - let user change it later
+      </h2>
+      <form
         className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
         action="/auth/sign-in"
         method="post"
@@ -42,6 +45,27 @@ export default function Login() {
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           name="email"
           placeholder="you@example.com"
+          required
+        />
+
+        <label className="text-md" htmlFor="email">
+          Name
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="name"
+          placeholder="name"
+          required
+        />
+
+        <h2>ask for this after email confirmed</h2>
+        <label className="text-md" htmlFor="email">
+          Username
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="username"
+          placeholder="username"
           required
         />
         <label className="text-md" htmlFor="password">
@@ -64,7 +88,7 @@ export default function Login() {
           Sign Up
         </button>
         <Messages />
-      </form> */}
+      </form>
       <button
         onClick={signInWithGitHub}
         className="bg-blue-500 rounded px-4 py-2 text-white mb-2"

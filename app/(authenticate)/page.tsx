@@ -25,7 +25,7 @@ export default async function LoginPage() {
           <h2 className="text-xl">Frameworks and tools:</h2>
           <ul className="px-6">
             <li>NextJs (Version 13.5.3 with App Router)</li>
-            <li>Supabase (Backend as a Service: PostgreSQL DB)</li>
+            <li>Supabase (PostgreSQL DB, Authentication, Storage)</li>
             <li>React</li>
             <li>TailwindCSS</li>
           </ul>

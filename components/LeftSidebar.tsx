@@ -35,7 +35,7 @@ const LeftSidebar = ({ user }: any) => {
     "notifications",
     "messages",
     "bookmarks",
-    user.user_metadata.user_name,
+    user?.user_metadata.user_name,
   ];
 
   const navigationList: NavigationItem[] = [
