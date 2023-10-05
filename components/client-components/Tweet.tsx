@@ -13,9 +13,8 @@ import { useRouter } from "next/navigation";
 const Tweet = ({ user, tweet }: any) => {
   const router = useRouter();
 
-  // IMPORTANT FIX: make user be a userprofile => user.username not metadata
   const navigateToTweet = () => {
-    router.push(`${user.user_metadata.user_name}/tweet/${tweet.id}`);
+    router.push(`${tweet.author.username}/tweet/${tweet.id}`);
   };
 
   // should I use nextJs Link component instead ?

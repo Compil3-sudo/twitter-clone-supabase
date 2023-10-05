@@ -94,21 +94,21 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
   // need to check if this tweet author is ok ?
   // I think the author is bugged...need to fix it
-  const { data: profileTweets, error: userTweetsError } = await supabase
+  const { data, error: userTweetsError } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(*)")
     .eq("user_id", userProfile.id)
     .order("created_at", { ascending: false });
 
-  const numberOfPosts = profileTweets?.length;
-
-  const profileTweetsMapped = profileTweets?.map((tweet: any) => ({
+  const profileTweets = data?.map((tweet: any) => ({
     ...tweet,
     user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === userProfile?.id
+      (like: any) => like.user_id === currentUser?.id
     ),
     likes: tweet.likes.length,
   }));
+
+  const numberOfPosts = profileTweets?.length;
 
   return (
     <>
@@ -200,8 +200,8 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
         </div>
 
         <div className="flex flex-col items-center w-full">
-          {profileTweetsMapped?.map((tweet: any) => (
-            <Tweet key={tweet.id} user={userProfile} tweet={tweet} />
+          {profileTweets?.map((tweet: any) => (
+            <Tweet key={tweet.id} user={currentUser} tweet={tweet} />
           ))}
         </div>
       </div>

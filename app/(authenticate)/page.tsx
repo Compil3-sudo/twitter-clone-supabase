@@ -24,7 +24,7 @@ export default async function LoginPage() {
           <h1 className="text-3xl font-bold py-2">Twitter Clone by Compil3</h1>
           <h2 className="text-xl">Frameworks and tools:</h2>
           <ul className="px-6">
-            <li>NextJs (Version 13.53 with App Router)</li>
+            <li>NextJs (Version 13.5.3 with App Router)</li>
             <li>Supabase (Backend as a Service: PostgreSQL DB)</li>
             <li>React</li>
             <li>TailwindCSS</li>

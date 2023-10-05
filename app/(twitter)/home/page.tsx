@@ -17,6 +17,7 @@ export default async function Home() {
   if (!user) {
     redirect("/");
   }
+
   const { data, error } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(*)")

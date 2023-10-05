@@ -25,7 +25,7 @@ const Like = ({ user, tweet }: any) => {
       }
     } else {
       const { error } = await supabase.from("likes").insert({
-        user_id: user?.id,
+        user_id: user.id,
         tweet_id: tweet.id,
       });
 
