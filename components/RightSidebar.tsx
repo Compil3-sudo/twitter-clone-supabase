@@ -55,7 +55,7 @@ const RightSidebar = async () => {
   // console.log(followProfilesError);
 
   return (
-    <div className="flex flex-col max-w-[350px] w-full mx-4">
+    <div className="hidden lg:flex flex-col max-w-[350px] w-full mx-4">
       <div className="top-0 fixed py-2 flex flex-col max-w-[350px] w-full">
         <div className="group flex bg-[#16181C] rounded-full p-2  px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
           <BiSearch className="group-focus-within:text-blue-500" />

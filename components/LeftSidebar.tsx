@@ -4,6 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { BsThreeDots, BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import { FaRegUser, FaUser } from "react-icons/fa6";
+import { FaFeatherAlt } from "react-icons/fa";
 import {
   BiHomeCircle,
   BiSolidHomeCircle,
@@ -14,8 +15,9 @@ import {
 } from "react-icons/bi";
 import { IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
 import Logo from "public/static/rares_favicon-light-32x32.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logout from "@/app/(authenticate)/auth/sign-out/Logout";
+import { usePathname } from "next/navigation";
 
 type NavigationItem = {
   text: string;
@@ -26,6 +28,15 @@ type NavigationItem = {
 
 const LeftSidebar = ({ user }: any) => {
   const [activeNav, setActiveNav] = useState("Home");
+  const path = usePathname();
+  const navigationTabs = [
+    "home",
+    "explore",
+    "notifications",
+    "messages",
+    "bookmarks",
+    user.user_metadata.user_name,
+  ];
 
   const navigationList: NavigationItem[] = [
     {
@@ -76,11 +87,18 @@ const LeftSidebar = ({ user }: any) => {
     },
   ];
 
+  useEffect(() => {
+    const navigationTab = path.split("/")[1];
+    if (!navigationTabs.includes(navigationTab)) {
+      setActiveNav("");
+    }
+  }, [path]);
+
   return (
-    <div className="flex flex-col max-w-xl flex-grow items-end">
+    <div className="flex flex-col max-xl:ml-[140px] xl:flex-grow xl:max-w-xl items-end">
       <div className="top-0 fixed flex flex-col h-full justify-between px-2">
         <div className="flex flex-col text-xl">
-          <div className="flex flex-col items-start my-4 mx-4 space-y-4">
+          <div className="flex flex-col items-end xl:items-start m-4 space-y-4">
             {navigationList.map((item) => (
               <div
                 key={item.text}
@@ -108,19 +126,28 @@ const LeftSidebar = ({ user }: any) => {
                     <div>
                       {item.text === activeNav ? item.iconFill : item.icon}
                     </div>
-                    <div className="px-2">{item.text}</div>
+                    <div className="hidden xl:flex xl:items-center px-2">
+                      {item.text}
+                    </div>
                   </div>
                 </Link>
               </div>
             ))}
-            <button className="rounded-full p-2 w-full bg-blue-500">
+            <button className="max-xl:hidden rounded-full p-2 w-full bg-blue-500 hover:bg-opacity-80 transition duration-200">
               Post
+            </button>
+
+            {/* different post button for smaller view */}
+            <button className="xl:hidden flex items-center w-fit p-2">
+              <div className="rounded-full bg-blue-500 p-2 hover:bg-opacity-80 transition duration-200">
+                <FaFeatherAlt size={20} />
+              </div>
             </button>
           </div>
         </div>
-        <div className="self-center mb-2">
+        <div className="flex flex-col self-end xl:self-center mb-2">
           <Logout />
-          <div className="rounded-full hover:bg-white/20 p-2 mb-3">
+          <div className="self-center rounded-full w-fit hover:bg-white/20 p-2 mb-3">
             <div className="grid gap-2 grid-flow-col items-center">
               <Image
                 src={user?.user_metadata.avatar_url}
@@ -129,13 +156,13 @@ const LeftSidebar = ({ user }: any) => {
                 alt="Profile Image"
                 className="rounded-full"
               />
-              <div className="flex flex-col">
+              <div className="hidden xl:flex flex-col">
                 <h2 className="">{user?.user_metadata.name}</h2>
                 <h2 className="text-gray-500">
                   @{user?.user_metadata.user_name}
                 </h2>
               </div>
-              <div className="items-center pl-8 pr-1">
+              <div className="max-xl:hidden items-center pl-8 pr-1">
                 <BsThreeDots />
               </div>
             </div>

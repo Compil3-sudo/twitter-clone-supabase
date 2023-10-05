@@ -50,7 +50,7 @@ const FollowButton = ({
       onMouseLeave={handleMouseLeave}
       className={`rounded-full font-medium px-4 py-1 border border-transparent ${
         followStatus
-          ? "text-white w-[106px] bg-transparent border border-gray-600 hover:border-red-700 hover:bg-red-800/30 hover:text-red-600 transition duration-200"
+          ? "text-white w-[106px] bg-transparent border border-slate-600 hover:border-red-700 hover:bg-red-800/30 hover:text-red-600 transition duration-200"
           : "text-black bg-[#EFF3F4]"
       }`}
     >

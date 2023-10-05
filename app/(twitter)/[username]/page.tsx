@@ -144,24 +144,30 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               flex-row - threeDots Message Notify FollowButton) */}
               <div></div>
               {ownProfile ? (
-                <button className="flex justify-start border border-gray-600 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
+                <button className="flex justify-start border border-slate-600 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
                   Set up profile
                 </button>
               ) : (
                 <div className="flex flex-row space-x-2 h-fit">
                   {/* idk what to do here ? open some menu for - share profile ? copy link to profile ? mute / block / report ? */}
-                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
+                  <button className="flex p-1.5 rounded-full border border-slate-600 hover:bg-white/10 transition duration-200">
                     <BsThreeDots size={20} />
                   </button>
+
                   {/* onClick - send direct message */}
-                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
+                  <button className="flex p-1.5 rounded-full border border-slate-600 hover:bg-white/10 transition duration-200">
                     <BiMessageSquareDetail size={20} />
                   </button>
-                  {/* onClick - activate notifications -> send notifications when user posts ? & change icon to filled bell */}
-                  <button className="flex p-1.5 rounded-full border border-gray-600 hover:bg-white/10 transition duration-200">
-                    <IoIosNotificationsOutline size={20} />
-                    {/* <IoIosNotifications size={20} /> */}
-                  </button>
+
+                  {/* only show notifications if user is following this profile - TODO: IMPORTANT - revalidate isUserFollowingProfile after unfollow */}
+                  {isUserFollowingProfile && (
+                    <button className="flex p-1.5 rounded-full border border-slate-600 hover:bg-white/10 transition duration-200">
+                      {/* onClick - activate notifications -> send notifications when user posts ? & change icon to filled bell */}
+                      <IoIosNotificationsOutline size={20} />
+                      {/* <IoIosNotifications size={20} /> */}
+                    </button>
+                  )}
+
                   <FollowButton
                     isUserFollowingProfile={isUserFollowingProfile}
                     userProfileId={userProfile.id}
@@ -182,20 +188,69 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               links & <p>Joined {userProfile.created_at.slice(0, 10)}</p>
             </div>
 
-            <div className="flex flex-row space-x-4">
-              <h2>{following ? following.length : 0} Following</h2>
-              <h2>{followers ? followers.length : 0} Followers</h2>
+            <div className="flex flex-row space-x-6">
+              {/* TODO: onClick show following */}
+              <button className="flex flex-row space-x-1">
+                <span className="font-semibold">
+                  {following ? following.length : 0}
+                </span>
+                <span className="flex text-gray-500 items-center">
+                  Following
+                </span>
+              </button>
+
+              {/* TODO: onClick show followers */}
+              <button className="flex flex-row space-x-1">
+                <span className="font-semibold">
+                  {followers ? followers.length : 0}
+                </span>
+                <span className="flex text-gray-500 items-center">
+                  Followers
+                </span>
+              </button>
             </div>
 
             {!ownProfile && (
+              // on click show list of common followers
               <div>
                 {commonFollowers.length === 0 ? (
-                  <h2>Not follwed by anyone you're following</h2>
+                  <h2 className="text-gray-500 text-sm">
+                    Not follwed by anyone you're following
+                  </h2>
                 ) : (
-                  <h2>Followed by ... and x others you follow</h2>
+                  <button className="text-gray-500 text-sm hover:underline transition duration-200">
+                    Followed by ... and x others you follow
+                  </button>
                 )}
               </div>
             )}
+          </div>
+
+          <div className="flex flex-row border-b justify-evenly">
+            {/* only activate border on click & active tab */}
+            {/* inactive tabs are text-gray-500 */}
+            <div className="flex w-full justify-center hover:bg-white/10">
+              {/* includes reposts */}
+              <button className="border-blue-500 border-b-4 py-4">Posts</button>
+            </div>
+
+            <div className="flex w-full justify-center text-gray-500 group hover:bg-white/10">
+              <button className="group-hover:border-blue-500 border-transparent border-b-4 py-4">
+                Replies
+              </button>
+            </div>
+
+            <div className="flex w-full justify-center text-gray-500 group hover:bg-white/10">
+              <button className="group-hover:border-blue-500 border-transparent border-b-4 py-4">
+                Media
+              </button>
+            </div>
+
+            <div className="flex w-full justify-center text-gray-500 group hover:bg-white/10">
+              <button className="group-hover:border-blue-500 border-transparent border-b-4 py-4">
+                Likes
+              </button>
+            </div>
           </div>
         </div>
 
