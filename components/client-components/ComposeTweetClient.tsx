@@ -1,13 +1,9 @@
 "use client";
 
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
-// import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const ComposeTweetClient = ({ user, serverAction }: any) => {
-  // const supabase = createClientComponentClient();
-
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
   const tweetMaxLength = 280;
   const characterLimit = 350;
@@ -62,12 +58,6 @@ const ComposeTweetClient = ({ user, serverAction }: any) => {
       tweetTextRef.current.value !== "" &&
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
-      // const { error } = await supabase.from("tweets").insert({
-      //   user_id: user?.id,
-      //   text: tweetTextRef.current!.value,
-      // });
-
-      // if (error) console.log(error);
       try {
         const response = await serverAction(data);
 

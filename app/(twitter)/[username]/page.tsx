@@ -1,14 +1,12 @@
+import ArrowHeader from "@/components/client-components/ArrowHeader";
 import FollowButton from "@/components/client-components/FollowButton";
 import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { VscArrowLeft } from "react-icons/vsc";
-// import { useParams } from "next/navigation";
 
 // TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
 // nextjs seems to make a static page => currently changes only occurr after refresh
@@ -114,19 +112,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     <>
       <div className="flex flex-col items-center">
         {/* PROFILE HEADER */}
-        {/* onClick navigate back to top */}
-        <div className="z-10 top-0 sticky flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
-          <div className="p-2 hover:bg-white/10 rounded-full my-auto mx-2">
-            {/* onClick navigate one page back ../ */}
-            <VscArrowLeft size={20} />
-          </div>
-          <div className="flex flex-col px-6 py-1 font-medium">
-            <h2 className="text-xl">{userProfile.name}</h2>
-            <p className="text-gray-500 text-sm">
-              {numberOfPosts} {numberOfPosts === 1 ? "post" : "posts"}
-            </p>
-          </div>
-        </div>
+        <ArrowHeader title={userProfile.name} numberOfPosts={numberOfPosts} />
         {/* PROFILE HEADER */}
         <div className="flex flex-col w-full">
           <div className="relative h-48 bg-slate-600 w-full">

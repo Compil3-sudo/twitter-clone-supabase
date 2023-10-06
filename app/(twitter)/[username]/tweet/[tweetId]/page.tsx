@@ -3,6 +3,8 @@ import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import ComposeReply from "@/components/client-components/ComposeReply";
+import ArrowHeader from "@/components/client-components/ArrowHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -59,10 +61,12 @@ const TweetPage = async ({
 
   return (
     <>
-      <div className="p-10">
-        <h1>Tweet view page.</h1>
-      </div>
+      {/* POST HEADER */}
+      <ArrowHeader title="Post" />
+      {/* POST HEADER */}
       <Tweet user={user} tweet={mappedTweet} />
+      <h2>add bookmark somewhere</h2>
+      <ComposeReply user={user} tweet={tweet} />
       {tweetReplies.data?.map((reply) => (
         <div key={reply.id} className="px-10">
           <p className="py-2">

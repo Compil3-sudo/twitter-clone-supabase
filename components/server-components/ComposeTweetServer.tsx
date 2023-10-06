@@ -14,7 +14,6 @@ const ComposeTweetServer = async ({ user }: any) => {
 
     const supabase = createServerActionClient({ cookies });
 
-    // try {
     // TODO: validate insert - tweet content
 
     const { data, error } = await supabase.from("tweets").insert({
@@ -25,10 +24,6 @@ const ComposeTweetServer = async ({ user }: any) => {
     if (error) {
       console.log(error);
     }
-
-    // } catch (error) {
-    //   console.log(error);
-    // }
 
     revalidatePath("/home");
     return { data, error };
