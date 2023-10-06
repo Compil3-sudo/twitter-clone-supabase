@@ -22,8 +22,8 @@ export default async function Home() {
   const { data, error } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(*)")
-    .order("created_at", { ascending: false });
-  // .limit(10);
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   const tweets = data?.map((tweet: any) => ({
     ...tweet,
@@ -48,7 +48,7 @@ export default async function Home() {
           <Tweet key={tweet.id} user={user} tweet={tweet} />
         ))}
       </div>
-      {/* <InfiniteFeed user={user} firstTweetsPage={tweets} /> */}
+      <InfiniteFeed user={user} firstTweetsPage={tweets} />
     </>
   );
 }
