@@ -68,6 +68,7 @@ const ComposeTweetClient = ({ user, serverAction }: any) => {
       // });
 
       // if (error) console.log(error);
+      console.log("postTweet function from compose tweet client");
 
       try {
         const response = await serverAction(data);

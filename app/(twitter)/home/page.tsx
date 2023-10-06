@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import InfiniteFeed from "@/components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
+import Tweet from "@/components/client-components/Tweet";
 
 export const dynamic = "force-dynamic";
 
@@ -21,8 +22,8 @@ export default async function Home() {
   const { data, error } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(*)")
-    .order("created_at", { ascending: false })
-    .limit(10);
+    .order("created_at", { ascending: false });
+  // .limit(10);
 
   const tweets = data?.map((tweet: any) => ({
     ...tweet,
@@ -42,7 +43,12 @@ export default async function Home() {
     <>
       <MainHeader />
       <ComposeTweetServer user={user} />
-      <InfiniteFeed user={user} firstTweetsPage={tweets} />
+      <div className="flex flex-col items-center">
+        {tweets?.map((tweet: any) => (
+          <Tweet key={tweet.id} user={user} tweet={tweet} />
+        ))}
+      </div>
+      {/* <InfiniteFeed user={user} firstTweetsPage={tweets} /> */}
     </>
   );
 }
