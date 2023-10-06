@@ -68,11 +68,8 @@ const ComposeTweetClient = ({ user, serverAction }: any) => {
       // });
 
       // if (error) console.log(error);
-
       try {
         const response = await serverAction(data);
-
-        console.log(response);
 
         tweetTextRef.current.value = "";
         if (response?.error) {

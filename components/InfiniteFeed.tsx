@@ -14,24 +14,20 @@ const getPagination = (page: number, size: number) => {
 };
 
 const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
-  // const [tweets, setTweets] = useState<any[]>(firstTweetsPage);
-  const [tweets, setTweets] = useState<any[]>([]);
+  const [tweets, setTweets] = useState<any[]>(firstTweetsPage);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const limit = 10; // Number of tweets to load per page
   const supabase = createClientComponentClient();
   const { from, to } = getPagination(page, limit);
 
-  const help = firstTweetsPage.map((tweet: any) => tweet.text);
-  const help2 = tweets.map((tweet: any) => tweet.text);
-
-  console.log("infinite feed client - firstTweetsPage: ", help);
-  console.log("infinite feed client - tweets State: ", help2);
-
-  useEffect(() => {
-    // Whenever `firstTweetsPage` prop changes, update the `tweets` state to match it.
+  // the initial state is firstTweetsPage
+  // this does not update when a new tweet is submitted for some reason
+  // keep track of last tweet => reset initial state
+  const lastTweet = firstTweetsPage[0];
+  if (lastTweet != tweets[0]) {
     setTweets(firstTweetsPage);
-  }, [firstTweetsPage]);
+  }
 
   useEffect(() => {
     const fetchTweets = async () => {
@@ -60,6 +56,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
         }
       }
     };
+    console.log("first");
 
     fetchTweets();
   }, [page]);

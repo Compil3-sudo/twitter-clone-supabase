@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import InfiniteFeed from "@/components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
+import Tweet from "@/components/client-components/Tweet";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,11 @@ export default async function Home() {
     <>
       <MainHeader />
       <ComposeTweetServer user={user} />
+      {/* <div className="flex flex-col items-center">
+        {tweets?.map((tweet: any) => (
+          <Tweet key={tweet.id} user={user} tweet={tweet} />
+        ))}
+      </div> */}
       <InfiniteFeed user={user} firstTweetsPage={tweets} />
     </>
   );
