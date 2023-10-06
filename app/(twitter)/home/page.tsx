@@ -33,6 +33,9 @@ export default async function Home() {
     likes: tweet.likes.length,
   }));
 
+  const help = tweets?.map((tweet) => tweet.text);
+  console.log("Home server: ", help);
+
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
   // /username/tweet/[tweetId]
