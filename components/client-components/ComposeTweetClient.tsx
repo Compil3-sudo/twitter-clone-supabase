@@ -1,12 +1,13 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-const ComposeTweet = ({ user }: any) => {
-  const supabase = createClientComponentClient();
+const ComposeTweetClient = ({ user, serverAction }: any) => {
+  // const supabase = createClientComponentClient();
+
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
   const tweetMaxLength = 280;
   const characterLimit = 350;
@@ -55,20 +56,31 @@ const ComposeTweet = ({ user }: any) => {
     }
   };
 
-  const postTweet = async () => {
+  const postTweet = async (data: FormData) => {
     if (
       tweetTextRef.current &&
       tweetTextRef.current.value !== "" &&
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
-      const { error } = await supabase.from("tweets").insert({
-        user_id: user?.id,
-        text: tweetTextRef.current!.value,
-      });
+      // const { error } = await supabase.from("tweets").insert({
+      //   user_id: user?.id,
+      //   text: tweetTextRef.current!.value,
+      // });
 
-      if (error) console.log(error);
+      // if (error) console.log(error);
 
-      tweetTextRef.current.value = "";
+      try {
+        const response = await serverAction(data);
+
+        console.log(response);
+
+        tweetTextRef.current.value = "";
+        if (response?.error) {
+          console.log(response.error.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -85,13 +97,17 @@ const ComposeTweet = ({ user }: any) => {
           />
         </div>
 
-        <div className="flex flex-col w-full flex-grow px-2 pt-2">
+        <form
+          action={postTweet}
+          className="flex flex-col w-full flex-grow px-2 pt-2"
+        >
           <div className="flex flex-col w-full">
             <div className="flex flex-col border-b">
               <textarea
                 ref={tweetTextRef}
                 onChange={handleChange}
                 maxLength={characterLimit}
+                name="tweetText"
                 // add invisible scrollbar
                 className="bg-transparent border-none outline-none resize-none pt-2"
                 placeholder="What is happening?!"
@@ -107,18 +123,19 @@ const ComposeTweet = ({ user }: any) => {
                 )}
 
                 <button
+                  type="submit"
                   className="rounded-full bg-blue-500 py-2 px-4"
-                  onClick={postTweet}
+                  // onClick={postTweet}
                 >
                   Post
                 </button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
 };
 
-export default ComposeTweet;
+export default ComposeTweetClient;

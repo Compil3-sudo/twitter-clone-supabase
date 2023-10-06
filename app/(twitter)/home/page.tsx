@@ -2,6 +2,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import InfiniteFeed from "@/components/InfiniteFeed";
+import MainHeader from "@/components/client-components/MainHeader";
+import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +40,8 @@ export default async function Home() {
 
   return (
     <>
+      <MainHeader />
+      <ComposeTweetServer user={user} />
       <InfiniteFeed user={user} firstTweetsPage={tweets} />
     </>
   );

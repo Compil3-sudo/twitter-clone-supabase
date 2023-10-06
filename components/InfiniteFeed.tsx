@@ -1,8 +1,6 @@
 "use client";
 
-import ComposeTweet from "@/components/client-components/ComposeTweet";
 import Tweet from "@/components/client-components/Tweet";
-import MainHeader from "@/components/client-components/MainHeader";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -62,8 +60,6 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
 
   return (
     <>
-      <MainHeader />
-      <ComposeTweet user={user} />
       {/* TWEETS INFINITE FEED */}
       <div className="flex flex-col items-center">
         <div className="w-full">
