@@ -21,6 +21,14 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
   const supabase = createClientComponentClient();
   const { from, to } = getPagination(page, limit);
 
+  // the initial state is firstTweetsPage
+  // this does not update when a new tweet is submitted for some reason
+  // keep track of last tweet => reset initial state
+  const lastTweet = firstTweetsPage[0];
+  if (lastTweet != tweets[0]) {
+    setTweets(firstTweetsPage);
+  }
+
   useEffect(() => {
     const fetchTweets = async () => {
       const { data, error } = await supabase
@@ -48,6 +56,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
         }
       }
     };
+    console.log("first");
 
     fetchTweets();
   }, [page]);

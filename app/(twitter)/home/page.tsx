@@ -43,11 +43,11 @@ export default async function Home() {
     <>
       <MainHeader />
       <ComposeTweetServer user={user} />
-      <div className="flex flex-col items-center">
+      {/* <div className="flex flex-col items-center">
         {tweets?.map((tweet: any) => (
           <Tweet key={tweet.id} user={user} tweet={tweet} />
         ))}
-      </div>
+      </div> */}
       <InfiniteFeed user={user} firstTweetsPage={tweets} />
     </>
   );
