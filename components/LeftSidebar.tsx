@@ -27,15 +27,18 @@ type NavigationItem = {
 };
 
 const LeftSidebar = ({ user }: { user: Profile }) => {
-  const [activeNav, setActiveNav] = useState("Home");
   const path = usePathname();
+  const [activeNav, setActiveNav] = useState(
+    path.split("/")[1].toLocaleLowerCase()
+  );
+
   const navigationTabs = [
     "home",
     "explore",
     "notifications",
     "messages",
     "bookmarks",
-    user.username,
+    user.username.toLocaleLowerCase(),
   ];
 
   const navigationList: NavigationItem[] = [
@@ -88,9 +91,11 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
   ];
 
   useEffect(() => {
-    const navigationTab = path.split("/")[1];
+    const navigationTab = path.split("/")[1].toLocaleLowerCase();
     if (!navigationTabs.includes(navigationTab)) {
       setActiveNav("");
+    } else {
+      setActiveNav(navigationTab);
     }
   }, [path]);
 
@@ -102,11 +107,6 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
             {navigationList.map((item) => (
               <div
                 key={item.text}
-                onClick={() =>
-                  item.text === ""
-                    ? setActiveNav("Home") // if you click on Logo => activate Home
-                    : setActiveNav(item.text)
-                }
                 className="px-4 py-2 rounded-full hover:bg-white/20 transition duration-200"
               >
                 {item.logo && (
@@ -124,7 +124,15 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
                 >
                   <div className="flex items-center">
                     <div>
-                      {item.text === activeNav ? item.iconFill : item.icon}
+                      {item.text === "Profile"
+                        ? user.username.toLocaleLowerCase() ===
+                          activeNav.toLocaleLowerCase()
+                          ? item.iconFill
+                          : item.icon
+                        : item.text.toLocaleLowerCase() ===
+                          activeNav.toLocaleLowerCase()
+                        ? item.iconFill
+                        : item.icon}
                     </div>
                     <div className="hidden xl:flex xl:items-center px-2">
                       {item.text}
