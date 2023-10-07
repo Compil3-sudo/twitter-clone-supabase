@@ -18,7 +18,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const limit = 10; // Number of tweets to load per page
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const { from, to } = getPagination(page, limit);
 
   // the initial state is firstTweetsPage
@@ -41,10 +41,10 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
       if (error) {
         console.error("Error fetching tweets:", error);
       } else {
-        const newTweets = data?.map((tweet: any) => ({
+        const newTweets = data?.map((tweet) => ({
           ...tweet,
           user_has_liked: !!tweet.likes.find(
-            (like: any) => like.user_id === user?.id
+            (like) => like.user_id === user?.id
           ),
           likes: tweet.likes.length,
         }));
@@ -78,7 +78,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
           >
-            {tweets.map((tweet: any) => (
+            {tweets.map((tweet) => (
               <Tweet key={tweet.id} user={user} tweet={tweet} />
             ))}
           </InfiniteScroll>

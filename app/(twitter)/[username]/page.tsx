@@ -2,6 +2,7 @@ import ArrowHeader from "@/components/client-components/ArrowHeader";
 import FollowButton from "@/components/client-components/FollowButton";
 import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { BiMessageSquareDetail } from "react-icons/bi";
@@ -11,7 +12,15 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 // TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
 // nextjs seems to make a static page => currently changes only occurr after refresh
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
+
+  const {
+    data: { user: currentUser },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  // user must be logged in to see profile pages
+  if (!currentUser) redirect("/");
 
   const { data: userProfile, error } = await supabase
     .from("profiles")
@@ -38,11 +47,6 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     );
   }
 
-  const {
-    data: { user: currentUser },
-    error: userError,
-  } = await supabase.auth.getUser();
-
   const { data: following, error: followingError } = await supabase
     .from("followers")
     .select("*")
@@ -54,7 +58,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     .eq("followed_id", userProfile.id);
 
   const ownProfile =
-    currentUser?.user_metadata.user_name === userProfile.username;
+    currentUser.user_metadata.user_name === userProfile.username;
 
   let isUserFollowingProfile;
   let commonFollowers = [];
@@ -64,7 +68,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     const { data: userFollowing, error: userFollowingError } = await supabase
       .from("followers")
       .select("*")
-      .eq("follower_id", currentUser?.id);
+      .eq("follower_id", currentUser.id);
 
     // the !! transforms it from object/undefined to true/false
     isUserFollowingProfile = !!userFollowing?.find(
@@ -101,7 +105,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const profileTweets = data?.map((tweet: any) => ({
     ...tweet,
     user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === currentUser?.id
+      (like: any) => like.user_id === currentUser.id
     ),
     likes: tweet.likes.length,
   }));
@@ -157,7 +161,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
                   <FollowButton
                     isUserFollowingProfile={isUserFollowingProfile}
                     userProfileId={userProfile.id}
-                    currentUserId={currentUser?.id}
+                    currentUserId={currentUser.id}
                   />
                 </div>
               )}
@@ -253,7 +257,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 export default ProfilePage;
 
 // export async function generateStaticParams() {
-//   const supabase = createServerComponentClient({ cookies });
+//   const supabase = createServerComponentClient<Database>({ cookies });
 // const params = useParams();
 // console.log(params);
 

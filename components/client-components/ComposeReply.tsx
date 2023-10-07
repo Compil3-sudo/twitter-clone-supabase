@@ -4,7 +4,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React, { useRef } from "react";
 
 const ComposeReply = ({ user, tweet }: any) => {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const replyTextRef = useRef<HTMLInputElement>(null);
   const replyMaxLength = 280;
 
@@ -15,7 +15,7 @@ const ComposeReply = ({ user, tweet }: any) => {
       replyTextRef.current.value.length <= replyMaxLength
     ) {
       const { error } = await supabase.from("replies").insert({
-        user_id: user?.id,
+        user_id: user.id,
         tweet_id: tweet.id,
         text: replyTextRef.current!.value,
       });

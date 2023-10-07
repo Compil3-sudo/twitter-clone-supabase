@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const username = String(formData.get("username"));
   const name = String(formData.get("name"));
   const password = String(formData.get("password"));
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createRouteHandlerClient<Database>({ cookies });
 
   // IMPORTANT: TODO: do NOT allow users to try to sign-up with email, when they already signed-up with github
   // ^ why does this not throw an error ?

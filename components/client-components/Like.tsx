@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Like = ({ user, tweet }: any) => {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const [userHasLiked, setUserHasLiked] = useState(tweet.user_has_liked);
   const [likesCount, setLikesCount] = useState(tweet.likes);
 

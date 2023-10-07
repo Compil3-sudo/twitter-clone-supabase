@@ -12,7 +12,7 @@ const ComposeTweetServer = async ({ user }: any) => {
     const tweetText = formData.get("tweetText"); // textArea name
     if (!tweetText) return;
 
-    const supabase = createServerActionClient({ cookies });
+    const supabase = createServerActionClient<Database>({ cookies });
 
     // TODO: validate insert - tweet content
 

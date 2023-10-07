@@ -10,7 +10,7 @@ import { BsThreeDots } from "react-icons/bs";
 export const dynamic = "force-dynamic";
 
 const RightSidebar = async () => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { user },

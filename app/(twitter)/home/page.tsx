@@ -8,7 +8,7 @@ import ComposeTweetServer from "@/components/server-components/ComposeTweetServe
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { user },
@@ -24,11 +24,9 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const tweets = data?.map((tweet: any) => ({
+  const tweets = data?.map((tweet) => ({
     ...tweet,
-    user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === user?.id
-    ),
+    user_has_liked: !!tweet.likes.find((like) => like.user_id === user?.id),
     likes: tweet.likes.length,
   }));
 

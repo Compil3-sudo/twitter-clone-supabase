@@ -8,7 +8,7 @@ import Messages from "./messages";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Login() {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
 
   async function signInWithGitHub() {
     const { error } = await supabase.auth.signInWithOAuth({

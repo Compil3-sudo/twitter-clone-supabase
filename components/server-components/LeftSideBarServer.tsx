@@ -4,8 +4,8 @@ import LeftSidebar from "../LeftSidebar";
 
 export const dynamic = "force-dynamic";
 
-const LeftSideBarServer = async () => {
-  const supabase = createServerComponentClient({ cookies });
+const LeftSidebarServer = async () => {
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { user },
@@ -14,4 +14,4 @@ const LeftSideBarServer = async () => {
   return <LeftSidebar user={user} />;
 };
 
-export default LeftSideBarServer;
+export default LeftSidebarServer;

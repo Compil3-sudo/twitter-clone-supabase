@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import NestedRepliesClient from "../client-components/NestedRepliesClient";
 
 const NestedRepliesServer = async ({ parentReply }: any) => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const { data } = await supabase
     .from("replies")

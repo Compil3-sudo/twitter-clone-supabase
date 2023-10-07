@@ -8,7 +8,7 @@ const FollowButton = ({
   currentUserId,
   isUserFollowingProfile,
 }: any) => {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const [followStatus, setFollowStatus] = useState(isUserFollowingProfile);
   const [isHovering, setIsHovering] = useState(false);
 

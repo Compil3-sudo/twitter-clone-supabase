@@ -13,7 +13,7 @@ const TweetPage = async ({
 }: {
   params: { username: string; tweetId: string };
 }) => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const username = params.username;
   const tweetId = params.tweetId;
@@ -46,9 +46,7 @@ const TweetPage = async ({
 
   const mappedTweet = {
     ...tweet,
-    user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === user?.id
-    ),
+    user_has_liked: !!tweet.likes.find((like) => like.user_id === user?.id),
     likes: tweet.likes.length,
   };
 
@@ -81,9 +79,10 @@ const TweetPage = async ({
             {reply.text} <button className="text-green-500">REPLYBUTTON</button>
           </p>
 
-          {reply.nestedReplies.length > 0 && (
+          {/* {reply.nestedReplies.length > 0 && (
             <NestedRepliesServer parentReply={reply} />
-          )}
+          )} */}
+          {reply.nestedReplies && <NestedRepliesServer parentReply={reply} />}
         </div>
       ))}
     </>

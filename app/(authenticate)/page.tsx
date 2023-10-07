@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { session },
