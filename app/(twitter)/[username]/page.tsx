@@ -60,7 +60,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const ownProfile =
     currentUser.user_metadata.user_name === userProfile.username;
 
-  let isUserFollowingProfile;
+  let isUserFollowingProfile = false;
   let commonFollowers = [];
 
   if (!ownProfile) {
@@ -98,14 +98,14 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   // I think the author is bugged...need to fix it
   const { data, error: userTweetsError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(*)")
+    .select("*, author: profiles(*), likes(user_id)")
     .eq("user_id", userProfile.id)
     .order("created_at", { ascending: false });
 
-  const profileTweets = data?.map((tweet: any) => ({
+  const profileTweets = data?.map((tweet) => ({
     ...tweet,
     user_has_liked: !!tweet.likes.find(
-      (like: any) => like.user_id === currentUser.id
+      (like) => like.user_id === currentUser.id
     ),
     likes: tweet.likes.length,
   }));
@@ -246,7 +246,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
         <div className="flex flex-col items-center w-full">
           {profileTweets?.map((tweet: any) => (
-            <Tweet key={tweet.id} user={currentUser} tweet={tweet} />
+            <Tweet key={tweet.id} userId={currentUser.id} tweet={tweet} />
           ))}
         </div>
       </div>

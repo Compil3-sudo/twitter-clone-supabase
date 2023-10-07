@@ -4,11 +4,15 @@ import { useState } from "react";
 
 type Reply = {
   id: string;
+  parent_reply_id: string | null;
   text: string;
+  tweet_id: string;
+  user_id: string;
+  nestedReplies: Reply | null;
 };
 
 type NestedRepliesClientProps = {
-  replies: Reply[];
+  replies: Reply[] | null;
 };
 
 const NestedRepliesClient = ({ replies }: any) => {

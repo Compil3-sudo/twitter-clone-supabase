@@ -5,12 +5,12 @@ import ComposeTweetClient from "../client-components/ComposeTweetClient";
 
 export const dynamic = "force-dynamic";
 
-const ComposeTweetServer = async ({ user }: any) => {
+const ComposeTweetServer = async ({ user }: { user: Profile }) => {
   const submitTweet = async (formData: FormData) => {
     "use server";
 
     const tweetText = formData.get("tweetText"); // textArea name
-    if (!tweetText) return;
+    if (!tweetText) return null;
 
     const supabase = createServerActionClient<Database>({ cookies });
 
@@ -26,7 +26,7 @@ const ComposeTweetServer = async ({ user }: any) => {
     }
 
     revalidatePath("/home");
-    return { data, error };
+    return error;
   };
 
   return <ComposeTweetClient user={user} serverAction={submitTweet} />;

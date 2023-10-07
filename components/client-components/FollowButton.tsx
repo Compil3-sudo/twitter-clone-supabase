@@ -7,7 +7,11 @@ const FollowButton = ({
   userProfileId,
   currentUserId,
   isUserFollowingProfile,
-}: any) => {
+}: {
+  userProfileId: string;
+  currentUserId: string;
+  isUserFollowingProfile: boolean;
+}) => {
   const supabase = createClientComponentClient<Database>();
   const [followStatus, setFollowStatus] = useState(isUserFollowingProfile);
   const [isHovering, setIsHovering] = useState(false);
@@ -24,20 +28,18 @@ const FollowButton = ({
     if (followStatus) {
       // the currentUser wants to UN-follow the userProfile
       setFollowStatus(false);
-      const { data, error } = await supabase.from("followers").delete().match({
+      const { error } = await supabase.from("followers").delete().match({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
-      // console.log(data);
       if (error) console.log(error);
     } else {
       // the currentUser wants to follow the userProfile
       setFollowStatus(true);
-      const { data, error } = await supabase.from("followers").insert({
+      const { error } = await supabase.from("followers").insert({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
-      // console.log(data);
       if (error) console.log(error);
     }
   };

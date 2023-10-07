@@ -24,8 +24,9 @@ const TweetPage = async ({
     .eq("username", username)
     .single();
 
-  if (userError) {
+  if (userError || !user) {
     console.log(userError);
+    throw Error("User does not exist");
   }
 
   // TODO: ONLY PASS USER'S USERNAME AND ID
@@ -34,7 +35,7 @@ const TweetPage = async ({
 
   const { data: tweet, error: tweetError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(*)")
+    .select("*, author: profiles(*), likes(user_id)")
     .eq("id", tweetId)
     .single();
 
@@ -46,7 +47,8 @@ const TweetPage = async ({
 
   const mappedTweet = {
     ...tweet,
-    user_has_liked: !!tweet.likes.find((like) => like.user_id === user?.id),
+    author: tweet.author!,
+    user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
     likes: tweet.likes.length,
   };
 
@@ -62,9 +64,10 @@ const TweetPage = async ({
       {/* POST HEADER */}
       <ArrowHeader title="Post" />
       {/* POST HEADER */}
-      <Tweet user={user} tweet={mappedTweet} />
+      {/* TODO IMPORTANT: FIX REDIRECT TO PROFILE FROM TWEET */}
+      <Tweet userId={user.id} tweet={mappedTweet} />
       <h2>add bookmark somewhere</h2>
-      <ComposeReply user={user} tweet={tweet} />
+      <ComposeReply userId={user.id} tweet={mappedTweet} />
       {tweetReplies.data?.map((reply) => (
         <div key={reply.id} className="px-10">
           <p className="py-2">

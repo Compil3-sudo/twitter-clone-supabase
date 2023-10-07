@@ -15,7 +15,8 @@ const RightSidebar = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const userId = user?.id;
+  if (!user) return;
+  const userId = user.id;
 
   // TODO: improve algorithm suggestion, based on mutual connections
   // could add other factors ?

@@ -10,8 +10,16 @@ const LeftSidebarServer = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  if (!user) return;
 
-  return <LeftSidebar user={user} />;
+  const { data: currentUserProfile } = await supabase
+    .from("profiles")
+    .select()
+    .eq("id", user.id)
+    .single();
+  if (!currentUserProfile) return;
+
+  return <LeftSidebar user={currentUserProfile} />;
 };
 
 export default LeftSidebarServer;

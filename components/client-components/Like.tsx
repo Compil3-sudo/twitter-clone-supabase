@@ -4,28 +4,34 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
-const Like = ({ user, tweet }: any) => {
+const Like = ({
+  userId,
+  tweet,
+}: {
+  userId: string;
+  tweet: TweetWithAuthor;
+}) => {
   const supabase = createClientComponentClient<Database>();
   const [userHasLiked, setUserHasLiked] = useState(tweet.user_has_liked);
   const [likesCount, setLikesCount] = useState(tweet.likes);
 
   const toggleLikeTweet = async () => {
     if (userHasLiked) {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("likes")
         .delete()
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("tweet_id", tweet.id);
 
       if (error) {
         console.log(error);
       } else {
         setUserHasLiked(false);
-        setLikesCount((prevCount: any) => prevCount - 1);
+        setLikesCount((prevCount) => prevCount - 1);
       }
     } else {
       const { error } = await supabase.from("likes").insert({
-        user_id: user.id,
+        user_id: userId,
         tweet_id: tweet.id,
       });
 
@@ -33,7 +39,7 @@ const Like = ({ user, tweet }: any) => {
         console.log(error);
       } else {
         setUserHasLiked(true);
-        setLikesCount((prevCount: any) => prevCount + 1);
+        setLikesCount((prevCount) => prevCount + 1);
       }
     }
   };

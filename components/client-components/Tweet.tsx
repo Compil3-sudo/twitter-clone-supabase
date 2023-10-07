@@ -10,7 +10,13 @@ import { FiShare } from "react-icons/fi";
 import { IoIosStats } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
-const Tweet = ({ user, tweet }: any) => {
+const Tweet = ({
+  userId,
+  tweet,
+}: {
+  userId: string;
+  tweet: TweetWithAuthor;
+}) => {
   const router = useRouter();
 
   const navigateToTweet = () => {
@@ -109,7 +115,7 @@ const Tweet = ({ user, tweet }: any) => {
               </div>
 
               <div onClick={stopNavigationPropagation}>
-                <Like user={user} tweet={tweet} />
+                <Like userId={userId} tweet={tweet} />
               </div>
 
               <div

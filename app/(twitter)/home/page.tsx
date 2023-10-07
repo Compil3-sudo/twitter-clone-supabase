@@ -18,17 +18,30 @@ export default async function Home() {
     redirect("/");
   }
 
+  // TODO IMPORTANT: make user state management across the entire app
+  // => only fetch currentUser and his profile once after login after session
+  const { data: currentUserProfile } = await supabase
+    .from("profiles")
+    .select()
+    .eq("id", user.id)
+    .single();
+
+  // REMOVE HOTFIX AFTER USER STATE MANAGEMENT
+  if (!currentUserProfile) redirect("/");
+
   const { data, error } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(*)")
+    .select("*, author: profiles(*), likes(user_id)")
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const tweets = data?.map((tweet) => ({
-    ...tweet,
-    user_has_liked: !!tweet.likes.find((like) => like.user_id === user?.id),
-    likes: tweet.likes.length,
-  }));
+  const tweets =
+    data?.map((tweet) => ({
+      ...tweet,
+      author: tweet.author!, // there is no way for a tweet to exist without an author, because eacht tweet has a user_id (:= author's id)
+      user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
+      likes: tweet.likes.length,
+    })) ?? [];
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -39,8 +52,8 @@ export default async function Home() {
   return (
     <>
       <MainHeader />
-      <ComposeTweetServer user={user} />
-      <InfiniteFeed user={user} firstTweetsPage={tweets} />
+      <ComposeTweetServer user={currentUserProfile} />
+      <InfiniteFeed userId={currentUserProfile.id} firstTweetsPage={tweets} />
     </>
   );
 }

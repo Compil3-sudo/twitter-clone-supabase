@@ -1,9 +1,16 @@
 "use client";
 
+import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const ComposeTweetClient = ({ user, serverAction }: any) => {
+const ComposeTweetClient = ({
+  user,
+  serverAction,
+}: {
+  user: Profile;
+  serverAction: (formData: FormData) => Promise<PostgrestError | null>;
+}) => {
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
   const tweetMaxLength = 280;
   const characterLimit = 350;
@@ -59,11 +66,11 @@ const ComposeTweetClient = ({ user, serverAction }: any) => {
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
       try {
-        const response = await serverAction(data);
-
+        const responseError = await serverAction(data);
         tweetTextRef.current.value = "";
-        if (response?.error) {
-          console.log(response.error.message);
+
+        if (responseError) {
+          console.log(responseError.message);
         }
       } catch (error) {
         console.log(error);
@@ -76,7 +83,7 @@ const ComposeTweetClient = ({ user, serverAction }: any) => {
       <div className="flex py-4 px-4 space-x-2 border-b">
         <div className="flex-none">
           <Image
-            src={user.user_metadata.avatar_url}
+            src={user.avatar_url}
             width={40}
             height={40}
             className="rounded-full"

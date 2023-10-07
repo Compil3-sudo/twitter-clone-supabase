@@ -13,8 +13,14 @@ const getPagination = (page: number, size: number) => {
   return { from, to };
 };
 
-const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
-  const [tweets, setTweets] = useState<any[]>(firstTweetsPage);
+const InfiniteFeed = ({
+  userId,
+  firstTweetsPage,
+}: {
+  userId: string;
+  firstTweetsPage: TweetWithAuthor[];
+}) => {
+  const [tweets, setTweets] = useState(firstTweetsPage);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const limit = 10; // Number of tweets to load per page
@@ -33,7 +39,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
     const fetchTweets = async () => {
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(*)")
+        .select("*, author: profiles(*), likes(user_id)")
         .order("created_at", { ascending: false })
         .limit(limit)
         .range(from, to);
@@ -43,9 +49,8 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
       } else {
         const newTweets = data?.map((tweet) => ({
           ...tweet,
-          user_has_liked: !!tweet.likes.find(
-            (like) => like.user_id === user?.id
-          ),
+          author: tweet.author!,
+          user_has_liked: !!tweet.likes.find((like) => like.user_id === userId),
           likes: tweet.likes.length,
         }));
 
@@ -56,7 +61,6 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
         }
       }
     };
-    console.log("first");
 
     fetchTweets();
   }, [page]);
@@ -79,7 +83,7 @@ const InfiniteFeed = ({ user, firstTweetsPage }: any) => {
             loader={<h4>Loading...</h4>}
           >
             {tweets.map((tweet) => (
-              <Tweet key={tweet.id} user={user} tweet={tweet} />
+              <Tweet key={tweet.id} userId={userId} tweet={tweet} />
             ))}
           </InfiniteScroll>
         </div>
