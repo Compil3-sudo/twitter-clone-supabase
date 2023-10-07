@@ -64,7 +64,7 @@ const TweetPage = async ({
       {/* POST HEADER */}
       <ArrowHeader title="Post" />
       {/* POST HEADER */}
-      {/* TODO IMPORTANT: FIX REDIRECT TO PROFILE FROM TWEET */}
+      {/* TODO: OPTIONAL: make tweet view page instead of reusing Tweet component ? */}
       <Tweet userId={user.id} tweet={mappedTweet} />
       <h2>add bookmark somewhere</h2>
       <ComposeReply userId={user.id} tweet={mappedTweet} />

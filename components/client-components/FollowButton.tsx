@@ -50,10 +50,10 @@ const FollowButton = ({
       onClick={toggleFollow}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`rounded-full font-medium px-4 py-1 border border-transparent ${
+      className={`rounded-full font-medium px-4 py-1 border ${
         followStatus
           ? "text-white w-[106px] bg-transparent border border-slate-600 hover:border-red-700 hover:bg-red-800/30 hover:text-red-600 transition duration-200"
-          : "text-black bg-[#EFF3F4]"
+          : "text-black border-transparent bg-[#EFF3F4] hover:bg-opacity-80 transition duration-200"
       }`}
     >
       {followStatus && !isHovering

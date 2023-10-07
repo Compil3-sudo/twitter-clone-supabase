@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FollowButton from "@/components/client-components/FollowButton";
 import { BsThreeDots } from "react-icons/bs";
+import WhoToFollowProfile from "./client-components/WhoToFollowProfile";
 
 export const dynamic = "force-dynamic";
 
@@ -68,36 +69,12 @@ const RightSidebar = async () => {
         </div>
         <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-5">
           <h2 className="p-2 text-lg font-bold">Who to Follow</h2>
-          {followProfiles?.map((followProfile: any) => (
-            <div
+          {followProfiles?.map((followProfile) => (
+            <WhoToFollowProfile
               key={followProfile.id}
-              className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200"
-            >
-              <div className="flex-none my-auto">
-                <Image
-                  src={followProfile.avatar_url}
-                  width={40}
-                  height={40}
-                  alt="Profile Image"
-                  className="rounded-full"
-                />
-              </div>
-              <div className="flex w-full justify-between">
-                <div className="flex flex-col w-full">
-                  <h2 className="hover:underline transition duration-200">
-                    {followProfile.name}
-                  </h2>
-                  <h2 className="text-gray-500">@{followProfile.username}</h2>
-                </div>
-                <div className="flex flex-col w-fit justify-center items-end">
-                  <FollowButton
-                    userProfileId={followProfile.id}
-                    currentUserId={userId}
-                    isUserFollowingProfile={false}
-                  />
-                </div>
-              </div>
-            </div>
+              userId={userId}
+              followProfile={followProfile}
+            />
           ))}
           <Link
             href={"/"}

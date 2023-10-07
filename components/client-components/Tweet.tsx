@@ -20,14 +20,14 @@ const Tweet = ({
   const router = useRouter();
 
   const navigateToTweet = () => {
-    router.push(`${tweet.author.username}/tweet/${tweet.id}`);
+    router.push(`/${tweet.author.username}/tweet/${tweet.id}`);
   };
 
   // should I use nextJs Link component instead ?
   const navigateToUserProfile = (event: React.MouseEvent) => {
     // without this it would redirect to the Tweet view page
     event.stopPropagation(); // Prevent the click event from propagating to the parent div
-    router.push(`${tweet.author.username}`);
+    router.push(`/${tweet.author.username}`);
   };
 
   const stopNavigationPropagation = (event: React.MouseEvent) => {

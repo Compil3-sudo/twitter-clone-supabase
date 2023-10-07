@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { VscArrowLeft } from "react-icons/vsc";
 
 const ArrowHeader = ({
@@ -9,6 +10,8 @@ const ArrowHeader = ({
   title: string;
   numberOfPosts?: number;
 }) => {
+  const router = useRouter();
+
   function scrollToTop(): void {
     window.scrollTo({
       top: 0,
@@ -16,7 +19,7 @@ const ArrowHeader = ({
   }
 
   function navigateBack() {
-    window.history.back();
+    router.back();
   }
 
   return (

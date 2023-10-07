@@ -104,6 +104,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
   const profileTweets = data?.map((tweet) => ({
     ...tweet,
+    author: tweet.author!,
     user_has_liked: !!tweet.likes.find(
       (like) => like.user_id === currentUser.id
     ),
@@ -245,7 +246,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
         </div>
 
         <div className="flex flex-col items-center w-full">
-          {profileTweets?.map((tweet: any) => (
+          {profileTweets?.map((tweet) => (
             <Tweet key={tweet.id} userId={currentUser.id} tweet={tweet} />
           ))}
         </div>
