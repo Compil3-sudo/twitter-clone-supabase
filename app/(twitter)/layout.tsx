@@ -2,6 +2,7 @@ import "../globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import RightSidebar from "@/components/RightSidebar";
+import LeftSidebarServer from "@/components/server-components/LeftSidebarServer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function TwitterLayout({
         className={`${inter.className} h-screen bg-slate-950 text-foreground`}
       >
         <div className="flex">
+          <LeftSidebarServer />
           <main className="flex flex-col max-w-[600px] w-full h-full min-h-screen mx-2 border-l border-r">
             {children}
           </main>
