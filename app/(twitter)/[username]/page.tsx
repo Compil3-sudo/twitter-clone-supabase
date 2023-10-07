@@ -67,7 +67,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     // who is the current user following
     const { data: userFollowing, error: userFollowingError } = await supabase
       .from("followers")
-      .select("*")
+      .select("followed_id")
       .eq("follower_id", currentUser.id);
 
     // the !! transforms it from object/undefined to true/false

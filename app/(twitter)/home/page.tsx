@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import InfiniteFeed from "@/components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
+import InfiniteFeedProvider from "@/components/client-components/InfiniteFeedContext";
 
 export const dynamic = "force-dynamic";
 
@@ -35,13 +36,40 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const tweets =
+  const recentTweets =
     data?.map((tweet) => ({
       ...tweet,
       author: tweet.author!, // there is no way for a tweet to exist without an author, because eacht tweet has a user_id (:= author's id)
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
     })) ?? [];
+
+  // fetch who the user is following
+  const { data: userFollowing } = await supabase
+    .from("followers")
+    .select("followed_id")
+    .eq("follower_id", currentUserProfile.id);
+
+  const userFollowingIds =
+    userFollowing?.map((followingId) => followingId.followed_id) || [];
+
+  // only fetch tweets, where tweet author is followed by currentUser
+  const { data: following, error: followingError } = await supabase
+    .from("tweets")
+    .select("*, author: profiles(*), likes(user_id)")
+    .eq("user_id", userFollowingIds)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const followingTweets =
+    following?.map((tweet) => ({
+      ...tweet,
+      author: tweet.author!, // there is no way for a tweet to exist without an author, because eacht tweet has a user_id (:= author's id)
+      user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
+      likes: tweet.likes.length,
+    })) ?? [];
+
+  // console.log(followingTweets);
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -51,9 +79,18 @@ export default async function Home() {
 
   return (
     <>
-      <MainHeader />
-      <ComposeTweetServer user={currentUserProfile} />
-      <InfiniteFeed userId={currentUserProfile.id} firstTweetsPage={tweets} />
+      <InfiniteFeedProvider>
+        <MainHeader />
+        <ComposeTweetServer user={currentUserProfile} />
+        {recentTweets.length > 0 ? (
+          <InfiniteFeed
+            userId={currentUserProfile.id}
+            firstTweetsPage={recentTweets}
+          />
+        ) : (
+          <h1 className="flex justify-center m-10">No Tweets Available :(</h1>
+        )}
+      </InfiniteFeedProvider>
     </>
   );
 }
