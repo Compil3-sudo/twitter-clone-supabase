@@ -16,23 +16,23 @@ type NestedRepliesClientProps = {
 };
 
 const NestedRepliesClient = ({ replies }: any) => {
-  const [showReplies, setShowReplies] = useState(false);
+  const [showReplies, setShowReplies] = useState(replies.length > 0);
 
   return (
     <>
       {showReplies ? (
-        replies.map((reply: any) => (
-          <div key={reply.id} className="px-8">
-            {reply.text}
-          </div>
-        ))
-      ) : (
         <button
           onClick={() => setShowReplies(!showReplies)}
           className="text-blue-500"
         >
           Show replies
         </button>
+      ) : (
+        replies.map((reply: any) => (
+          <div key={reply.id} className="px-8">
+            {reply.text}
+          </div>
+        ))
       )}
     </>
   );
