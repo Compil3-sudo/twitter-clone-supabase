@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} min-h-screen h-full bg-slate-950 text-[#fff]`}
+        className={`${inter.className} min-h-screen h-full bg-slate-950`} style={{ color: "white" }}
       >
         {children}
       </body>
