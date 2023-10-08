@@ -1,6 +1,7 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const FollowButton = ({
@@ -15,6 +16,7 @@ const FollowButton = ({
   const supabase = createClientComponentClient<Database>();
   const [followStatus, setFollowStatus] = useState(isUserFollowingProfile);
   const [isHovering, setIsHovering] = useState(false);
+  const router = useRouter();
 
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -32,7 +34,12 @@ const FollowButton = ({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
-      if (error) console.log(error);
+
+      if (error) {
+        console.log(error);
+      } else {
+        router.refresh();
+      }
     } else {
       // the currentUser wants to follow the userProfile
       setFollowStatus(true);
@@ -40,7 +47,12 @@ const FollowButton = ({
         follower_id: currentUserId,
         followed_id: userProfileId,
       });
-      if (error) console.log(error);
+
+      if (error) {
+        console.log(error);
+      } else {
+        router.refresh();
+      }
     }
   };
 
