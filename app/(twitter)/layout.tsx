@@ -33,7 +33,7 @@ export default function TwitterLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} min-h-screen h-full bg-slate-950 text-foreground`}
+        className={`${inter.className} min-h-screen h-full bg-slate-950 text-white`}
       >
         <div className="flex">
           <LeftSidebarServer />
