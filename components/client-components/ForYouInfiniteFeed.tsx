@@ -1,19 +1,12 @@
 "use client";
 
-import Tweet from "@/components/client-components/Tweet";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+import { getPagination } from "./InfiniteFeed";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Tweet from "./Tweet";
 
-const getPagination = (page: number, size: number) => {
-  const limit = size ? +size : 3;
-  const from = page ? page * limit : 0;
-  const to = page ? from + size - 1 : size - 1;
-
-  return { from, to };
-};
-
-const InfiniteFeed = ({
+const ForYouInfiniteFeed = ({
   userId,
   firstTweetsPage,
 }: {
@@ -76,16 +69,20 @@ const InfiniteFeed = ({
       {/* TWEETS INFINITE FEED */}
       <div className="flex flex-col items-center">
         <div className="w-full">
-          <InfiniteScroll
-            dataLength={tweets.length}
-            next={loadMoreTweets}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-          >
-            {tweets.map((tweet) => (
-              <Tweet key={tweet.id} userId={userId} tweet={tweet} />
-            ))}
-          </InfiniteScroll>
+          {tweets.length > 0 ? (
+            <InfiniteScroll
+              dataLength={tweets.length}
+              next={loadMoreTweets}
+              hasMore={hasMore}
+              loader={<h4>Loading...</h4>}
+            >
+              {tweets.map((tweet) => (
+                <Tweet key={tweet.id} userId={userId} tweet={tweet} />
+              ))}
+            </InfiniteScroll>
+          ) : (
+            <h1 className="flex justify-center m-10">No Tweets Available :(</h1>
+          )}
         </div>
       </div>
       {/* TWEETS INFINITE FEED */}
@@ -93,4 +90,4 @@ const InfiniteFeed = ({
   );
 };
 
-export default InfiniteFeed;
+export default ForYouInfiniteFeed;

@@ -1,4 +1,5 @@
 "use client";
+
 import { useContext } from "react";
 import {
   InfiniteFeedContext,
@@ -14,7 +15,6 @@ const MainHeader = () => {
   const changeActiveFeed = (tab: (typeof InfiniteFeedTabs)[number]) => {
     changeFeed(tab);
   };
-  console.log(activeFeed);
 
   return (
     <div className="top-0 sticky flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
@@ -24,7 +24,11 @@ const MainHeader = () => {
           <div className="w-1/2 flex justify-center hover:bg-white/10">
             <button
               onClick={() => changeActiveFeed(InfiniteFeedTabs[0])}
-              className="border-blue-500 border-b-4 py-4"
+              className={`${
+                activeFeed === InfiniteFeedTabs[0]
+                  ? "border-blue-500 border-b-4 py-4 font-semibold"
+                  : "text-gray-500 border-b-4 border-transparent"
+              }`}
             >
               For You
             </button>
@@ -32,7 +36,11 @@ const MainHeader = () => {
           <div className="w-1/2 flex justify-center hover:bg-white/10">
             <button
               onClick={() => changeActiveFeed(InfiniteFeedTabs[1])}
-              className="hover:border-blue-500 border-transparent border-b-4 py-4"
+              className={`${
+                activeFeed === InfiniteFeedTabs[1]
+                  ? "border-blue-500 border-b-4 py-4 font-semibold"
+                  : "text-gray-500 border-b-4 border-transparent"
+              }`}
             >
               Following
             </button>

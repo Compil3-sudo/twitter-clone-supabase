@@ -1,7 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import InfiniteFeed from "@/components/InfiniteFeed";
+import InfiniteFeed from "@/components/client-components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
 import InfiniteFeedProvider from "@/components/client-components/InfiniteFeedContext";
@@ -57,7 +57,7 @@ export default async function Home() {
   const { data: following, error: followingError } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(user_id)")
-    .eq("user_id", userFollowingIds)
+    .in("user_id", userFollowingIds)
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -68,8 +68,6 @@ export default async function Home() {
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
     })) ?? [];
-
-  // console.log(followingTweets);
 
   // IMPORTANT:
   // ROUTING: - dynamic tweet page
@@ -82,14 +80,12 @@ export default async function Home() {
       <InfiniteFeedProvider>
         <MainHeader />
         <ComposeTweetServer user={currentUserProfile} />
-        {recentTweets.length > 0 ? (
-          <InfiniteFeed
-            userId={currentUserProfile.id}
-            firstTweetsPage={recentTweets}
-          />
-        ) : (
-          <h1 className="flex justify-center m-10">No Tweets Available :(</h1>
-        )}
+        <InfiniteFeed
+          userId={currentUserProfile.id}
+          firstTweetsPage={recentTweets}
+          firstFollowingTweetsPage={followingTweets}
+          userFollowingIds={userFollowingIds}
+        />
       </InfiniteFeedProvider>
     </>
   );
