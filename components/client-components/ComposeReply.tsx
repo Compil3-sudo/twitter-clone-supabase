@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React, { useRef } from "react";
+import CustomTextArea from "./CustomTextArea";
 
 const ComposeReply = ({
   userId,
@@ -11,7 +12,7 @@ const ComposeReply = ({
   tweet: TweetWithAuthor;
 }) => {
   const supabase = createClientComponentClient<Database>();
-  const replyTextRef = useRef<HTMLInputElement>(null);
+  const replyTextRef = useRef<HTMLTextAreaElement>(null);
   const replyMaxLength = 280;
 
   const sendReply = async () => {
@@ -23,7 +24,7 @@ const ComposeReply = ({
       const { error } = await supabase.from("replies").insert({
         user_id: userId,
         tweet_id: tweet.id,
-        text: replyTextRef.current!.value,
+        text: replyTextRef.current.value,
       });
 
       if (error) console.log(error);
@@ -32,14 +33,13 @@ const ComposeReply = ({
 
   return (
     <>
-      <input
-        ref={replyTextRef}
-        type="text"
-        className="text-black"
-        placeholder="Post your reply"
+      <CustomTextArea
+        formAction={sendReply}
+        txtAreaTextRef={replyTextRef}
+        buttonText="Reply"
+        txtAreaPlaceholder="Post your reply"
+        txtAreaName="replyText"
       />
-
-      <button onClick={sendReply}>REPLY</button>
     </>
   );
 };
