@@ -168,15 +168,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
             </div>
 
             <div className="flex flex-col mb-3">
-              <h2 className="text-lg font-semibold">{userProfile.name}</h2>
+              <h2 className="text-lg font-bold">{userProfile.name}</h2>
               <h2 className="text-gray-500">@{userProfile.username}</h2>
             </div>
 
-            <div>bio ?</div>
+            <span className="text-sm">{userProfile.bio}</span>
 
-            <div>
-              links & <p>Joined {userProfile.created_at.slice(0, 10)}</p>
-            </div>
+            <p className="text-gray-500 text-sm mb-2">
+              Joined {userProfile.created_at.slice(0, 10)}
+            </p>
 
             <div className="flex flex-row space-x-6">
               {/* TODO: onClick show following */}
