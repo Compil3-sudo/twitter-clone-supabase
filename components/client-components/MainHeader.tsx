@@ -21,30 +21,34 @@ const MainHeader = () => {
       <div className="flex flex-col w-full">
         <h1 className="text-lg p-4 font-bold">Home</h1>
         <div className="flex flex-row">
-          <div className="w-1/2 flex justify-center hover:bg-white/10">
-            <button
-              onClick={() => changeActiveFeed(InfiniteFeedTabs[0])}
-              className={`${
+          <button
+            onClick={() => changeActiveFeed(InfiniteFeedTabs[0])}
+            className="w-1/2 flex justify-center hover:bg-white/10"
+          >
+            <div
+              className={`self-center ${
                 activeFeed === InfiniteFeedTabs[0]
                   ? "border-blue-500 border-b-4 py-4 font-semibold"
                   : "text-gray-500 border-b-4 border-transparent"
               }`}
             >
               For You
-            </button>
-          </div>
-          <div className="w-1/2 flex justify-center hover:bg-white/10">
-            <button
-              onClick={() => changeActiveFeed(InfiniteFeedTabs[1])}
-              className={`${
+            </div>
+          </button>
+          <button
+            onClick={() => changeActiveFeed(InfiniteFeedTabs[1])}
+            className="w-1/2 flex justify-center hover:bg-white/10"
+          >
+            <div
+              className={`self-center ${
                 activeFeed === InfiniteFeedTabs[1]
                   ? "border-blue-500 border-b-4 py-4 font-semibold"
                   : "text-gray-500 border-b-4 border-transparent"
               }`}
             >
               Following
-            </button>
-          </div>
+            </div>
+          </button>
         </div>
       </div>
     </div>
