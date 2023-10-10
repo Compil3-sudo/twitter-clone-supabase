@@ -17,7 +17,8 @@ export async function POST(request: Request) {
   // ^ why does this not throw an error ?
 
   const default_avatar_url =
-    "https://tkucuunzwysyuqynjhwt.supabase.co/storage/v1/object/public/avatars/twitter_default_avatar.png";
+    process.env.NEXT_PUBLIC_SUPABASE_URL +
+    "/storage/v1/object/public/avatars/twitter_default_avatar.png";
 
   // async function downloadImage() {
   //   try {

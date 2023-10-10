@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import SetUpProfile from "@/components/client-components/SetUpProfile";
 
 // TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
 // nextjs seems to make a static page => currently changes only occurr after refresh
@@ -135,9 +136,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               flex-row - threeDots Message Notify FollowButton) */}
               <div></div>
               {ownProfile ? (
-                <button className="flex justify-start border border-slate-600 hover:bg-white/10 transition duration-200 rounded-full h-fit py-1 px-4">
-                  Set up profile
-                </button>
+                <SetUpProfile userProfile={userProfile} />
               ) : (
                 <div className="flex flex-row space-x-2 h-fit">
                   {/* idk what to do here ? open some menu for - share profile ? copy link to profile ? mute / block / report ? */}
