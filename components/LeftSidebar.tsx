@@ -105,23 +105,20 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
         <div className="flex flex-col text-xl">
           <div className="flex flex-col items-end xl:items-start m-4 space-y-4">
             {navigationList.map((item) => (
-              <div
+              <Link
                 key={item.text}
-                className="px-4 py-2 rounded-full hover:bg-white/20 transition duration-200"
+                className="w-full"
+                href={`/${
+                  item.text === ""
+                    ? "home"
+                    : item.text === "Profile"
+                    ? user.username
+                    : item.text.toLowerCase()
+                }`}
               >
-                {item.logo && (
-                  <Link href={"/home"}>
-                    <img src={item.logo.src} />
-                  </Link>
-                )}
+                <div className="w-fit px-4 py-2 rounded-full hover:bg-white/20 transition duration-200">
+                  {item.logo && <img src={item.logo.src} />}
 
-                <Link
-                  href={`/${
-                    item.text === "Profile"
-                      ? user.username
-                      : item.text.toLowerCase()
-                  }`}
-                >
                   <div className="flex items-center">
                     <div>
                       {item.text === "Profile"
@@ -138,9 +135,10 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
                       {item.text}
                     </div>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
             ))}
+
             <button className="max-xl:hidden rounded-full p-2 w-full bg-blue-500 hover:bg-opacity-80 transition duration-200">
               Post
             </button>
