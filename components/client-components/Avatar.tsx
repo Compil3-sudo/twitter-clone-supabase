@@ -3,46 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
+import { MdAddAPhoto } from "react-icons/md";
 
 export default function Avatar({
-  uid,
-  url,
+  userId,
+  avatar_url,
   size,
   onUpload,
 }: {
-  uid: string;
-  url: Profile["avatar_url"];
+  userId: Profile["id"];
+  avatar_url: Profile["avatar_url"];
   size: number;
   onUpload: (url: string) => void;
 }) {
   const supabase = createClientComponentClient<Database>();
-  const [avatarUrl, setAvatarUrl] = useState<Profile["avatar_url"]>(url);
   const [uploading, setUploading] = useState(false);
-
-  // useEffect(() => {
-  //   const helper = url.split("/");
-  //   const avatarUrlHelp = helper[helper.length - 1];
-
-  //   async function downloadImage(path: string) {
-  //     try {
-  //       const { data, error } = await supabase.storage
-  //         .from(`avatars`)
-  //         .download(`${uid}/` + path);
-  //       if (error) {
-  //         throw error;
-  //       }
-
-  //       const url = URL.createObjectURL(data);
-  //       setAvatarUrl(url);
-  //     } catch (error) {
-  //       console.log("Error downloading image: ", error);
-  //     }
-  //   }
-
-  //   if (url) {
-  //     downloadImage(avatarUrlHelp);
-  //   }
-  // }, [url, supabase]);
 
   const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (
     event
@@ -54,7 +29,7 @@ export default function Avatar({
         throw new Error("You must select an image to upload.");
       }
 
-      const helper = url.split("/");
+      const helper = avatar_url.split("/");
       const oldAvatar = helper[helper.length - 1];
       const help = oldAvatar.split(".")[0];
       const prevNum = Number(help.split("-")[1]);
@@ -63,13 +38,13 @@ export default function Avatar({
 
       const { error: deleteError } = await supabase.storage
         .from(`avatars`)
-        .remove([`${uid}/${oldAvatar}`]);
+        .remove([`${userId}/${oldAvatar}`]);
 
       if (deleteError) throw deleteError;
 
       const file = event.target.files[0];
       const fileExt = file.name.split(".").pop();
-      const filePath = `${uid}/avatar-${random}.${fileExt}`;
+      const filePath = `${userId}/avatar-${random}.${fileExt}`;
 
       let { error: uploadError } = await supabase.storage
         .from(`avatars`)
@@ -91,38 +66,36 @@ export default function Avatar({
   };
 
   return (
-    <div>
-      {url ? (
-        <Image
-          width={size}
-          height={size}
-          src={url}
-          alt="Avatar"
-          className="avatar image"
-          style={{ height: size, width: size }}
-        />
-      ) : (
-        <div
-          className="avatar no-image"
-          style={{ height: size, width: size }}
-        />
-      )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? "Uploading ..." : "Upload"}
+    <>
+      <h1 className="text-3xl font-bold">Pick a profile picture</h1>
+      <p className="text-gray-500 mb-5">
+        Have a favorite selfie? Upload it now.
+      </p>
+      <div className="flex justify-center align-middle my-16">
+        <label
+          htmlFor="addAvatar"
+          className="absolute top-1/2 cursor-pointer bg-slate-700 rounded-full p-2 hover:bg-opacity-90 transition duration-200"
+        >
+          <MdAddAPhoto size={25} />
         </label>
         <input
-          style={{
-            visibility: "hidden",
-            position: "absolute",
-          }}
           type="file"
-          id="single"
+          id="addAvatar"
+          className="top-1/2 hidden absolute"
           accept="image/*"
           onChange={uploadAvatar}
           disabled={uploading}
         />
+        <div className="border-4 border-white rounded-full">
+          <Image
+            src={avatar_url}
+            height={175}
+            width={175}
+            alt="Profile Image"
+            className="rounded-full border-2 border-black"
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
