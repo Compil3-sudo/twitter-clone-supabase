@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 const Backdrop = ({ onClose }: { onClose: () => void }) => {
   return (
     <div
-      className="fixed top-0 left-0 w-screen h-screen z-20 bg-gray-700 bg-opacity-80"
+      className="fixed top-0 left-0 min-w-screen w-full min-h-screen h-full z-20 bg-gray-700 bg-opacity-80"
       onClick={onClose}
     />
   );

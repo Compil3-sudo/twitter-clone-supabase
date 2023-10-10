@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import LeftSidebar from "../LeftSidebar";
+import ComposeTweetServer from "./ComposeTweetServer";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,12 @@ const LeftSidebarServer = async () => {
     .single();
   if (!currentUserProfile) return;
 
-  return <LeftSidebar user={currentUserProfile} />;
+  return (
+    <LeftSidebar
+      user={currentUserProfile}
+      composeTweet={<ComposeTweetServer user={currentUserProfile} />}
+    />
+  );
 };
 
 export default LeftSidebarServer;

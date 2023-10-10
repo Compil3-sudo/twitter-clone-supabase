@@ -18,6 +18,8 @@ import Logo from "public/static/rares_favicon-light-32x32.png";
 import { useEffect, useState } from "react";
 import Logout from "@/app/(authenticate)/auth/sign-out/Logout";
 import { usePathname } from "next/navigation";
+import Modal from "./client-components/Modal";
+import ComposeTweetServer from "./server-components/ComposeTweetServer";
 
 type NavigationItem = {
   text: string;
@@ -26,11 +28,19 @@ type NavigationItem = {
   logo?: StaticImageData;
 };
 
-const LeftSidebar = ({ user }: { user: Profile }) => {
+const LeftSidebar = ({
+  user,
+  composeTweet,
+}: {
+  user: Profile;
+  composeTweet: any;
+}) => {
   const path = usePathname();
   const [activeNav, setActiveNav] = useState(
     path.split("/")[1].toLocaleLowerCase()
   );
+  const [showProfileOptions, setShowProfileOptions] = useState(false);
+  const [showComposeTweetModal, setShowComposeTweetModal] = useState(false);
 
   const navigationTabs = [
     "home",
@@ -139,21 +149,42 @@ const LeftSidebar = ({ user }: { user: Profile }) => {
               </Link>
             ))}
 
-            <button className="max-xl:hidden rounded-full p-2 w-full bg-blue-500 hover:bg-opacity-80 transition duration-200">
+            <button
+              onClick={() => setShowComposeTweetModal(true)}
+              className="max-xl:hidden rounded-full p-2 w-full bg-blue-500 hover:bg-opacity-80 transition duration-200"
+            >
               Post
             </button>
 
             {/* different post button for smaller view */}
-            <button className="xl:hidden flex items-center w-fit p-2">
+            {showComposeTweetModal && (
+              <Modal onClose={() => setShowComposeTweetModal(false)}>
+                <div className="bg-slate-950 rounded-3xl px-2 py-4 sm:w-[600px] w-[300px]">
+                  {composeTweet}
+                </div>
+              </Modal>
+            )}
+            <button
+              onClick={() => setShowComposeTweetModal(true)}
+              className="xl:hidden flex items-center w-fit pr-4"
+            >
               <div className="rounded-full bg-blue-500 p-2 hover:bg-opacity-80 transition duration-200">
                 <FaFeatherAlt size={20} />
               </div>
             </button>
           </div>
         </div>
+
         <div className="flex flex-col self-end xl:self-center mb-2">
-          <Logout />
-          <div className="self-center rounded-full w-fit hover:bg-white/20 p-2 mb-3">
+          {showProfileOptions && (
+            <div className="absolute -mt-12 bg-slate-950 self-center m-2 border rounded-xl shadow-sm shadow-white">
+              <Logout />
+            </div>
+          )}
+          <div
+            onClick={() => setShowProfileOptions(!showProfileOptions)}
+            className="self-center cursor-pointer rounded-full w-fit hover:bg-white/20 p-2 mb-3"
+          >
             <div className="grid gap-2 grid-flow-col items-center">
               <Image
                 src={user.avatar_url}
