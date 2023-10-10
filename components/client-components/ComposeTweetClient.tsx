@@ -2,7 +2,11 @@
 
 import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import {
+  ComposeTweetModalContext,
+  ComposeTweetModalContextType,
+} from "../context/ComposeTweetModalContext";
 
 const ComposeTweetClient = ({
   user,
@@ -17,6 +21,9 @@ const ComposeTweetClient = ({
   const maxTextAreaHeight = 300;
   const [remainingChars, setRemainingChars] = useState(tweetMaxLength);
   const [remainingCharsColor, setRemainingCharsColor] = useState("yellow");
+  const { showComposeTweetModal, changeComposeModal } = useContext(
+    ComposeTweetModalContext
+  ) as ComposeTweetModalContextType;
 
   const countCharacters = () => {
     setRemainingChars(tweetMaxLength - tweetTextRef.current!.value.length);
@@ -68,6 +75,8 @@ const ComposeTweetClient = ({
       try {
         const responseError = await serverAction(data);
         tweetTextRef.current.value = "";
+
+        if (showComposeTweetModal) changeComposeModal(false);
 
         if (responseError) {
           console.log(responseError.message);

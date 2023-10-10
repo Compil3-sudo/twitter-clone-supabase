@@ -15,11 +15,15 @@ import {
 } from "react-icons/bi";
 import { IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
 import Logo from "public/static/rares_favicon-light-32x32.png";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Logout from "@/app/(authenticate)/auth/sign-out/Logout";
 import { usePathname } from "next/navigation";
 import Modal from "./client-components/Modal";
-import ComposeTweetServer from "./server-components/ComposeTweetServer";
+import { VscClose } from "react-icons/vsc";
+import {
+  ComposeTweetModalContext,
+  ComposeTweetModalContextType,
+} from "./context/ComposeTweetModalContext";
 
 type NavigationItem = {
   text: string;
@@ -30,17 +34,19 @@ type NavigationItem = {
 
 const LeftSidebar = ({
   user,
-  composeTweet,
+  ComposeTweet,
 }: {
   user: Profile;
-  composeTweet: any;
+  ComposeTweet: JSX.Element;
 }) => {
   const path = usePathname();
   const [activeNav, setActiveNav] = useState(
     path.split("/")[1].toLocaleLowerCase()
   );
   const [showProfileOptions, setShowProfileOptions] = useState(false);
-  const [showComposeTweetModal, setShowComposeTweetModal] = useState(false);
+  const { showComposeTweetModal, changeComposeModal } = useContext(
+    ComposeTweetModalContext
+  ) as ComposeTweetModalContextType;
 
   const navigationTabs = [
     "home",
@@ -150,7 +156,9 @@ const LeftSidebar = ({
             ))}
 
             <button
-              onClick={() => setShowComposeTweetModal(true)}
+              onClick={() => {
+                changeComposeModal(true);
+              }}
               className="max-xl:hidden rounded-full p-2 w-full bg-blue-500 hover:bg-opacity-80 transition duration-200"
             >
               Post
@@ -158,14 +166,22 @@ const LeftSidebar = ({
 
             {/* different post button for smaller view */}
             {showComposeTweetModal && (
-              <Modal onClose={() => setShowComposeTweetModal(false)}>
-                <div className="bg-slate-950 rounded-3xl px-2 py-4 sm:w-[600px] w-[300px]">
-                  {composeTweet}
+              <Modal onClose={() => changeComposeModal(false)}>
+                <div className="flex flex-col bg-slate-950 rounded-3xl px-2 py-4 sm:w-[600px] w-[300px]">
+                  <div
+                    onClick={() => changeComposeModal(false)}
+                    className="p-1 mx-4 rounded-full w-fit cursor-pointer text-gray-300 hover:bg-gray-500"
+                  >
+                    <VscClose size={25} />
+                  </div>
+                  {ComposeTweet}
                 </div>
               </Modal>
             )}
             <button
-              onClick={() => setShowComposeTweetModal(true)}
+              onClick={() => {
+                changeComposeModal(true);
+              }}
               className="xl:hidden flex items-center w-fit pr-4"
             >
               <div className="rounded-full bg-blue-500 p-2 hover:bg-opacity-80 transition duration-200">

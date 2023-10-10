@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import InfiniteFeed from "@/components/client-components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
-import InfiniteFeedProvider from "@/components/client-components/InfiniteFeedContext";
+import InfiniteFeedProvider from "@/components/context/InfiniteFeedContext";
 
 export const dynamic = "force-dynamic";
 

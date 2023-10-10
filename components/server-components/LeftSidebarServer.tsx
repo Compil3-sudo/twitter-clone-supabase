@@ -23,7 +23,7 @@ const LeftSidebarServer = async () => {
   return (
     <LeftSidebar
       user={currentUserProfile}
-      composeTweet={<ComposeTweetServer user={currentUserProfile} />}
+      ComposeTweet={<ComposeTweetServer user={currentUserProfile} />}
     />
   );
 };

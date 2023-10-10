@@ -5,7 +5,7 @@ import {
   InfiniteFeedContext,
   InfiniteFeedContextType,
   InfiniteFeedTabs,
-} from "./InfiniteFeedContext";
+} from "../context/InfiniteFeedContext";
 import ForYouInfiniteFeed from "./ForYouInfiniteFeed";
 import FollowingInfiniteFeed from "./FollowingInfiniteFeed";
 

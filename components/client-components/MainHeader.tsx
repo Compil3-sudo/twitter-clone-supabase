@@ -5,7 +5,7 @@ import {
   InfiniteFeedContext,
   InfiniteFeedContextType,
   InfiniteFeedTabs,
-} from "./InfiniteFeedContext";
+} from "../context/InfiniteFeedContext";
 
 const MainHeader = () => {
   const { activeFeed, changeFeed } = useContext(
