@@ -11,6 +11,7 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
 
     const tweetText = formData.get("tweetText"); // textArea name
     if (!tweetText) return null;
+    if (tweetText.toString() === "") return null;
 
     const supabase = createServerActionClient<Database>({ cookies });
 

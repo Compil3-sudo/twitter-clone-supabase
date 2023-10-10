@@ -2,11 +2,12 @@
 
 import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useEffect, useRef, useState, useContext } from "react";
+import { useRef, useContext } from "react";
 import {
   ComposeTweetModalContext,
   ComposeTweetModalContextType,
 } from "../context/ComposeTweetModalContext";
+import CustomTextArea from "./CustomTextArea";
 
 const ComposeTweetClient = ({
   user,
@@ -17,63 +18,19 @@ const ComposeTweetClient = ({
 }) => {
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
   const tweetMaxLength = 280;
-  const characterLimit = 350;
-  const maxTextAreaHeight = 300;
-  const [remainingChars, setRemainingChars] = useState(tweetMaxLength);
-  const [remainingCharsColor, setRemainingCharsColor] = useState("yellow");
+
   const { showComposeTweetModal, changeComposeModal } = useContext(
     ComposeTweetModalContext
   ) as ComposeTweetModalContextType;
 
-  const countCharacters = () => {
-    setRemainingChars(tweetMaxLength - tweetTextRef.current!.value.length);
-  };
-
-  useEffect(() => {
-    tweetTextRef.current!.addEventListener("input", countCharacters);
-
-    if (remainingChars <= 0) {
-      setRemainingCharsColor("red-500");
-    } else if (remainingChars >= 1 && remainingChars <= 20) {
-      setRemainingCharsColor("yellow-500");
-    }
-
-    return () => {
-      if (tweetTextRef.current) {
-        tweetTextRef.current.removeEventListener("input", countCharacters);
-      }
-    };
-  }, [tweetTextRef.current?.value.length]);
-
-  const handleChange = () => {
-    // making the entire text red looks ugly
-    // don't know how to only make the part > tweetMaxLength red
-
-    // if (
-    //   tweetTextRef.current &&
-    //   tweetTextRef.current.value.length >= tweetMaxLength
-    // ) {
-    //   tweetTextRef.current.style.color = "red";
-    // } else {
-    //   tweetTextRef.current!.style.color = "black";
-    // }
-    if (tweetTextRef.current) {
-      tweetTextRef.current.style.height = "auto";
-      tweetTextRef.current.style.height = `${Math.min(
-        tweetTextRef.current.scrollHeight,
-        maxTextAreaHeight
-      )}px`;
-    }
-  };
-
-  const postTweet = async (data: FormData) => {
+  const postTweet = async (formData: FormData) => {
     if (
       tweetTextRef.current &&
       tweetTextRef.current.value !== "" &&
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
       try {
-        const responseError = await serverAction(data);
+        const responseError = await serverAction(formData);
         tweetTextRef.current.value = "";
 
         if (showComposeTweetModal) changeComposeModal(false);
@@ -100,42 +57,13 @@ const ComposeTweetClient = ({
           />
         </div>
 
-        <form
-          action={postTweet}
-          className="flex flex-col w-full flex-grow px-2 pt-2"
-        >
-          <div className="flex flex-col w-full">
-            <div className="flex flex-col border-b">
-              <textarea
-                ref={tweetTextRef}
-                onChange={handleChange}
-                maxLength={characterLimit}
-                name="tweetText"
-                // add invisible scrollbar
-                className="bg-transparent border-none outline-none resize-none pt-2"
-                placeholder="What is happening?!"
-              />
-            </div>
-
-            <div className="flex flex-col items-end mt-4">
-              <div className="flex">
-                {remainingChars <= 20 && (
-                  <p className={`py-2 px-4 text-${remainingCharsColor}`}>
-                    {remainingChars}
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  className="rounded-full bg-blue-500 py-2 px-4"
-                  // onClick={postTweet}
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <CustomTextArea
+          formAction={postTweet}
+          txtAreaTextRef={tweetTextRef}
+          buttonText="Post"
+          txtAreaPlaceholder="What is happening?!"
+          txtAreaName="tweetText"
+        />
       </div>
     </>
   );
