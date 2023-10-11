@@ -65,7 +65,8 @@ const SetUpProfile = ({ userProfile }: { userProfile: Profile }) => {
       // alert("Profile updated!");
     } catch (error) {
       console.log(error);
-      alert("Error updating the data!");
+      // alert("Error updating the data!");
+      alert(`Error: ${error}`);
     } finally {
       setUpdatedAvatar(true);
     }
