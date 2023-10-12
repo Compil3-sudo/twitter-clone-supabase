@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Twitter - Clone",
-  description: "Twitter tutorial from freecodecamp",
+  description: "Twitter clone by Compil3",
   icons: {
     icon: [
       {

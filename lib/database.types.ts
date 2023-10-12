@@ -232,21 +232,24 @@ export interface Database {
         Row: {
           created_at: string;
           id: string;
-          text: string;
+          media_id: string | null;
+          text: string | null;
           updated_at: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
-          text: string;
+          media_id?: string | null;
+          text?: string | null;
           updated_at?: string;
           user_id: string;
         };
         Update: {
           created_at?: string;
           id?: string;
-          text?: string;
+          media_id?: string | null;
+          text?: string | null;
           updated_at?: string;
           user_id?: string;
         };
@@ -264,6 +267,19 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
+      delete_avatar: {
+        Args: {
+          avatar_url: string;
+        };
+        Returns: Record<string, unknown>;
+      };
+      delete_storage_object: {
+        Args: {
+          bucket: string;
+          object: string;
+        };
+        Returns: Record<string, unknown>;
+      };
       get_profiles_to_follow: {
         Args: {
           authenticated_user_id: string;

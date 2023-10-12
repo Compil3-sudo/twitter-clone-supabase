@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { GoFileMedia } from "react-icons/go";
 
 type CustomTextAreaProps = {
   formAction: (formData: FormData) => void;
@@ -17,12 +18,12 @@ const CustomTextArea = ({
   txtAreaPlaceholder,
   txtAreaName,
 }: CustomTextAreaProps) => {
-  // const txtAreaTextRef = useRef<HTMLTextAreaElement>(null);
   const txtAreaMaxLength = 280;
   const characterLimit = 350;
   const maxTextAreaHeight = 300;
   const [remainingChars, setRemainingChars] = useState(txtAreaMaxLength);
-  const [remainingCharsColor, setRemainingCharsColor] = useState("yellow");
+  const [media, setMedia] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const countCharacters = () => {
     setRemainingChars(txtAreaMaxLength - txtAreaTextRef.current!.value.length);
@@ -30,12 +31,6 @@ const CustomTextArea = ({
 
   useEffect(() => {
     txtAreaTextRef.current!.addEventListener("input", countCharacters);
-
-    if (remainingChars <= 0) {
-      setRemainingCharsColor("red-500");
-    } else if (remainingChars >= 1 && remainingChars <= 20) {
-      setRemainingCharsColor("yellow-500");
-    }
 
     return () => {
       if (txtAreaTextRef.current) {
@@ -54,9 +49,36 @@ const CustomTextArea = ({
     }
   };
 
+  const uploadMedia: React.ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
+    setUploading(true);
+
+    if (!event.target.files || event.target.files.length === 0) {
+      throw new Error("You must select an image or video to upload.");
+    }
+
+    const selectedMedia = event.target.files[0];
+    setMedia(selectedMedia);
+    setUploading(false);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append(txtAreaName, txtAreaTextRef.current!.value);
+    if (media) {
+      formData.append("media", media);
+    }
+
+    formAction(formData);
+  };
+
   return (
     <form
       action={formAction}
+      onSubmit={handleSubmit}
       className="flex flex-col w-full flex-grow px-2 pt-2"
     >
       <div className="flex flex-col w-full">
@@ -70,14 +92,47 @@ const CustomTextArea = ({
             className="bg-transparent border-none outline-none resize-none pt-2"
             placeholder={txtAreaPlaceholder}
           />
+          {media && (
+            <div className="mt-4">
+              {media.type.startsWith("image/") ? (
+                <img
+                  src={URL.createObjectURL(media)}
+                  alt="Media Preview"
+                  className="max-w-full h-auto"
+                />
+              ) : media.type.startsWith("video/") ? (
+                <video controls>
+                  <source src={URL.createObjectURL(media)} type={media.type} />
+                </video>
+              ) : null}
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-col items-end mt-4">
+        <div className="flex flex-row justify-between mt-4">
+          <label
+            htmlFor="addMedia"
+            className="my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer"
+          >
+            <GoFileMedia size={20} />
+            <input
+              type="file"
+              id="addMedia"
+              name="media"
+              className="hidden absolute"
+              accept="image/* video/mp4"
+              onChange={uploadMedia}
+              disabled={uploading}
+            />
+          </label>
+
           <div className="flex">
-            {remainingChars <= 20 && (
-              <p className={`py-2 px-4 text-${remainingCharsColor}`}>
-                {remainingChars}
-              </p>
+            {remainingChars <= 20 && remainingChars > 0 ? (
+              <p className="py-2 px-4 text-yellow-500">{remainingChars}</p>
+            ) : (
+              remainingChars <= 0 && (
+                <p className="py-2 px-4 text-red-500">{remainingChars}</p>
+              )
             )}
 
             <button

@@ -26,18 +26,21 @@ const ComposeTweetClient = ({
   const postTweet = async (formData: FormData) => {
     if (
       tweetTextRef.current &&
-      tweetTextRef.current.value !== "" &&
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
       try {
-        const responseError = await serverAction(formData);
+        const media = formData.get("media");
+        console.log("media: ", media);
+
+        // const responseError = await serverAction(formData);
         tweetTextRef.current.value = "";
+        // removeMedia(); // how to do this ?
 
         if (showComposeTweetModal) changeComposeModal(false);
 
-        if (responseError) {
-          console.log(responseError.message);
-        }
+        // if (responseError) {
+        //   console.log(responseError.message);
+        // }
       } catch (error) {
         console.log(error);
       }
