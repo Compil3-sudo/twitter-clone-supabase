@@ -18,6 +18,7 @@ const ComposeTweetClient = ({
 }) => {
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
   const [media, setMedia] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const tweetMaxLength = 280;
 
   const { showComposeTweetModal, changeComposeModal } = useContext(
@@ -25,6 +26,7 @@ const ComposeTweetClient = ({
   ) as ComposeTweetModalContextType;
 
   const postTweet = async (formData: FormData) => {
+    setSubmitting(true);
     if (
       tweetTextRef.current &&
       tweetTextRef.current.value.length <= tweetMaxLength
@@ -43,6 +45,7 @@ const ComposeTweetClient = ({
         console.log(error);
       }
     }
+    setSubmitting(false);
   };
 
   return (
@@ -64,6 +67,7 @@ const ComposeTweetClient = ({
           media={media}
           onUploadMedia={(uploadMedia: File) => setMedia(uploadMedia)}
           buttonText="Post"
+          submitting={submitting}
           txtAreaPlaceholder="What is happening?!"
           txtAreaName="tweetText"
         />

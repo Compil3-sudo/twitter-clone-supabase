@@ -9,6 +9,7 @@ type CustomTextAreaProps = {
   media: File | null;
   onUploadMedia: (uploadMedia: File) => void;
   buttonText: string;
+  submitting: boolean;
   txtAreaPlaceholder: string;
   txtAreaName: string;
 };
@@ -19,6 +20,7 @@ const CustomTextArea = ({
   media,
   onUploadMedia,
   buttonText,
+  submitting,
   txtAreaPlaceholder,
   txtAreaName,
 }: CustomTextAreaProps) => {
@@ -139,6 +141,7 @@ const CustomTextArea = ({
             )}
 
             <button
+              disabled={submitting}
               type="submit"
               className="rounded-full bg-blue-500 py-2 px-4"
             >
