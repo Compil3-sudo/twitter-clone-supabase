@@ -1,14 +1,14 @@
 "use client";
 
 import Like from "./Like";
-import ComposeReply from "./ComposeReply";
-import Link from "next/link";
 import Image from "next/image";
 import { BsThreeDots } from "react-icons/bs";
 import { BiMessageRounded, BiRepost } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { IoIosStats } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
 
 const Tweet = ({
   userId,
@@ -18,6 +18,35 @@ const Tweet = ({
   tweet: TweetWithAuthor;
 }) => {
   const router = useRouter();
+  const [mediaUrl, setMediaUrl] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<string>("");
+
+  useEffect(() => {
+    if (tweet.media_id) {
+      const downloadMedia = async () => {
+        try {
+          const supabase = createClientComponentClient();
+          const path = `${tweet.author.id}/${tweet.media_id}.png`;
+
+          const { data, error } = await supabase.storage
+            .from("tweets")
+            .download(path);
+          if (error) {
+            throw error;
+          }
+
+          setMediaType("image/");
+
+          const media_url = URL.createObjectURL(data);
+          setMediaUrl(media_url);
+        } catch (error) {
+          console.log("Error downloading media: ", error);
+        }
+      };
+
+      downloadMedia();
+    }
+  }, []);
 
   const navigateToTweet = () => {
     router.push(`/${tweet.author.username}/tweet/${tweet.id}`);
@@ -34,8 +63,6 @@ const Tweet = ({
     // without this it would redirect to the Tweet view page
     event.stopPropagation(); // Prevent the click event from propagating to the parent div
   };
-
-  //  <ComposeReply user={user} tweet={tweet} />;
 
   return (
     <>
@@ -88,7 +115,26 @@ const Tweet = ({
           {/* Tweet content */}
           <div className="">{tweet.text}</div>
           {/* add tweet media - image / video ? later */}
-          {/* <div className="bg-gray-600 rounded-2xl h-20 py-2">Media</div> */}
+          {tweet.media_id && (
+            <div className="mt-4">
+              {mediaUrl && (
+                <>
+                  {mediaType.startsWith("image/") ? (
+                    <Image
+                      width={140}
+                      height={140}
+                      src={mediaUrl}
+                      alt="Media"
+                    />
+                  ) : mediaType.startsWith("video/") ? (
+                    <video controls>
+                      <source src={mediaUrl} type={mediaType} />
+                    </video>
+                  ) : null}
+                </>
+              )}
+            </div>
+          )}
           {/* Tweet content */}
 
           {/* Tweet Footer */}
