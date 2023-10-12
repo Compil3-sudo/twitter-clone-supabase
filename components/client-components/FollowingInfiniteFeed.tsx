@@ -24,7 +24,7 @@ const FollowingInfiniteFeed = ({
   const { from, to } = getPagination(pageFollowing, limit);
 
   const lastFollowingTweet = firstFollowingTweetsPage[0];
-  if (lastFollowingTweet != followingtweets[0]) {
+  if (lastFollowingTweet.id !== followingtweets[0].id) {
     setFollowingTweets([lastFollowingTweet, ...followingtweets]);
   }
 

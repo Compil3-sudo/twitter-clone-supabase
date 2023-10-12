@@ -24,7 +24,7 @@ const ForYouInfiniteFeed = ({
   // this does not update when a new tweet is submitted for some reason
   // keep track of last tweet => reset initial state
   const lastTweet = firstTweetsPage[0];
-  if (lastTweet != tweets[0]) {
+  if (lastTweet.id !== tweets[0].id) {
     setTweets([lastTweet, ...tweets]);
   }
 
