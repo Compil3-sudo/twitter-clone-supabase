@@ -1,7 +1,7 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import CustomTextArea from "./CustomTextArea";
 
 const ComposeReply = ({
@@ -13,9 +13,13 @@ const ComposeReply = ({
 }) => {
   const supabase = createClientComponentClient<Database>();
   const replyTextRef = useRef<HTMLTextAreaElement>(null);
+  const [media, setMedia] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
   const replyMaxLength = 280;
 
   const sendReply = async () => {
+    setSubmitting(true);
     if (
       replyTextRef.current &&
       replyTextRef.current.value !== "" &&
@@ -29,6 +33,7 @@ const ComposeReply = ({
 
       if (error) console.log(error);
     }
+    setSubmitting(false);
   };
 
   return (
@@ -36,7 +41,10 @@ const ComposeReply = ({
       <CustomTextArea
         formAction={sendReply}
         txtAreaTextRef={replyTextRef}
+        media={media}
+        onUploadMedia={(uploadMedia: File) => setMedia(uploadMedia)}
         buttonText="Reply"
+        submitting={submitting}
         txtAreaPlaceholder="Post your reply"
         txtAreaName="replyText"
       />
