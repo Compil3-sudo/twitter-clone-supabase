@@ -12,12 +12,17 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
 
     const supabase = createServerActionClient<Database>({ cookies });
 
-    const tweetText = formData.get("tweetText")?.toString(); // textArea name
+    let tweetText = formData.get("tweetText"); // textArea name
     const media = formData.get("media") as File;
 
     if (!tweetText && !media) return null;
 
     let mediaId = null;
+    if (!tweetText) {
+      tweetText = null;
+    } else {
+      tweetText = tweetText.toString();
+    }
 
     if (media) {
       mediaId = uuidv4();
@@ -29,12 +34,11 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
         .from(`tweets`)
         .upload(filePath, media);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.log(uploadError);
+        throw uploadError;
+      }
     }
-
-    // user should actually be able to post a tweet with media and no text
-    // if (!tweetText) return null;
-    // if (tweetText.toString() === "") return null;
 
     const { error } = await supabase.from("tweets").insert({
       user_id: user.id,

@@ -6,6 +6,8 @@ import { GoFileMedia } from "react-icons/go";
 type CustomTextAreaProps = {
   formAction: (formData: FormData) => void;
   txtAreaTextRef: React.RefObject<HTMLTextAreaElement>;
+  media: File | null;
+  onUploadMedia: (uploadMedia: File) => void;
   buttonText: string;
   txtAreaPlaceholder: string;
   txtAreaName: string;
@@ -14,6 +16,8 @@ type CustomTextAreaProps = {
 const CustomTextArea = ({
   formAction,
   txtAreaTextRef,
+  media,
+  onUploadMedia,
   buttonText,
   txtAreaPlaceholder,
   txtAreaName,
@@ -22,7 +26,6 @@ const CustomTextArea = ({
   const characterLimit = 350;
   const maxTextAreaHeight = 300;
   const [remainingChars, setRemainingChars] = useState(txtAreaMaxLength);
-  const [media, setMedia] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const countCharacters = () => {
@@ -59,7 +62,7 @@ const CustomTextArea = ({
     }
 
     const selectedMedia = event.target.files[0];
-    setMedia(selectedMedia);
+    onUploadMedia(selectedMedia);
     setUploading(false);
   };
 

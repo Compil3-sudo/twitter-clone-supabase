@@ -2,7 +2,7 @@
 
 import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import {
   ComposeTweetModalContext,
   ComposeTweetModalContextType,
@@ -17,6 +17,7 @@ const ComposeTweetClient = ({
   serverAction: (formData: FormData) => Promise<PostgrestError | null>;
 }) => {
   const tweetTextRef = useRef<HTMLTextAreaElement>(null);
+  const [media, setMedia] = useState<File | null>(null);
   const tweetMaxLength = 280;
 
   const { showComposeTweetModal, changeComposeModal } = useContext(
@@ -29,18 +30,15 @@ const ComposeTweetClient = ({
       tweetTextRef.current.value.length <= tweetMaxLength
     ) {
       try {
-        const media = formData.get("media");
-        console.log("media: ", media);
-
-        // const responseError = await serverAction(formData);
+        const responseError = await serverAction(formData);
         tweetTextRef.current.value = "";
-        // removeMedia(); // how to do this ?
+        setMedia(null);
 
         if (showComposeTweetModal) changeComposeModal(false);
 
-        // if (responseError) {
-        //   console.log(responseError.message);
-        // }
+        if (responseError) {
+          console.log(responseError.message);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -63,6 +61,8 @@ const ComposeTweetClient = ({
         <CustomTextArea
           formAction={postTweet}
           txtAreaTextRef={tweetTextRef}
+          media={media}
+          onUploadMedia={(uploadMedia: File) => setMedia(uploadMedia)}
           buttonText="Post"
           txtAreaPlaceholder="What is happening?!"
           txtAreaName="tweetText"
