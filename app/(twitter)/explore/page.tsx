@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 const Explore = () => {
   return (
     <div>
