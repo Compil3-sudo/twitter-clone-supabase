@@ -232,6 +232,7 @@ export interface Database {
         Row: {
           created_at: string;
           id: string;
+          media_extension: string | null;
           media_id: string | null;
           text: string | null;
           updated_at: string;
@@ -240,6 +241,7 @@ export interface Database {
         Insert: {
           created_at?: string;
           id?: string;
+          media_extension?: string | null;
           media_id?: string | null;
           text?: string | null;
           updated_at?: string;
@@ -248,6 +250,7 @@ export interface Database {
         Update: {
           created_at?: string;
           id?: string;
+          media_extension?: string | null;
           media_id?: string | null;
           text?: string | null;
           updated_at?: string;

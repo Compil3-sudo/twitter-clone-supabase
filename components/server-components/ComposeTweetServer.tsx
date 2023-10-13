@@ -14,6 +14,7 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
 
     let tweetText = formData.get("tweetText"); // textArea name
     const media = formData.get("media") as File;
+    let fileExt = null;
 
     if (!tweetText && !media) return null;
 
@@ -27,7 +28,7 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
     if (media) {
       mediaId = uuidv4();
 
-      const fileExt = media.name.split(".").pop();
+      fileExt = media.name.split(".").pop();
       const filePath = `${user.id}/${mediaId}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
@@ -44,6 +45,7 @@ const ComposeTweetServer = async ({ user }: { user: Profile }) => {
       user_id: user.id,
       text: tweetText,
       media_id: mediaId,
+      media_extension: fileExt,
     });
 
     if (error) {

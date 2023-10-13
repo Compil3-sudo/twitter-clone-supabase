@@ -16,6 +16,7 @@ const Tweet = ({
 }: {
   userId: string;
   tweet: TweetWithAuthor;
+  // tweet: TweetWithAuthor & ({ mediaServer?: string } | undefined);
 }) => {
   const router = useRouter();
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
@@ -26,7 +27,7 @@ const Tweet = ({
       const downloadMedia = async () => {
         try {
           const supabase = createClientComponentClient();
-          const path = `${tweet.author.id}/${tweet.media_id}.png`;
+          const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
 
           const { data, error } = await supabase.storage
             .from("tweets")
@@ -35,7 +36,11 @@ const Tweet = ({
             throw error;
           }
 
-          setMediaType("image/");
+          if (tweet.media_extension === "mp4") {
+            setMediaType("video");
+          } else {
+            setMediaType("image");
+          }
 
           const media_url = URL.createObjectURL(data);
           setMediaUrl(media_url);
@@ -68,7 +73,7 @@ const Tweet = ({
     <>
       <div
         onClick={navigateToTweet}
-        className="flex w-full py-2 px-4 space-x-2 border-b cursor-pointer"
+        className="flex w-full py-2 px-4 space-x-3 border-b cursor-pointer"
       >
         {/* Tweet Author Profile Image */}
         <div className="flex-none pt-2">
@@ -83,7 +88,7 @@ const Tweet = ({
         </div>
         {/* Tweet Author Profile Image */}
 
-        <div className="flex flex-col w-full space-y-2">
+        <div className="flex flex-col w-full space-y-3">
           {/* Tweet header - author - name @username * created_x time ago */}
           <header className="flex flex-row space-x-4 justify-center items-center">
             <div
@@ -116,19 +121,31 @@ const Tweet = ({
           <div className="">{tweet.text}</div>
           {/* add tweet media - image / video ? later */}
           {tweet.media_id && (
-            <div className="mt-4">
+            <div className="">
+              {/* {tweet.mediaServer && (
+                <Image
+                  width={140}
+                  height={140}
+                  src={tweet.mediaServer}
+                  alt="SERVER"
+                />
+              )} */}
               {mediaUrl && (
                 <>
-                  {mediaType.startsWith("image/") ? (
+                  {mediaType === "image" ? (
                     <Image
                       width={140}
                       height={140}
                       src={mediaUrl}
                       alt="Media"
+                      className="rounded-xl"
                     />
-                  ) : mediaType.startsWith("video/") ? (
+                  ) : mediaType === "video" ? (
                     <video controls>
-                      <source src={mediaUrl} type={mediaType} />
+                      <source
+                        src={mediaUrl}
+                        type={`video/${tweet.media_extension}`}
+                      />
                     </video>
                   ) : null}
                 </>
