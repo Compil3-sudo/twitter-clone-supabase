@@ -36,15 +36,28 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   }
 
   if (!userProfile) {
+    // account does NOT exist
     return (
       <>
-        {/* TODO: make this a bit prettier */}
-        <div>back arrow profile</div>
-        <div>Profile Image</div>
-        <h1>@{params.username}</h1>
-        <div className="container px-16 mx-auto">
-          <h2>This account doesn't exist</h2>
-          <h3>Try searching for another.</h3>
+        <div className="flex flex-col items-center">
+          <ArrowHeader title="Profile" />
+
+          <div className="flex flex-col w-full">
+            <div className="relative h-48 bg-slate-600 w-full">
+              <div className="bg-neutral-700 w-[140px] h-[140px] rounded-full border-2 border-black absolute bottom-0 left-0 -mb-[70px] ml-4" />
+            </div>
+            <div className="mb-4 pt-3 px-4 flex flex-col">
+              <div className="flex flex-row justify-between h-[70px]"></div>
+              <div className="flex flex-col mb-3">
+                <h2 className="text-lg font-bold">@{params.username}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container px-16 mx-auto mt-10">
+          <h2 className="text-4xl font-bold">This account doesn't exist</h2>
+          <h3 className="text-gray-500">Try searching for another.</h3>
         </div>
       </>
     );
@@ -64,7 +77,26 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     currentUser.user_metadata.user_name === userProfile.username;
 
   let isUserFollowingProfile = false;
-  let commonFollowers = [];
+  let commonFollowersIds = [] as Profile["id"][];
+  let commonFollowers = [] as Profile[];
+  let followersText = "";
+
+  function generateFollowersText(commonFollowers: Profile[]) {
+    switch (commonFollowers.length) {
+      case 0:
+        return "Not follwed by anyone you're following";
+      case 1:
+        return `Followed by ${commonFollowers[0].name}`;
+      case 2:
+        return `Followed by ${commonFollowers[0].name} and ${commonFollowers[1].name}`;
+      case 3:
+        return `Followed by ${commonFollowers[0].name}, ${commonFollowers[1].name}, and ${commonFollowers[2].name}`;
+      default:
+        return `Followed by ${commonFollowers[0].name}, ${
+          commonFollowers[1].name
+        }, and ${commonFollowers.length - 2} others you follow`;
+    }
+  }
 
   if (!ownProfile) {
     // who is the current user following
@@ -86,9 +118,16 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
       userFollowing?.map((following) => following.followed_id) || [];
 
     // find common followers
-    commonFollowers = userProfileFollowers.filter((followerId) =>
+    commonFollowersIds = userProfileFollowers.filter((followerId) =>
       userFollowingIds.includes(followerId)
     );
+
+    const { data: commonFollowersData, error: commonFollowersError } =
+      await supabase.from("profiles").select("*").in("id", commonFollowersIds);
+
+    if (commonFollowersData) commonFollowers = commonFollowersData;
+
+    followersText = generateFollowersText(commonFollowers);
 
     // make text - 1 commonFollower:
     // followed by user
@@ -205,13 +244,13 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
             {!ownProfile && (
               // on click show list of common followers
               <div>
-                {commonFollowers.length === 0 ? (
+                {commonFollowersIds.length === 0 ? (
                   <h2 className="text-gray-500 text-sm">
                     Not follwed by anyone you're following
                   </h2>
                 ) : (
                   <button className="text-gray-500 text-sm hover:underline transition duration-200">
-                    Followed by ... and x others you follow
+                    {followersText}
                   </button>
                 )}
               </div>

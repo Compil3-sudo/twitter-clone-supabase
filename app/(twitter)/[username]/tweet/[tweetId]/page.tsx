@@ -75,7 +75,7 @@ const TweetPage = async ({
       likes: reply.likes.length,
     })) ?? [];
 
-  console.log(tweetReplies);
+  // console.log(tweetReplies);
 
   return (
     <>
