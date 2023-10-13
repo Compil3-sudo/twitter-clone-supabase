@@ -39,7 +39,7 @@ export default async function Home() {
   const recentTweets =
     data?.map((tweet) => ({
       ...tweet,
-      author: tweet.author!, // there is no way for a tweet to exist without an author, because eacht tweet has a user_id (:= author's id)
+      author: tweet.author!, // there is no way for a tweet to exist without an author, because each tweet has a user_id (:= author's id)
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
     })) ?? [];

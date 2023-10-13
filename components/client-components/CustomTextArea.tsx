@@ -82,9 +82,9 @@ const CustomTextArea = ({
 
   return (
     <form
-      action={formAction}
+      // action={formAction}
       onSubmit={handleSubmit}
-      className="flex flex-col w-full flex-grow px-2 pt-2"
+      className="flex flex-col w-full px-2 pt-2"
     >
       <div className="flex flex-col w-full">
         <div className="flex flex-col border-b">
@@ -98,7 +98,7 @@ const CustomTextArea = ({
             placeholder={txtAreaPlaceholder}
           />
           {media && (
-            <div className="mt-4">
+            <div className="my-4">
               {media.type.startsWith("image/") ? (
                 <img
                   src={URL.createObjectURL(media)}

@@ -3,8 +3,8 @@ import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ComposeReply from "@/components/client-components/ComposeReply";
 import ArrowHeader from "@/components/client-components/ArrowHeader";
+import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
 
 export const dynamic = "force-dynamic";
 
@@ -18,16 +18,20 @@ const TweetPage = async ({
   const username = params.username;
   const tweetId = params.tweetId;
 
-  const { data: user, error: userError } = await supabase
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/");
+
+  const { data: currentUserProfile } = await supabase
     .from("profiles")
-    .select("id, username")
-    .eq("username", username)
+    .select()
+    .eq("id", user.id)
     .single();
 
-  if (userError || !user) {
-    console.log(userError);
-    throw Error("User does not exist");
-  }
+  if (!currentUserProfile) redirect("/");
 
   // TODO: ONLY PASS USER'S USERNAME AND ID
   // TWEET COMPONENT NEEDS USER'S USERNAME
@@ -48,16 +52,30 @@ const TweetPage = async ({
   const mappedTweet = {
     ...tweet,
     author: tweet.author!,
-    user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
+    user_has_liked: !!tweet.likes.find(
+      (like) => like.user_id === currentUserProfile.id
+    ),
     likes: tweet.likes.length,
   };
 
-  const tweetReplies = await supabase
+  const { data: repliesData, error: repliesError } = await supabase
     .from("replies")
-    .select("*, nestedReplies: replies(*)")
-    .eq("tweet_id", mappedTweet.id);
+    // .select("*, author: profiles(*), likes(user_id), nestedReplies: replies(*)")
+    .select("*, author: profiles(*), likes(user_id)")
+    .eq("tweet_id", mappedTweet.id)
+    .order("created_at", { ascending: false });
 
-  // console.log(tweetReplies);
+  const tweetReplies =
+    repliesData?.map((reply) => ({
+      ...reply,
+      author: reply.author!, // there is no way for a reply to exist without an author, because each tweet has a user_id (:= author's id)
+      user_has_liked: !!reply.likes.find(
+        (like) => like.user_id === currentUserProfile.id
+      ),
+      likes: reply.likes.length,
+    })) ?? [];
+
+  console.log(tweetReplies);
 
   return (
     <>
@@ -65,29 +83,40 @@ const TweetPage = async ({
       <ArrowHeader title="Post" />
       {/* POST HEADER */}
       {/* TODO: OPTIONAL: make tweet view page instead of reusing Tweet component ? */}
-      <Tweet userId={user.id} tweet={mappedTweet} />
+      <Tweet userId={currentUserProfile.id} tweet={mappedTweet} />
       <h2>add bookmark somewhere</h2>
-      <ComposeReply userId={user.id} tweet={mappedTweet} />
-      {tweetReplies.data?.map((reply) => (
-        <div key={reply.id} className="px-10">
-          <p className="py-2">
-            {/* on reply btn click
-                - go to a new Tweet Page
-                - pass the reply as a "main parent reply" prop
-                - if the tweet has a "main parent reply": change the view
-                  - main parent reply has a line => directly under tweet content
-                - this becomes the "tweetReplies" basically
-                - add (insert) nested replies to the main reply
-            */}
-            {reply.text} <button className="text-green-500">REPLYBUTTON</button>
-          </p>
+      <ComposeReplyServer user={currentUserProfile} tweet={mappedTweet} />
 
-          {/* {reply.nestedReplies.length > 0 && (
-            <NestedRepliesServer parentReply={reply} />
-          )} */}
-          {reply.nestedReplies && <NestedRepliesServer parentReply={reply} />}
-        </div>
+      {/* TODO: IMPORTANT: make infinite scroll component - load pagination, fetch replies in batches */}
+
+      {tweetReplies.map((reply) => (
+        // TODO: MAKE REPLY COMPONENT - VERY SIMILAR TO TWEET...
+        // OR make TWEET component into POST component
+        // can be either a tweet or a reply ?
+        <Tweet key={reply.id} userId={currentUserProfile.id} tweet={reply} />
       ))}
+
+      {
+        // tweetReplies.data?.map((reply) => (
+        //   <div key={reply.id} className="px-10">
+        //     <p className="py-2">
+        //       {/* on reply btn click
+        //           - go to a new Tweet Page
+        //           - pass the reply as a "main parent reply" prop
+        //           - if the tweet has a "main parent reply": change the view
+        //             - main parent reply has a line => directly under tweet content
+        //           - this becomes the "tweetReplies" basically
+        //           - add (insert) nested replies to the main reply
+        //       */}
+        //       {reply.text} <button className="text-green-500">REPLYBUTTON</button>
+        //     </p>
+        //     {/* {reply.nestedReplies.length > 0 && (
+        //       <NestedRepliesServer parentReply={reply} />
+        //     )} */}
+        //     {reply.nestedReplies && <NestedRepliesServer parentReply={reply} />}
+        //   </div>
+        // ))
+      }
     </>
   );
 };

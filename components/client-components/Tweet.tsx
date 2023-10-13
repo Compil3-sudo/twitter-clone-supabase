@@ -15,8 +15,8 @@ const Tweet = ({
   tweet,
 }: {
   userId: string;
-  tweet: TweetWithAuthor;
-  // tweet: TweetWithAuthor & ({ mediaServer?: string } | undefined);
+  // tweet: TweetWithAuthor;
+  tweet: any;
 }) => {
   const router = useRouter();
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
@@ -122,14 +122,6 @@ const Tweet = ({
           {/* add tweet media - image / video ? later */}
           {tweet.media_id && (
             <div className="">
-              {/* {tweet.mediaServer && (
-                <Image
-                  width={140}
-                  height={140}
-                  src={tweet.mediaServer}
-                  alt="SERVER"
-                />
-              )} */}
               {mediaUrl && (
                 <>
                   {mediaType === "image" ? (
