@@ -1,24 +1,10 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { redirect } from "next/navigation";
-import Login from "./login/Login";
-import Logo from "public/static/android-chrome-192x192.png";
-import { cookies } from "next/headers";
 import Image from "next/image";
+import Logo from "public/static/android-chrome-192x192.png";
+import CreateAccountForm from "./CreateAccountForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage() {
-  const supabase = createServerComponentClient<Database>({ cookies });
-
-  const {
-    data: { session },
-    error,
-  } = await supabase.auth.getSession();
-
-  if (error) console.log(error);
-
-  if (session) redirect("/home");
-
+const CreateAccount = () => {
   return (
     <div className="grid grid-flow-col h-screen place-items-center">
       <div className="flex flex-col justify-center">
@@ -36,7 +22,9 @@ export default async function LoginPage() {
           </div>
         </div>
       </div>
-      <Login />
+      <CreateAccountForm />
     </div>
   );
-}
+};
+
+export default CreateAccount;

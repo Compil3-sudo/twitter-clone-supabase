@@ -156,7 +156,7 @@ const Tweet = ({
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
                   <BiMessageRounded size={20} />
                 </div>
-                <div className="text-sm px-1 justify-center">120</div>
+                <div className="text-sm px-1 justify-center">0</div>
               </div>
 
               <div
@@ -166,7 +166,7 @@ const Tweet = ({
                 <div className="group-hover:bg-green-500/10 p-2 rounded-full">
                   <BiRepost size={20} />
                 </div>
-                <div className="text-sm px-1 justify-center">272</div>
+                <div className="text-sm px-1 justify-center">0</div>
               </div>
 
               <div onClick={stopNavigationPropagation}>
@@ -180,7 +180,7 @@ const Tweet = ({
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
                   <IoIosStats size={20} />
                 </div>
-                <div className="text-sm px-1 justify-center">247.4K</div>
+                <div className="text-sm px-1 justify-center">0</div>
               </div>
 
               <div

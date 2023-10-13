@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.redirect(
-      `${requestUrl.origin}/login?error=Could not authenticate user`,
+      `${requestUrl.origin}/createAccount?error=Could not authenticate user. ${error.message}`,
       {
         // a 301 status is required to redirect from a POST to a GET route
         status: 301,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.redirect(
-    `${requestUrl.origin}/login?message=Check email to continue sign in process`,
+    `${requestUrl.origin}?message=Check your email to continue sign in process`,
     {
       // a 301 status is required to redirect from a POST to a GET route
       status: 301,

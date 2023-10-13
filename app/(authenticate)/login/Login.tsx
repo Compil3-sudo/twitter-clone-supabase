@@ -4,27 +4,76 @@ import { BsGithub } from "react-icons/bs";
 // change to server component if you want to use the form
 // for email sign-up
 
-// import Link from "next/link";
 import Messages from "./messages";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useState } from "react";
-import { VscArrowLeft } from "react-icons/vsc";
+import { FormEvent, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const [createAccount, setCreateAccount] = useState(false);
   const supabase = createClientComponentClient<Database>();
+  const router = useRouter();
+
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  const [validityError, setValidityError] = useState<string | null>(null);
 
   async function signInWithGitHub() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
         redirectTo: `${location.origin}/auth/callback`,
-        // redirectTo: "http://localhost:3000/auth/callback",
       },
     });
 
     if (error) console.log(error);
   }
+
+  const checkEmail = (email: string) => {
+    if (
+      email.includes("@") &&
+      email.includes(".") &&
+      email.split("@")[0].length > 0 &&
+      email.split("@")[1].length > 0 &&
+      email.split("@")[1].split(".").length == 2
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkPassword = (password: string) => {
+    if (password.length >= 6) return true;
+    return false;
+  };
+
+  const handleSignInSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setValidityError(null);
+    const enteredEmail = emailRef.current?.value;
+    const enteredPassword = passwordRef.current?.value;
+
+    if (!enteredEmail || !enteredPassword) {
+      return;
+    }
+
+    const enteredEmailIsValid = checkEmail(enteredEmail);
+    const enteredPasswordIsValid = checkPassword(enteredPassword);
+
+    if (!enteredEmailIsValid) setValidityError("Invalid email.");
+    if (!enteredPasswordIsValid)
+      setValidityError("Password must be at least 6 characters long.");
+
+    const formIsValid = enteredEmailIsValid && enteredPasswordIsValid;
+
+    if (!formIsValid) {
+      return;
+    }
+
+    if (formRef.current) formRef.current.submit();
+  };
 
   return (
     <div className="flex flex-col w-fit self-center px-8 sm:max-w-md justify-center gap-2">
@@ -46,23 +95,12 @@ export default function Login() {
         <div className="w-1/2 border-t border-gray-400"></div>
       </div>
 
-      {createAccount && (
-        <>
-          <div
-            className="flex flex-row py-2 space-x-2 cursor-pointer hover:bg-white/10 transition-all ease-out"
-            onClick={() => setCreateAccount(false)}
-          >
-            <VscArrowLeft size={20} className="my-auto" />
-            <span>Back to Sign in</span>
-          </div>
-          <h2 className="text-lg">Create your account</h2>
-        </>
-      )}
-
       <form
         className="flex-1 flex flex-col w-full justify-center gap-2"
         action="/auth/sign-in"
         method="post"
+        ref={formRef}
+        onSubmit={handleSignInSubmit}
       >
         {/* <label
           className="group h-16 focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2"
@@ -92,87 +130,50 @@ export default function Login() {
             required
           />
         </label> */}
-        <label
-          className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2"
-          htmlFor="email"
-        >
+        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
           <span className="group-focus-within:text-blue-500">Email</span>
           <input
             className="bg-inherit outline-none group"
             type="email"
             name="email"
+            ref={emailRef}
+            required
           />
         </label>
 
-        <label
-          className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2"
-          htmlFor="password"
-        >
+        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
           <span className="group-focus-within:text-blue-500">Password</span>
           <input
             className="bg-inherit outline-none group"
             type="password"
             name="password"
+            ref={passwordRef}
+            required
           />
         </label>
 
-        {!createAccount && (
-          <button className="bg-green-700 rounded px-4 py-2 text-white mb-2">
-            Sign In
-          </button>
+        <button
+          type="submit"
+          className="bg-green-700 rounded px-4 py-2 text-white mb-2"
+        >
+          Sign In
+        </button>
+        {validityError && validityError !== "reset" && (
+          <p className="my-4 p-4 bg-neutral-900 text-center">{validityError}</p>
         )}
 
-        {!createAccount && (
-          <>
-            <h2 className="text-lg">Don't have an account?</h2>
+        <h2 className="text-lg">Don't have an account?</h2>
 
-            <button
-              onClick={() => setCreateAccount(true)}
-              className="bg-blue-500 rounded px-4 py-2 text-white mb-2"
-            >
-              Create account
-            </button>
-          </>
-        )}
+        <button
+          onClick={() => {
+            router.push("/createAccount");
+          }}
+          className="bg-blue-500 rounded px-4 py-2 text-white mb-2"
+        >
+          Create account
+        </button>
 
-        {createAccount && (
-          <>
-            <label
-              className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2"
-              htmlFor="username"
-            >
-              <span className="group-focus-within:text-blue-500">Username</span>
-              <input
-                className="bg-inherit outline-none group"
-                type="text"
-                name="username"
-                required={createAccount}
-              />
-            </label>
-            <label
-              className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2"
-              htmlFor="name"
-            >
-              <span className="group-focus-within:text-blue-500">Name</span>
-              <input
-                className="bg-inherit outline-none group"
-                type="text"
-                name="name"
-                required={createAccount}
-              />
-            </label>
-          </>
-        )}
-
-        {createAccount && (
-          <button
-            formAction="/auth/sign-up"
-            className="bg-blue-500 rounded px-4 py-2 text-white mb-2"
-          >
-            Sign Up
-          </button>
-        )}
-        <Messages />
+        {validityError !== "reset" && <Messages />}
       </form>
     </div>
   );
