@@ -10,6 +10,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import SetUpProfile from "@/components/client-components/SetUpProfile";
 
+export const dynamic = "force-dynamic";
+
 // TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
 // nextjs seems to make a static page => currently changes only occurr after refresh
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
