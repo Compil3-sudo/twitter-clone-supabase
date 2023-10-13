@@ -133,7 +133,14 @@ const LeftSidebar = ({
                 }`}
               >
                 <div className="w-fit px-4 py-2 rounded-full hover:bg-white/20 transition duration-200">
-                  {item.logo && <img src={item.logo.src} />}
+                  {item.logo && (
+                    <Image
+                      src={item.logo.src}
+                      width={32}
+                      height={32}
+                      alt="RT Logo"
+                    />
+                  )}
 
                   <div className="flex items-center">
                     <div>
