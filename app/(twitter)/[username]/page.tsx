@@ -1,6 +1,5 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import FollowButton from "@/components/client-components/FollowButton";
-import Tweet from "@/components/client-components/Tweet";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -10,6 +9,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import SetUpProfile from "@/components/client-components/SetUpProfile";
 import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
+import InfiniteScrollFeed from "@/components/client-components/InfiniteScrollFeed";
 
 export const dynamic = "force-dynamic";
 
@@ -137,34 +137,29 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     if (commonFollowersData) commonFollowers = commonFollowersData;
 
     followersText = generateFollowersText(commonFollowers);
-
-    // make text - 1 commonFollower:
-    // followed by user
-    // 2: followed by userA and userB
-    // 3: followed by user1, user2 and user3
-    // >3: followed by userA, userB and commonFollowers.length other you follow
   }
 
-  // need to check if this tweet author is ok ?
-  // I think the author is bugged...need to fix it
   const { data, error: userTweetsError } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(user_id), replies(user_id)")
     .eq("user_id", userProfile.id)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(10);
 
-  const profileTweets = data?.map((tweet) => ({
-    ...tweet,
-    author: tweet.author!,
-    user_has_liked: !!tweet.likes.find(
-      (like) => like.user_id === currentUserProfile.id
-    ),
-    likes: tweet.likes.length,
-    replies: tweet.replies.length,
-  }));
+  const profileTweets =
+    data?.map((tweet) => ({
+      ...tweet,
+      author: tweet.author!,
+      user_has_liked: !!tweet.likes.find(
+        (like) => like.user_id === currentUserProfile.id
+      ),
+      likes: tweet.likes.length,
+      replies: tweet.replies.length,
+    })) ?? [];
 
-  const numberOfPosts = profileTweets?.length;
-
+  // TODO: fix - this no longer works because of limit...
+  // const numberOfPosts = profileTweets?.length; // this no longer works because of limit...
+  const numberOfPosts = 0; // this no longer works because of limit...
   return (
     <>
       <div className="flex flex-col items-center">
@@ -295,17 +290,14 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
 
-        {/* TODO IMPORTANT: make infinite scroll component fetch posts pagination */}
-        <div className="flex flex-col items-center w-full">
-          {profileTweets?.map((tweet) => (
-            <Tweet
-              key={tweet.id}
-              userId={currentUserProfile.id}
-              tweet={tweet}
-              ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
-            />
-          ))}
-        </div>
+        <InfiniteScrollFeed
+          user={currentUserProfile}
+          firstTweetsPage={profileTweets}
+          ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
+          // option={InfiniteScrollFeedOption[2]} // nextjs server forbidden...
+          option={"Profile"}
+          userProfileId={userProfile.id}
+        />
       </div>
     </>
   );

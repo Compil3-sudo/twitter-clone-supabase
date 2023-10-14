@@ -4,7 +4,7 @@ import { useContext } from "react";
 import {
   InfiniteFeedContext,
   InfiniteFeedContextType,
-  InfiniteFeedTabs,
+  InfiniteScrollFeedOption,
 } from "../context/InfiniteFeedContext";
 
 const MainHeader = () => {
@@ -12,7 +12,7 @@ const MainHeader = () => {
     InfiniteFeedContext
   ) as InfiniteFeedContextType;
 
-  const changeActiveFeed = (tab: (typeof InfiniteFeedTabs)[number]) => {
+  const changeActiveFeed = (tab: (typeof InfiniteScrollFeedOption)[number]) => {
     changeFeed(tab);
   };
 
@@ -22,12 +22,12 @@ const MainHeader = () => {
         <h1 className="text-lg p-4 font-bold">Home</h1>
         <div className="flex flex-row">
           <button
-            onClick={() => changeActiveFeed(InfiniteFeedTabs[0])}
+            onClick={() => changeActiveFeed(InfiniteScrollFeedOption[0])}
             className="w-1/2 flex justify-center hover:bg-white/10"
           >
             <div
               className={`self-center ${
-                activeFeed === InfiniteFeedTabs[0]
+                activeFeed === InfiniteScrollFeedOption[0]
                   ? "border-blue-500 border-b-4 py-4 font-semibold"
                   : "text-gray-500 border-b-4 border-transparent"
               }`}
@@ -36,12 +36,12 @@ const MainHeader = () => {
             </div>
           </button>
           <button
-            onClick={() => changeActiveFeed(InfiniteFeedTabs[1])}
+            onClick={() => changeActiveFeed(InfiniteScrollFeedOption[1])}
             className="w-1/2 flex justify-center hover:bg-white/10"
           >
             <div
               className={`self-center ${
-                activeFeed === InfiniteFeedTabs[1]
+                activeFeed === InfiniteScrollFeedOption[1]
                   ? "border-blue-500 border-b-4 py-4 font-semibold"
                   : "text-gray-500 border-b-4 border-transparent"
               }`}
