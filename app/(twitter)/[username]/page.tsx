@@ -149,7 +149,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
   // I think the author is bugged...need to fix it
   const { data, error: userTweetsError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id)")
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)")
     .eq("user_id", userProfile.id)
     .order("created_at", { ascending: false });
 
@@ -160,6 +160,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
       (like) => like.user_id === currentUserProfile.id
     ),
     likes: tweet.likes.length,
+    replies: tweet.replies.length,
   }));
 
   const numberOfPosts = profileTweets?.length;

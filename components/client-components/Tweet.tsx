@@ -196,7 +196,9 @@ const Tweet = ({
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">
                   <BiMessageRounded size={20} />
                 </div>
-                <div className="text-sm px-1 justify-center">0</div>
+                <div className="text-sm px-1 justify-center">
+                  {tweet.replies}
+                </div>
               </div>
 
               <div

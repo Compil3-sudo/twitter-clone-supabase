@@ -35,7 +35,7 @@ const ForYouInfiniteFeed = ({
     const fetchTweets = async () => {
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(user_id)")
+        .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
         .order("created_at", { ascending: false })
         .limit(limit)
         .range(from, to);
@@ -50,6 +50,7 @@ const ForYouInfiniteFeed = ({
             (like) => like.user_id === user.id
           ),
           likes: tweet.likes.length,
+          replies: tweet.replies.length,
         }));
 
         setTweets([...tweets, ...newTweets]);

@@ -7,7 +7,8 @@ declare global {
   type Profile = DB["public"]["Tables"]["profiles"]["Row"];
   type TweetWithAuthor = Tweet & {
     author: Profile;
-    likes: number;
     user_has_liked: boolean;
+    likes: number;
+    replies: number;
   };
 }

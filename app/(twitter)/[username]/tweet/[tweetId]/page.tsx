@@ -39,7 +39,7 @@ const TweetPage = async ({
 
   const { data: tweet, error: tweetError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id)")
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
     .eq("id", tweetId)
     .single();
 
@@ -56,6 +56,7 @@ const TweetPage = async ({
       (like) => like.user_id === currentUserProfile.id
     ),
     likes: tweet.likes.length,
+    replies: tweet.replies.length,
   };
 
   const { data: repliesData, error: repliesError } = await supabase

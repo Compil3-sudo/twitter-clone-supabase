@@ -33,7 +33,7 @@ export default async function Home() {
 
   const { data, error } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id)")
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -43,6 +43,7 @@ export default async function Home() {
       author: tweet.author!, // there is no way for a tweet to exist without an author, because each tweet has a user_id (:= author's id)
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
+      replies: tweet.replies.length,
     })) ?? [];
 
   // fetch who the user is following
@@ -57,7 +58,7 @@ export default async function Home() {
   // only fetch tweets, where tweet author is followed by currentUser
   const { data: following, error: followingError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id)")
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
     .in("user_id", userFollowingIds)
     .order("created_at", { ascending: false })
     .limit(10);
@@ -68,6 +69,7 @@ export default async function Home() {
       author: tweet.author!, // there is no way for a tweet to exist without an author, because eacht tweet has a user_id (:= author's id)
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
+      replies: tweet.replies.length,
     })) ?? [];
 
   // IMPORTANT:

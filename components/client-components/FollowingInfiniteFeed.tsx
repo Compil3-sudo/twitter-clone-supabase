@@ -37,7 +37,7 @@ const FollowingInfiniteFeed = ({
     const fetchFollowingTweets = async () => {
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(user_id)")
+        .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
         .in("user_id", userFollowingIds)
         .order("created_at", { ascending: false })
         .limit(limit)
@@ -51,6 +51,7 @@ const FollowingInfiniteFeed = ({
           author: tweet.author!,
           user_has_liked: !!tweet.likes.find((like) => like.user_id === userId),
           likes: tweet.likes.length,
+          replies: tweet.replies.length,
         }));
 
         setFollowingTweets([...followingtweets, ...newFollowingTweets]);
