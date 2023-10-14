@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import RightSidebar from "@/components/RightSidebar";
 import LeftSidebarServer from "@/components/server-components/LeftSidebarServer";
 import ComposeTweetModalProvider from "@/components/context/ComposeTweetModalContext";
+import ComposeReplyModalProvider from "@/components/context/ComposeReplyModalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,10 +41,12 @@ export default function TwitterLayout({
 
         <div className="flex">
           <ComposeTweetModalProvider>
-            <LeftSidebarServer />
-            <main className="flex flex-col max-w-[600px] w-full h-full min-h-screen mx-2 border-l border-r">
-              {children}
-            </main>
+            <ComposeReplyModalProvider>
+              <LeftSidebarServer />
+              <main className="flex flex-col max-w-[600px] w-full h-full min-h-screen mx-2 border-l border-r">
+                {children}
+              </main>
+            </ComposeReplyModalProvider>
           </ComposeTweetModalProvider>
           <RightSidebar />
         </div>

@@ -1,17 +1,22 @@
+"use client";
+
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React, { useEffect, useState } from "react";
 import { getPagination } from "./InfiniteFeed";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Tweet from "./Tweet";
 
+// TODO: IMPORTANT - make ONLY ONE REUSABLE INFINITE SCROLL COMPONENT
 const FollowingInfiniteFeed = ({
   userId,
   firstFollowingTweetsPage,
   userFollowingIds,
+  ComposeReply,
 }: {
   userId: string;
   firstFollowingTweetsPage: TweetWithAuthor[];
   userFollowingIds: string[];
+  ComposeReply: JSX.Element;
 }) => {
   const [followingtweets, setFollowingTweets] = useState(
     firstFollowingTweetsPage
@@ -82,7 +87,12 @@ const FollowingInfiniteFeed = ({
               loader={<h4>Loading...</h4>}
             >
               {followingtweets.map((tweet) => (
-                <Tweet key={tweet.id} userId={userId} tweet={tweet} />
+                <Tweet
+                  key={tweet.id}
+                  userId={userId}
+                  tweet={tweet}
+                  ComposeReply={ComposeReply}
+                />
               ))}
             </InfiniteScroll>
           ) : (

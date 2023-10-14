@@ -3,17 +3,12 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 import ComposeReplyClient from "../client-components/ComposeReplyClient";
+import { replyTweetType } from "../context/ComposeReplyModalContext";
 
 export const dynamic = "force-dynamic";
 
-const ComposeReplyServer = async ({
-  user,
-  tweet,
-}: {
-  user: Profile;
-  tweet: TweetWithAuthor;
-}) => {
-  const submitTweet = async (formData: FormData) => {
+const ComposeReplyServer = async ({ user }: { user: Profile }) => {
+  const submitTweet = async (formData: FormData, tweet: replyTweetType) => {
     "use server";
 
     const supabase = createServerActionClient<Database>({ cookies });

@@ -6,12 +6,15 @@ import { getPagination } from "./InfiniteFeed";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Tweet from "./Tweet";
 
+// TODO: IMPORTANT - make ONLY ONE REUSABLE INFINITE SCROLL COMPONENT
 const ForYouInfiniteFeed = ({
-  userId,
+  user,
   firstTweetsPage,
+  ComposeReply,
 }: {
-  userId: string;
+  user: Profile;
   firstTweetsPage: TweetWithAuthor[];
+  ComposeReply: JSX.Element;
 }) => {
   const [tweets, setTweets] = useState(firstTweetsPage);
   const [hasMore, setHasMore] = useState(true);
@@ -43,7 +46,9 @@ const ForYouInfiniteFeed = ({
         const newTweets = data?.map((tweet) => ({
           ...tweet,
           author: tweet.author!,
-          user_has_liked: !!tweet.likes.find((like) => like.user_id === userId),
+          user_has_liked: !!tweet.likes.find(
+            (like) => like.user_id === user.id
+          ),
           likes: tweet.likes.length,
         }));
 
@@ -77,7 +82,12 @@ const ForYouInfiniteFeed = ({
               loader={<h4>Loading...</h4>}
             >
               {tweets.map((tweet) => (
-                <Tweet key={tweet.id} userId={userId} tweet={tweet} />
+                <Tweet
+                  key={tweet.id}
+                  userId={user.id}
+                  tweet={tweet}
+                  ComposeReply={ComposeReply}
+                />
               ))}
             </InfiniteScroll>
           ) : (

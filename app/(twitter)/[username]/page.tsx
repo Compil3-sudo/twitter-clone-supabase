@@ -9,6 +9,7 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import SetUpProfile from "@/components/client-components/SetUpProfile";
+import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
   // user must be logged in to see profile pages
   if (!currentUser) redirect("/");
+
+  const { data: currentUserProfile, error: currentUserProfileError } =
+    await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .single();
+
+  if (!currentUserProfile) redirect("/");
 
   const { data: userProfile, error } = await supabase
     .from("profiles")
@@ -73,8 +83,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     .select("*")
     .eq("followed_id", userProfile.id);
 
-  const ownProfile =
-    currentUser.user_metadata.user_name === userProfile.username;
+  const ownProfile = currentUserProfile.username === userProfile.username;
 
   let isUserFollowingProfile = false;
   let commonFollowersIds = [] as Profile["id"][];
@@ -103,7 +112,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     const { data: userFollowing, error: userFollowingError } = await supabase
       .from("followers")
       .select("followed_id")
-      .eq("follower_id", currentUser.id);
+      .eq("follower_id", currentUserProfile.id);
 
     // the !! transforms it from object/undefined to true/false
     isUserFollowingProfile = !!userFollowing?.find(
@@ -148,7 +157,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     ...tweet,
     author: tweet.author!,
     user_has_liked: !!tweet.likes.find(
-      (like) => like.user_id === currentUser.id
+      (like) => like.user_id === currentUserProfile.id
     ),
     likes: tweet.likes.length,
   }));
@@ -202,7 +211,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
                   <FollowButton
                     isUserFollowingProfile={isUserFollowingProfile}
                     userProfileId={userProfile.id}
-                    currentUserId={currentUser.id}
+                    currentUserId={currentUserProfile.id}
                   />
                 </div>
               )}
@@ -285,9 +294,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
 
+        {/* TODO IMPORTANT: make infinite scroll component fetch posts pagination */}
         <div className="flex flex-col items-center w-full">
           {profileTweets?.map((tweet) => (
-            <Tweet key={tweet.id} userId={currentUser.id} tweet={tweet} />
+            <Tweet
+              key={tweet.id}
+              userId={currentUserProfile.id}
+              tweet={tweet}
+              ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
+            />
           ))}
         </div>
       </div>

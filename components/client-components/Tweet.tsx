@@ -8,19 +8,34 @@ import { FiShare } from "react-icons/fi";
 import { IoIosStats } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import {
+  ComposeReplyModalContext,
+  ComposeReplyModalContextType,
+} from "../context/ComposeReplyModalContext";
+import Modal from "./Modal";
+import { VscClose } from "react-icons/vsc";
 
 const Tweet = ({
   userId,
   tweet,
+  ComposeReply,
 }: {
   userId: string;
+  // TODO: CHANGE TYPE BACK - FIGURE OUT REPLY
   // tweet: TweetWithAuthor;
   tweet: any;
+  ComposeReply: JSX.Element;
 }) => {
   const router = useRouter();
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [mediaType, setMediaType] = useState<string>("");
+  const {
+    showComposeReplyModal,
+    changeReplyModal,
+    replyTweet,
+    changeReplyTweet,
+  } = useContext(ComposeReplyModalContext) as ComposeReplyModalContextType;
 
   useEffect(() => {
     if (tweet.media_id) {
@@ -69,8 +84,33 @@ const Tweet = ({
     event.stopPropagation(); // Prevent the click event from propagating to the parent div
   };
 
+  const openReplyModal = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    const helper = {
+      author: {
+        username: tweet.author.username,
+      },
+      id: tweet.id,
+    };
+    changeReplyTweet(helper);
+    changeReplyModal(true);
+  };
+
   return (
     <>
+      {showComposeReplyModal && tweet.id === replyTweet?.id && (
+        <Modal onClose={() => changeReplyModal(false)}>
+          <div className="flex flex-col bg-slate-950 rounded-3xl px-2 py-4 sm:w-[600px] w-[300px]">
+            <div
+              onClick={() => changeReplyModal(false)}
+              className="p-1 mx-4 rounded-full w-fit cursor-pointer text-gray-300 hover:bg-gray-500"
+            >
+              <VscClose size={25} />
+            </div>
+            {ComposeReply}
+          </div>
+        </Modal>
+      )}
       <div
         onClick={navigateToTweet}
         className="flex w-full py-2 px-4 space-x-3 border-b cursor-pointer"
@@ -150,7 +190,7 @@ const Tweet = ({
           <footer>
             <div className="flex text-gray-500 justify-between">
               <div
-                onClick={stopNavigationPropagation}
+                onClick={openReplyModal}
                 className="group flex items-center hover:text-blue-500 transition duration-200"
               >
                 <div className="group-hover:bg-blue-500/10 p-2 rounded-full">

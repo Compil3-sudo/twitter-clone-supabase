@@ -1,30 +1,49 @@
 "use client";
 
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomTextArea from "./CustomTextArea";
 import Image from "next/image";
 import { PostgrestError } from "@supabase/supabase-js";
 import {
-  ComposeTweetModalContext,
-  ComposeTweetModalContextType,
-} from "../context/ComposeTweetModalContext";
+  ComposeReplyModalContext,
+  ComposeReplyModalContextType,
+  replyTweetType,
+} from "../context/ComposeReplyModalContext";
+import { useParams } from "next/navigation";
 
 const ComposeReplyClient = ({
   user,
   serverAction,
 }: {
   user: Profile;
-  serverAction: (formData: FormData) => Promise<PostgrestError | null>;
+  serverAction: (
+    formData: FormData,
+    tweet: replyTweetType
+  ) => Promise<PostgrestError | null>;
 }) => {
   const replyTextRef = useRef<HTMLTextAreaElement>(null);
   const [media, setMedia] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const params = useParams();
+  const {
+    showComposeReplyModal,
+    changeReplyModal,
+    replyTweet,
+    changeReplyTweet,
+  } = useContext(ComposeReplyModalContext) as ComposeReplyModalContextType;
   const replyMaxLength = 280;
 
-  // COMPOSE REPLY MODAL:
-  const { showComposeTweetModal, changeComposeModal } = useContext(
-    ComposeTweetModalContext
-  ) as ComposeTweetModalContextType;
+  useEffect(() => {
+    if (params.username && params.tweetId) {
+      const helper = {
+        author: {
+          username: params.username.toString(),
+        },
+        id: params.tweetId.toString(),
+      };
+      changeReplyTweet(helper);
+    }
+  }, []);
 
   const sendReply = async (formData: FormData) => {
     setSubmitting(true);
@@ -33,11 +52,11 @@ const ComposeReplyClient = ({
       replyTextRef.current.value.length <= replyMaxLength
     ) {
       try {
-        const responseError = await serverAction(formData);
+        const responseError = await serverAction(formData, replyTweet!);
         replyTextRef.current.value = "";
         setMedia(null);
 
-        if (showComposeTweetModal) changeComposeModal(false);
+        if (showComposeReplyModal) changeReplyModal(false);
 
         if (responseError) {
           console.log(responseError.message);

@@ -5,6 +5,7 @@ import InfiniteFeed from "@/components/client-components/InfiniteFeed";
 import MainHeader from "@/components/client-components/MainHeader";
 import ComposeTweetServer from "@/components/server-components/ComposeTweetServer";
 import InfiniteFeedProvider from "@/components/context/InfiniteFeedContext";
+import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
 
 export const dynamic = "force-dynamic";
 
@@ -81,10 +82,11 @@ export default async function Home() {
         <MainHeader />
         <ComposeTweetServer user={currentUserProfile} />
         <InfiniteFeed
-          userId={currentUserProfile.id}
+          user={currentUserProfile}
           firstTweetsPage={recentTweets}
           firstFollowingTweetsPage={followingTweets}
           userFollowingIds={userFollowingIds}
+          ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
         />
       </InfiniteFeedProvider>
     </>

@@ -18,15 +18,17 @@ export const getPagination = (page: number, size: number) => {
 };
 
 const InfiniteFeed = ({
-  userId,
+  user,
   firstTweetsPage,
   firstFollowingTweetsPage,
   userFollowingIds,
+  ComposeReply,
 }: {
-  userId: string;
+  user: Profile;
   firstTweetsPage: TweetWithAuthor[];
   firstFollowingTweetsPage: TweetWithAuthor[];
   userFollowingIds: string[];
+  ComposeReply: JSX.Element;
 }) => {
   const { activeFeed } = useContext(
     InfiniteFeedContext
@@ -35,12 +37,17 @@ const InfiniteFeed = ({
   return (
     <>
       {activeFeed === InfiniteFeedTabs[0] ? (
-        <ForYouInfiniteFeed userId={userId} firstTweetsPage={firstTweetsPage} />
+        <ForYouInfiniteFeed
+          user={user}
+          firstTweetsPage={firstTweetsPage}
+          ComposeReply={ComposeReply}
+        />
       ) : (
         <FollowingInfiniteFeed
-          userId={userId}
+          userId={user.id}
           firstFollowingTweetsPage={firstFollowingTweetsPage}
           userFollowingIds={userFollowingIds}
+          ComposeReply={ComposeReply}
         />
       )}
     </>

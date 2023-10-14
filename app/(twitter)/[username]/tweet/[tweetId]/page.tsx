@@ -83,9 +83,13 @@ const TweetPage = async ({
       <ArrowHeader title="Post" />
       {/* POST HEADER */}
       {/* TODO: OPTIONAL: make tweet view page instead of reusing Tweet component ? */}
-      <Tweet userId={currentUserProfile.id} tweet={mappedTweet} />
+      <Tweet
+        userId={currentUserProfile.id}
+        tweet={mappedTweet}
+        ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
+      />
       <h2>add bookmark somewhere</h2>
-      <ComposeReplyServer user={currentUserProfile} tweet={mappedTweet} />
+      <ComposeReplyServer user={currentUserProfile} />
 
       {/* TODO: IMPORTANT: make infinite scroll component - load pagination, fetch replies in batches */}
 
@@ -93,7 +97,16 @@ const TweetPage = async ({
         // TODO: MAKE REPLY COMPONENT - VERY SIMILAR TO TWEET...
         // OR make TWEET component into POST component
         // can be either a tweet or a reply ?
-        <Tweet key={reply.id} userId={currentUserProfile.id} tweet={reply} />
+
+        // TODO: IMPORTANT - FIX THIS
+        // CAN NOT USE THE SAME COMPONENT
+        // IT TRIES TO ACCESS TWEETS TABLE
+        <Tweet
+          key={reply.id}
+          userId={currentUserProfile.id}
+          tweet={reply}
+          ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
+        />
       ))}
 
       {
