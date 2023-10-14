@@ -7,7 +7,7 @@ import { BiMessageRounded, BiRepost } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { IoIosStats } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useContext, useEffect, useState } from "react";
 import {
   ComposeReplyModalContext,
@@ -37,36 +37,59 @@ const Tweet = ({
     changeReplyTweet,
   } = useContext(ComposeReplyModalContext) as ComposeReplyModalContextType;
 
-  useEffect(() => {
-    if (tweet.media_id) {
-      const downloadMedia = async () => {
-        try {
-          const supabase = createClientComponentClient();
-          const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
+  // useEffect(() => {
+  //   if (tweet.media_id) {
+  //     const downloadMedia = async () => {
+  // try {
+  //   const supabase = createClientComponentClient();
+  //   const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
 
-          const { data, error } = await supabase.storage
-            .from("tweets")
-            .download(path);
-          if (error) {
-            throw error;
-          }
+  //   const { data, error } = await supabase.storage
+  //     .from("tweets")
+  //     .download(path);
+  //   if (error) {
+  //     throw error;
+  //   }
 
-          if (tweet.media_extension === "mp4") {
-            setMediaType("video");
-          } else {
-            setMediaType("image");
-          }
+  // if (tweet.media_extension === "mp4") {
+  //   setMediaType("video");
+  // } else {
+  //   setMediaType("image");
+  // }
 
-          const media_url = URL.createObjectURL(data);
-          setMediaUrl(media_url);
-        } catch (error) {
-          console.log("Error downloading media: ", error);
-        }
-      };
+  // const media_url = URL.createObjectURL(data);
+  // setMediaUrl(media_url);
+  // } catch (error) {
+  //   console.log("Error downloading media: ", error);
+  // }
+  //   const supabase = createClientComponentClient();
+  //   const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
 
-      downloadMedia();
-    }
-  }, []);
+  //   const { data, error } = await supabase.storage
+  //     .from("tweets")
+  //     .createSignedUrl(path, 60, {
+  //       transform: {
+  //         width: 100,
+  //         height: 100,
+  //       },
+  //     });
+
+  //   console.log(data?.signedUrl);
+
+  //   if (tweet.media_extension === "mp4") {
+  //     setMediaType("video");
+  //   } else {
+  //     setMediaType("image");
+  //   }
+
+  //   // const media_url = URL.createObjectURL(data);
+  //   setMediaUrl(data?.signedUrl || null);
+  //   return data?.signedUrl;
+  // };
+
+  // const media_url = downloadMedia();
+  //   }
+  // }, []);
 
   const navigateToTweet = () => {
     router.push(`/${tweet.author.username}/tweet/${tweet.id}`);
@@ -162,24 +185,28 @@ const Tweet = ({
           {/* add tweet media - image / video ? later */}
           {tweet.media_id && (
             <div className="">
-              {mediaUrl && (
+              {tweet.mediaUrl && (
                 <>
-                  {mediaType === "image" ? (
-                    <Image
-                      width={140}
-                      height={140}
-                      src={mediaUrl}
-                      alt="Media"
-                      className="rounded-xl"
-                    />
-                  ) : mediaType === "video" ? (
-                    <video controls>
-                      <source
-                        src={mediaUrl}
-                        type={`video/${tweet.media_extension}`}
+                  {
+                    // mediaType === "image" ? (
+                    tweet.media_extension !== "mp4" ? (
+                      <Image
+                        width={140}
+                        height={140}
+                        src={tweet.mediaUrl}
+                        alt="Media"
+                        className="rounded-xl"
                       />
-                    </video>
-                  ) : null}
+                    ) : // mediaType === "video" ? (
+                    tweet.media_extension === "mp4" ? (
+                      <video controls>
+                        <source
+                          src={tweet.mediaUrl}
+                          type={`video/${tweet.media_extension}`}
+                        />
+                      </video>
+                    ) : null
+                  }
                 </>
               )}
             </div>

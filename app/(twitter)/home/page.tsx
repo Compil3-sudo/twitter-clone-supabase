@@ -37,6 +37,59 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(10);
 
+  const downloadMedia = async (tweets: any) => {
+    const paths = [] as string[];
+
+    tweets.forEach((tweet: any) => {
+      if (tweet.media_id) {
+        paths.push(
+          `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`
+        );
+      }
+    });
+
+    const { data, error } = await supabase.storage
+      .from("tweets")
+      .createSignedUrls(paths, 60);
+
+    // console.log(data);
+    // const tweetsWithMedia = data?.map((signedMedia) => ({
+    //   tweetMediaId: signedMedia.path?.split("/")[1].split(".")[0],
+    //   mediaUrl: signedMedia.signedUrl,
+    // }));
+
+    const mediaDictionary: Record<string, string> = {};
+    data?.forEach((signedMedia) => {
+      const key = signedMedia.path?.split("/")[1].split(".")[0];
+
+      if (key) {
+        mediaDictionary[key] = signedMedia.signedUrl;
+      } else {
+        console.log("Error with key for: ", signedMedia);
+      }
+    });
+    // console.log(tweetsWithMedia);
+    // const mediaURL = data;
+
+    // let mediaType;
+
+    // if (tweet.media_extension === "mp4") {
+    //   // setMediaType("video");
+    //   mediaType = "video";
+    // } else {
+    //   // setMediaType("image");
+    //   mediaType = "image";
+    // }
+
+    // const media_url = URL.createObjectURL(data);
+    // setMediaUrl(data?.signedUrl || null);
+    // return { mediaURL, mediaType };
+    return mediaDictionary;
+  };
+
+  const mediaDictionary = await downloadMedia(data);
+  // console.log(mediaDictionary);
+
   const recentTweets =
     data?.map((tweet) => ({
       ...tweet,
@@ -44,7 +97,10 @@ export default async function Home() {
       user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
       likes: tweet.likes.length,
       replies: tweet.replies.length,
+      mediaUrl: tweet.media_id ? mediaDictionary[tweet.media_id] : null,
     })) ?? [];
+
+  // console.log("TWEETS: ", recentTweets);
 
   // fetch who the user is following
   const { data: userFollowing } = await supabase
