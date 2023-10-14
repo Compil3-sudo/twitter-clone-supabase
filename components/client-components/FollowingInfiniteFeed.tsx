@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getPagination } from "./InfiniteFeed";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Tweet from "./Tweet";
+import { ImSpinner2 } from "react-icons/im";
 
 // TODO: IMPORTANT - make ONLY ONE REUSABLE INFINITE SCROLL COMPONENT
 const FollowingInfiniteFeed = ({
@@ -85,7 +86,12 @@ const FollowingInfiniteFeed = ({
               dataLength={followingtweets.length}
               next={loadMoreFollowingTweets}
               hasMore={hasMoreFollowingTweets}
-              loader={<h4>Loading...</h4>}
+              loader={
+                <ImSpinner2
+                  size={50}
+                  className="animate-spin text-blue-500 mx-auto mt-8"
+                />
+              }
             >
               {followingtweets.map((tweet) => (
                 <Tweet
