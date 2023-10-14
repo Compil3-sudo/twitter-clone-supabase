@@ -38,19 +38,19 @@ export default async function Home() {
     .limit(10);
 
   const downloadMedia = async (tweets: any) => {
-    const paths = [] as string[];
+    // const paths = [] as string[];
 
-    tweets.forEach((tweet: any) => {
-      if (tweet.media_id) {
-        paths.push(
-          `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`
-        );
-      }
-    });
+    // tweets.forEach((tweet: any) => {
+    //   if (tweet.media_id) {
+    //     paths.push(
+    //       `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`
+    //     );
+    //   }
+    // });
 
-    const { data, error } = await supabase.storage
-      .from("tweets")
-      .createSignedUrls(paths, 60);
+    // const { data, error } = await supabase.storage
+    //   .from("tweets")
+    //   .createSignedUrls(paths, 60);
 
     // console.log(data);
     // const tweetsWithMedia = data?.map((signedMedia) => ({
@@ -58,16 +58,16 @@ export default async function Home() {
     //   mediaUrl: signedMedia.signedUrl,
     // }));
 
-    const mediaDictionary: Record<string, string> = {};
-    data?.forEach((signedMedia) => {
-      const key = signedMedia.path?.split("/")[1].split(".")[0];
+    // const mediaDictionary: Record<string, string> = {};
+    // data?.forEach((signedMedia) => {
+    //   const key = signedMedia.path?.split("/")[1].split(".")[0];
 
-      if (key) {
-        mediaDictionary[key] = signedMedia.signedUrl;
-      } else {
-        console.log("Error with key for: ", signedMedia);
-      }
-    });
+    //   if (key) {
+    //     mediaDictionary[key] = signedMedia.signedUrl;
+    //   } else {
+    //     console.log("Error with key for: ", signedMedia);
+    //   }
+    // });
     // console.log(tweetsWithMedia);
     // const mediaURL = data;
 
@@ -84,11 +84,42 @@ export default async function Home() {
     // const media_url = URL.createObjectURL(data);
     // setMediaUrl(data?.signedUrl || null);
     // return { mediaURL, mediaType };
+    // const mediaDictionary: Record<string, string> = {};
+    // tweets.forEach(async (tweet: any) => {
+    //   if (tweet.media_id) {
+    //     const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
+    //     const { data, error } = await supabase.storage
+    //       .from("tweets")
+    //       .createSignedUrl(path, 60);
+
+    //     if (data) mediaDictionary[tweet.media_id] = data.signedUrl;
+    //     console.log(mediaDictionary);
+    //   }
+    // });
+    // console.log(mediaDictionary);
+
+    const mediaDictionary: Record<string, string> = {};
+
+    for (const tweet of tweets) {
+      if (tweet.media_id) {
+        const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
+        const { data, error } = await supabase.storage
+          .from("tweets")
+          .createSignedUrl(path, 60);
+
+        if (data) {
+          mediaDictionary[tweet.media_id] = data.signedUrl;
+        }
+      }
+    }
+
+    console.log(mediaDictionary);
+
     return mediaDictionary;
   };
 
   const mediaDictionary = await downloadMedia(data);
-  // console.log(mediaDictionary);
+  console.log(mediaDictionary);
 
   const recentTweets =
     data?.map((tweet) => ({
