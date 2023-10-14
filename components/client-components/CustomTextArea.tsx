@@ -143,7 +143,7 @@ const CustomTextArea = ({
             <button
               disabled={submitting}
               type="submit"
-              className="rounded-full bg-blue-500 py-2 px-4"
+              className="rounded-full bg-blue-500 hover:bg-opacity-80 transition ease-in-out py-2 px-4"
             >
               {buttonText}
             </button>
