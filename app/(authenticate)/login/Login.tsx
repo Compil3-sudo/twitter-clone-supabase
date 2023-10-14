@@ -130,7 +130,7 @@ export default function Login() {
             required
           />
         </label> */}
-        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
+        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-lg outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
           <span className="group-focus-within:text-blue-500">Email</span>
           <input
             className="bg-inherit outline-none group"
@@ -141,7 +141,7 @@ export default function Login() {
           />
         </label>
 
-        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-md outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
+        <label className="group focus-within:outline-blue-500 focus-within:outline-2 flex flex-col text-lg outline outline-1 outline-slate-700 rounded-lg p-2 my-2">
           <span className="group-focus-within:text-blue-500">Password</span>
           <input
             className="bg-inherit outline-none group"
