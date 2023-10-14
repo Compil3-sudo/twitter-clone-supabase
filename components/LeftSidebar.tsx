@@ -49,6 +49,7 @@ const LeftSidebar = ({
   );
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [windowSize, setWindowSize] = useState(window.innerWidth);
 
   const { showComposeTweetModal, changeComposeModal } = useContext(
     ComposeTweetModalContext
@@ -122,18 +123,34 @@ const LeftSidebar = ({
     setShowSidebar(false);
   }, [path]);
 
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowSize(window.innerWidth);
+    }
+
+    if (windowSize > 640) {
+      setShowSidebar(false);
+    }
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, [windowSize]);
+
   return (
     <>
-      <div
+      <button
         onClick={() => setShowSidebar(!showSidebar)}
-        className="sm:hidden fixed top-2/3 z-30 rounded-full bg-blue-500 ml-2 p-2"
+        className="sm:hidden fixed top-3/4 z-30 ml-2 p-2 rounded-full bg-blue-500 hover:bg-opacity-80 transition ease-in-out"
       >
         {showSidebar ? (
           <TbLayoutSidebarLeftCollapseFilled size={25} />
         ) : (
           <TbLayoutSidebarLeftExpandFilled size={25} />
         )}
-      </div>
+      </button>
 
       <div
         className={`${
