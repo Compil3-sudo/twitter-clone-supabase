@@ -49,7 +49,7 @@ const LeftSidebar = ({
   );
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const [windowSize, setWindowSize] = useState(0);
 
   const { showComposeTweetModal, changeComposeModal } = useContext(
     ComposeTweetModalContext
@@ -159,7 +159,7 @@ const LeftSidebar = ({
       >
         <div
           className={`${
-            showSidebar ? "top-0 left-0 bg-slate-950 w-full" : ""
+            showSidebar ? "left-0 bg-slate-950 w-full" : ""
           } top-0 fixed flex flex-col h-full justify-between px-2`}
         >
           <div className="flex flex-col text-xl">
