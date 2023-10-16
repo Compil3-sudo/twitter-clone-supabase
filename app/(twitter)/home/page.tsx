@@ -98,7 +98,10 @@ export default async function Home() {
     // });
     // console.log(mediaDictionary);
 
-    const mediaDictionary: Record<string, string> = {};
+    // const mediaDictionary: Record<string, string> = {};
+
+    let tweetsWithMedia = [];
+    let mediaUrl = null;
 
     for (const tweet of tweets) {
       if (tweet.media_id) {
@@ -108,28 +111,85 @@ export default async function Home() {
           .createSignedUrl(path, 60);
 
         if (data) {
-          mediaDictionary[tweet.media_id] = data.signedUrl;
+          // mediaDictionary[tweet.media_id] = data.signedUrl;
+          mediaUrl = data.signedUrl;
         }
       }
+      const updatedTweet = {
+        ...tweet,
+        // author: tweet.author, // why am I setting this if tweet.author already exists ?
+        user_has_liked: !!tweet.likes.find(
+          (like: any) => like.user_id === user.id
+        ),
+        likes: tweet.likes.length,
+        replies: tweet.replies.length,
+        // mediaUrl: tweet.media_id ? mediaDictionary[tweet.media_id] : null,
+        mediaUrl: mediaUrl,
+      };
+      tweetsWithMedia.push(updatedTweet);
     }
 
-    console.log(mediaDictionary);
+    // console.log(mediaDictionary);
 
-    return mediaDictionary;
+    // return { mediaDictionary, tweetsWithMedia };
+    return tweetsWithMedia;
   };
 
-  const mediaDictionary = await downloadMedia(data);
-  console.log(mediaDictionary);
+  // const { mediaDictionary, tweetsWithMedia } = await downloadMedia(data);
+  // const tweetsWithMedia = downloadMedia(data);
 
-  const recentTweets =
-    data?.map((tweet) => ({
-      ...tweet,
-      author: tweet.author!, // there is no way for a tweet to exist without an author, because each tweet has a user_id (:= author's id)
-      user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
-      likes: tweet.likes.length,
-      replies: tweet.replies.length,
-      mediaUrl: tweet.media_id ? mediaDictionary[tweet.media_id] : null,
-    })) ?? [];
+  // const tweetsWithMedia = await downloadMedia(data);
+  // console.log(tweetsWithMedia)
+
+  // console.log("MEDIA DICTIONARY: ", mediaDictionary);
+  // console.log("TWEETS WITH MEDIA: ", tweetsWithMedia);
+
+  const downloadMedia2 = async (tweets: any) => {
+    let tweetsWithMedia = [];
+    let mediaUrl = null;
+
+    for (const tweet of tweets) {
+      if (tweet.media_id) {
+        const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
+        mediaUrl = await supabase.storage
+          .from("tweets")
+          .download(path)
+          .then((data) => {
+            if (data.data) {
+              return URL.createObjectURL(data.data);
+            }
+          });
+      }
+      const updatedTweet = {
+        ...tweet,
+        // author: tweet.author, // why am I setting this if tweet.author already exists ?
+        user_has_liked: !!tweet.likes.find(
+          (like: any) => like.user_id === user.id
+        ),
+        likes: tweet.likes.length,
+        replies: tweet.replies.length,
+        // mediaUrl: tweet.media_id ? mediaDictionary[tweet.media_id] : null,
+        mediaUrl: mediaUrl,
+      };
+      tweetsWithMedia.push(updatedTweet);
+    }
+
+    return tweetsWithMedia;
+  };
+
+  const tweetsWithMedia = await downloadMedia(data);
+
+  // const recentTweets =
+  //   data?.map((tweet) => ({
+  //     ...tweet,
+  //     author: tweet.author!, // there is no way for a tweet to exist without an author, because each tweet has a user_id (:= author's id)
+  //     user_has_liked: !!tweet.likes.find((like) => like.user_id === user.id),
+  //     likes: tweet.likes.length,
+  //     replies: tweet.replies.length,
+  //     mediaUrl: tweet.media_id ? mediaDictionary[tweet.media_id] : null,
+  //   })) ?? [];
+
+  const recentTweets = tweetsWithMedia as TweetWithAuthor[];
 
   // console.log("TWEETS: ", recentTweets);
 
