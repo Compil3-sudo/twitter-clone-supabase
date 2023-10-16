@@ -30,6 +30,9 @@ const CustomTextArea = ({
   const [remainingChars, setRemainingChars] = useState(txtAreaMaxLength);
   const [uploading, setUploading] = useState(false);
 
+  const isButtonDisabled =
+    submitting || (!txtAreaTextRef.current?.value.length && !media);
+
   const countCharacters = () => {
     setRemainingChars(txtAreaMaxLength - txtAreaTextRef.current!.value.length);
   };
@@ -141,9 +144,13 @@ const CustomTextArea = ({
             )}
 
             <button
-              disabled={submitting}
+              disabled={isButtonDisabled}
               type="submit"
-              className="rounded-full bg-blue-500 hover:bg-opacity-80 transition ease-in-out py-2 px-4"
+              className={`${
+                isButtonDisabled
+                  ? "bg-opacity-50 text-foreground/50"
+                  : "hover:bg-opacity-80 transition ease-in-out"
+              } rounded-full bg-blue-500 py-2 px-4`}
             >
               {buttonText}
             </button>
