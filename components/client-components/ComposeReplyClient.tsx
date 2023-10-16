@@ -86,6 +86,7 @@ const ComposeReplyClient = ({
           txtAreaTextRef={replyTextRef}
           media={media}
           onUploadMedia={(uploadMedia: File) => setMedia(uploadMedia)}
+          onRemoveMedia={() => setMedia(null)}
           buttonText="Reply"
           submitting={submitting}
           txtAreaPlaceholder="Post your reply"

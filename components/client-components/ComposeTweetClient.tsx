@@ -66,6 +66,7 @@ const ComposeTweetClient = ({
           txtAreaTextRef={tweetTextRef}
           media={media}
           onUploadMedia={(uploadMedia: File) => setMedia(uploadMedia)}
+          onRemoveMedia={() => setMedia(null)}
           buttonText="Post"
           submitting={submitting}
           txtAreaPlaceholder="What is happening?!"

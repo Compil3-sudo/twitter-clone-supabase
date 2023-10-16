@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { GoFileMedia } from "react-icons/go";
+import { VscClose } from "react-icons/vsc";
 
 type CustomTextAreaProps = {
   formAction: (formData: FormData) => void;
   txtAreaTextRef: React.RefObject<HTMLTextAreaElement>;
   media: File | null;
   onUploadMedia: (uploadMedia: File) => void;
+  onRemoveMedia: () => void;
   buttonText: string;
   submitting: boolean;
   txtAreaPlaceholder: string;
@@ -19,6 +21,7 @@ const CustomTextArea = ({
   txtAreaTextRef,
   media,
   onUploadMedia,
+  onRemoveMedia,
   buttonText,
   submitting,
   txtAreaPlaceholder,
@@ -101,12 +104,18 @@ const CustomTextArea = ({
             placeholder={txtAreaPlaceholder}
           />
           {media && (
-            <div className="my-4">
+            <div className="my-4 relative">
+              <div
+                onClick={() => onRemoveMedia()}
+                className="absolute right-2 top-2 w-fit p-2 bg-slate-700 hover:bg-opacity-90 rounded-full cursor-pointer"
+              >
+                <VscClose size={20} />
+              </div>
               {media.type.startsWith("image/") ? (
                 <img
                   src={URL.createObjectURL(media)}
                   alt="Media Preview"
-                  className="max-w-full h-auto"
+                  className="w-full h-auto"
                 />
               ) : media.type.startsWith("video/") ? (
                 <video controls>
