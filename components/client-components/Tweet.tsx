@@ -15,6 +15,7 @@ import {
 } from "../context/ComposeReplyModalContext";
 import Modal from "./Modal";
 import { VscClose } from "react-icons/vsc";
+import { ImSpinner2 } from "react-icons/im";
 
 const Tweet = ({
   userId,
@@ -162,7 +163,7 @@ const Tweet = ({
           {/* add tweet media - image / video ? later */}
           {tweet.media_id && (
             <div className="">
-              {mediaUrl && (
+              {mediaUrl ? (
                 <>
                   {mediaType === "image" ? (
                     <Image
@@ -181,6 +182,11 @@ const Tweet = ({
                     </video>
                   ) : null}
                 </>
+              ) : (
+                <ImSpinner2
+                  size={50}
+                  className="animate-spin text-blue-500 mx-auto mt-8"
+                />
               )}
             </div>
           )}

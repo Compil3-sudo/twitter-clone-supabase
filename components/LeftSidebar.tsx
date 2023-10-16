@@ -159,7 +159,7 @@ const LeftSidebar = ({
       >
         <div
           className={`${
-            showSidebar ? "left-0 bg-slate-950 w-full" : ""
+            showSidebar ? "left-0 pl-10 bg-slate-950 w-full" : ""
           } top-0 fixed flex flex-col h-full justify-between px-2`}
         >
           <div className="flex flex-col text-xl">
@@ -236,6 +236,7 @@ const LeftSidebar = ({
               <div className="w-full">
                 <button
                   onClick={() => {
+                    setShowSidebar(false);
                     changeComposeModal(true);
                   }}
                   className="xl:hidden w-fit px-3 py-2"
