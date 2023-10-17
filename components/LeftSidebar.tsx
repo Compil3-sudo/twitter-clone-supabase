@@ -260,13 +260,17 @@ const LeftSidebar = ({
               className="self-center cursor-pointer rounded-full w-fit hover:bg-white/20 p-2 mb-3"
             >
               <div className="grid gap-2 grid-flow-col items-center">
-                <Image
-                  src={user.avatar_url}
-                  height={40}
-                  width={40}
-                  alt="Profile Image"
-                  className="rounded-full"
-                />
+                <div className="flex-none overflow-hidden w-10 h-10">
+                  <div className="w-full h-full relative">
+                    <Image
+                      src={user.avatar_url}
+                      objectFit="cover"
+                      layout="fill"
+                      className="rounded-full"
+                      alt="Profile Image"
+                    />
+                  </div>
+                </div>
                 <div className="hidden xl:flex flex-col">
                   <h2 className="">{user.name}</h2>
                   <h2 className="text-gray-500">@{user.username}</h2>

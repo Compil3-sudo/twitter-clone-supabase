@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import { MdAddAPhoto } from "react-icons/md";
@@ -74,7 +74,7 @@ export default function Avatar({
       <div className="flex justify-center align-middle my-16">
         <label
           htmlFor="addAvatar"
-          className="absolute top-1/2 cursor-pointer bg-slate-700 rounded-full p-2 hover:bg-opacity-90 transition duration-200"
+          className="absolute z-10 top-1/2 cursor-pointer bg-slate-700 rounded-full p-2 hover:bg-opacity-90 transition duration-200"
         >
           <MdAddAPhoto size={25} />
         </label>
@@ -87,13 +87,17 @@ export default function Avatar({
           disabled={uploading}
         />
         <div className="border-4 border-white rounded-full">
-          <Image
-            src={avatar_url}
-            height={175}
-            width={175}
-            alt="Profile Image"
-            className="rounded-full border-2 border-black"
-          />
+          <div className="flex-none overflow-hidden w-44 h-44">
+            <div className="w-full h-full relative">
+              <Image
+                src={avatar_url}
+                objectFit="cover"
+                layout="fill"
+                className="rounded-full border-2 border-black"
+                alt="Profile Image"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

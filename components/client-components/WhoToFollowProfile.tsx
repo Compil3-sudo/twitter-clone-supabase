@@ -29,14 +29,16 @@ const WhoToFollowProfile = ({
       onClick={navigateToProfile}
       className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
     >
-      <div className="flex-none my-auto">
-        <Image
-          src={followProfile.avatar_url}
-          width={40}
-          height={40}
-          alt="Profile Image"
-          className="rounded-full"
-        />
+      <div className="flex-none overflow-hidden w-10 h-10 my-auto">
+        <div className="w-full h-full relative">
+          <Image
+            src={followProfile.avatar_url}
+            objectFit="cover"
+            layout="fill"
+            className="rounded-full"
+            alt="Profile Image"
+          />
+        </div>
       </div>
       <div className="flex w-full justify-between">
         <div className="flex flex-col w-full">

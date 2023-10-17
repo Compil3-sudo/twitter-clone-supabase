@@ -168,13 +168,17 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
         {/* PROFILE HEADER */}
         <div className="flex flex-col w-full">
           <div className="relative h-48 bg-slate-600 w-full">
-            <Image
-              src={userProfile.avatar_url}
-              width={140}
-              height={140}
-              alt={`${userProfile.name}'s Profile Image`}
-              className="rounded-full border-2 border-black absolute bottom-0 left-0 -mb-[70px] ml-4"
-            />
+            <div className="absolute bottom-0 left-0 -mb-[70px] ml-4 flex-none overflow-hidden w-36 h-36">
+              <div className="w-full h-full relative">
+                <Image
+                  src={userProfile.avatar_url}
+                  objectFit="cover"
+                  layout="fill"
+                  className="rounded-full border-2 border-black "
+                  alt={`${userProfile.name}'s Profile Image`}
+                />
+              </div>
+            </div>
           </div>
           <div className="mb-4 pt-3 px-4 flex flex-col">
             <div className="flex flex-row justify-between h-[70px]">

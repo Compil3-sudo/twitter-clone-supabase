@@ -117,15 +117,16 @@ const Tweet = ({
         className="flex w-full py-2 px-4 space-x-3 border-b cursor-pointer"
       >
         {/* Tweet Author Profile Image */}
-        <div className="flex-none pt-2">
-          <Image
-            src={tweet.author.avatar_url}
-            width={40}
-            height={40}
-            className="rounded-full"
-            alt="Profile Image"
-            onClick={navigateToUserProfile}
-          />
+        <div className="flex-none overflow-hidden w-10 h-10 mt-2">
+          <div className="w-full h-full relative">
+            <Image
+              src={tweet.author.avatar_url}
+              objectFit="cover"
+              layout="fill"
+              className="rounded-full"
+              alt="Profile Image"
+            />
+          </div>
         </div>
         {/* Tweet Author Profile Image */}
 

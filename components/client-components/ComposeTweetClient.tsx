@@ -51,14 +51,16 @@ const ComposeTweetClient = ({
   return (
     <>
       <div className="flex py-4 px-4 space-x-2 border-b">
-        <div className="flex-none">
-          <Image
-            src={user.avatar_url}
-            width={40}
-            height={40}
-            className="rounded-full"
-            alt="Profile Image"
-          />
+        <div className="flex-none overflow-hidden w-10 h-10">
+          <div className="w-full h-full relative">
+            <Image
+              src={user.avatar_url}
+              objectFit="cover"
+              layout="fill"
+              className="rounded-full"
+              alt="Profile Image"
+            />
+          </div>
         </div>
 
         <CustomTextArea
