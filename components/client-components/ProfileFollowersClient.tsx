@@ -34,16 +34,20 @@ const ProfileFollowersClient = ({
   return (
     <>
       <div className="flex flex-row space-x-6">
-        {/* TODO: onClick show following */}
-        <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
+        <button
+          onClick={() => router.push(`${profileUsername}/following`)}
+          className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces"
+        >
           <span className="font-semibold">
             {following ? following.length : 0}{" "}
           </span>
           <span className="flex text-gray-500 items-center">Following</span>
         </button>
 
-        {/* TODO: onClick show followers */}
-        <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
+        <button
+          onClick={() => router.push(`${profileUsername}/followers`)}
+          className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces"
+        >
           <span className="font-semibold">
             {followers ? followers.length : 0}{" "}
           </span>

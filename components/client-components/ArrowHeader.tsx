@@ -3,15 +3,23 @@
 import { useRouter } from "next/navigation";
 import { VscArrowLeft } from "react-icons/vsc";
 
+export const FollowersTabs = [
+  "Followers you know",
+  "Followers",
+  "Following",
+] as const;
+
 const ArrowHeader = ({
   title,
   subtitle,
   followersTabs,
+  followersActiveTab,
   numberOfPosts,
 }: {
   title: string;
   subtitle?: string;
   followersTabs?: boolean;
+  followersActiveTab?: (typeof FollowersTabs)[number];
   numberOfPosts?: number;
 }) => {
   const router = useRouter();
@@ -53,7 +61,13 @@ const ArrowHeader = ({
               }}
               className="w-1/3 flex justify-center hover:bg-white/10"
             >
-              <div className="self-center border-blue-500 border-b-4 py-4 font-semibold">
+              <div
+                className={`self-center ${
+                  followersActiveTab === FollowersTabs[0]
+                    ? "border-blue-500 border-b-4 py-4 font-semibold"
+                    : "text-gray-500 border-b-4 border-transparent"
+                }`}
+              >
                 Followers you know
               </div>
             </button>
@@ -64,7 +78,13 @@ const ArrowHeader = ({
               }}
               className="w-1/3 flex justify-center hover:bg-white/10"
             >
-              <div className="self-center text-gray-500 border-b-4 border-transparent">
+              <div
+                className={`self-center ${
+                  followersActiveTab === FollowersTabs[1]
+                    ? "border-blue-500 border-b-4 py-4 font-semibold"
+                    : "text-gray-500 border-b-4 border-transparent"
+                }`}
+              >
                 Followers
               </div>
             </button>
@@ -75,7 +95,13 @@ const ArrowHeader = ({
               }}
               className="w-1/3 flex justify-center hover:bg-white/10"
             >
-              <div className="self-center text-gray-500 border-b-4 border-transparent">
+              <div
+                className={`self-center ${
+                  followersActiveTab === FollowersTabs[2]
+                    ? "border-blue-500 border-b-4 py-4 font-semibold"
+                    : "text-gray-500 border-b-4 border-transparent"
+                }`}
+              >
                 Following
               </div>
             </button>
