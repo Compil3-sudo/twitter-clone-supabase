@@ -12,12 +12,14 @@ export const FollowersTabs = [
 const ArrowHeader = ({
   title,
   subtitle,
+  ownProfile,
   followersTabs,
   followersActiveTab,
   numberOfPosts,
 }: {
   title: string;
   subtitle?: string;
+  ownProfile?: boolean;
   followersTabs?: boolean;
   followersActiveTab?: (typeof FollowersTabs)[number];
   numberOfPosts?: number;
@@ -54,29 +56,34 @@ const ArrowHeader = ({
           </div>
 
           <div className="flex flex-row w-full">
-            <button
-              onClick={(event) => {
-                event.stopPropagation();
-                router.push(`/${subtitle}/followers_you_follow`);
-              }}
-              className="w-1/3 flex justify-center hover:bg-white/10"
-            >
-              <div
-                className={`self-center ${
-                  followersActiveTab === FollowersTabs[0]
-                    ? "border-blue-500 border-b-4 py-4 font-semibold"
-                    : "text-gray-500 border-b-4 border-transparent"
-                }`}
+            {ownProfile ? null : (
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push(`/${subtitle}/followers_you_follow`);
+                }}
+                className="w-1/3 flex justify-center hover:bg-white/10"
               >
-                Followers you know
-              </div>
-            </button>
+                <div
+                  className={`self-center ${
+                    followersActiveTab === FollowersTabs[0]
+                      ? "border-blue-500 border-b-4 py-4 font-semibold"
+                      : "text-gray-500 border-b-4 border-transparent"
+                  }`}
+                >
+                  Followers you know
+                </div>
+              </button>
+            )}
+
             <button
               onClick={(event) => {
                 event.stopPropagation();
                 router.push(`/${subtitle}/followers`);
               }}
-              className="w-1/3 flex justify-center hover:bg-white/10"
+              className={`${
+                ownProfile ? "w-1/2" : "w-1/3"
+              } flex justify-center hover:bg-white/10`}
             >
               <div
                 className={`self-center ${
@@ -88,12 +95,15 @@ const ArrowHeader = ({
                 Followers
               </div>
             </button>
+
             <button
               onClick={(event) => {
                 event.stopPropagation();
                 router.push(`/${subtitle}/following`);
               }}
-              className="w-1/3 flex justify-center hover:bg-white/10"
+              className={`${
+                ownProfile ? "w-1/2" : "w-1/3"
+              } flex justify-center hover:bg-white/10`}
             >
               <div
                 className={`self-center ${

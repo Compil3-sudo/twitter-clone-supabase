@@ -27,10 +27,6 @@ const ProfileFollowers = async ({
   // user must be logged in to see profile pages
   if (!currentUser) redirect("/");
 
-  if (params.username === currentUser?.user_metadata.user_name) {
-    redirect(`/${params.username}`);
-  }
-
   const { data: currentUserProfile, error: currentUserProfileError } =
     await supabase
       .from("profiles")
@@ -101,6 +97,7 @@ const ProfileFollowers = async ({
       <ArrowHeader
         title={userProfile.name}
         subtitle={userProfile.username}
+        ownProfile={ownProfile}
         followersTabs={true}
         followersActiveTab={"Followers"}
         // followersActiveTab={FollowersTabs[2]}

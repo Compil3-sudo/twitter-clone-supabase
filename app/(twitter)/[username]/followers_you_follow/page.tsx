@@ -85,6 +85,7 @@ const ProfileCommonFollowers = async ({
       <ArrowHeader
         title={userProfile.name}
         subtitle={userProfile.username}
+        ownProfile={ownProfile}
         followersTabs={true}
         followersActiveTab={"Followers you know"}
         // followersActiveTab={FollowersTabs[0]}
