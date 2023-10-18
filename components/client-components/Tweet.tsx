@@ -161,35 +161,37 @@ const Tweet = ({
           {/* Tweet content */}
           <div className="">{tweet.text}</div>
           {/* add tweet media - image / video ? later */}
-          {tweet.media_id && (
-            <div className="">
-              {mediaUrl ? (
-                <>
-                  {mediaType === "image" ? (
+          {tweet.media_id &&
+            (mediaUrl ? (
+              <>
+                {mediaType === "image" ? (
+                  <div
+                    style={{ paddingBottom: "100%" }} // Maintain a 1:1 aspect ratio
+                    className="relative"
+                  >
                     <Image
-                      width={140}
-                      height={140}
                       src={mediaUrl}
+                      fill
+                      sizes="100vw"
+                      className="rounded-xl object-contain"
                       alt="Media"
-                      className="rounded-xl"
                     />
-                  ) : mediaType === "video" ? (
-                    <video controls>
-                      <source
-                        src={mediaUrl}
-                        type={`video/${tweet.media_extension}`}
-                      />
-                    </video>
-                  ) : null}
-                </>
-              ) : (
-                <ImSpinner2
-                  size={50}
-                  className="animate-spin text-blue-500 mx-auto mt-8"
-                />
-              )}
-            </div>
-          )}
+                  </div>
+                ) : mediaType === "video" ? (
+                  <video controls>
+                    <source
+                      src={mediaUrl}
+                      type={`video/${tweet.media_extension}`}
+                    />
+                  </video>
+                ) : null}
+              </>
+            ) : (
+              <ImSpinner2
+                size={50}
+                className="animate-spin text-blue-500 mx-auto mt-8"
+              />
+            ))}
           {/* Tweet content */}
 
           {/* Tweet Footer */}
