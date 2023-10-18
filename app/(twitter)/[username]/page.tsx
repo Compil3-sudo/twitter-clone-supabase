@@ -10,6 +10,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import SetUpProfile from "@/components/client-components/SetUpProfile";
 import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
 import InfiniteScrollFeed from "@/components/client-components/InfiniteScrollFeed";
+import ProfileFollowersClient from "@/components/client-components/ProfileFollowersClient";
 
 export const dynamic = "force-dynamic";
 
@@ -227,42 +228,14 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               Joined {userProfile.created_at.slice(0, 10)}
             </p>
 
-            <div className="flex flex-row space-x-6">
-              {/* TODO: onClick show following */}
-              <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
-                <span className="font-semibold">
-                  {following ? following.length : 0}{" "}
-                </span>
-                <span className="flex text-gray-500 items-center">
-                  Following
-                </span>
-              </button>
-
-              {/* TODO: onClick show followers */}
-              <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
-                <span className="font-semibold">
-                  {followers ? followers.length : 0}{" "}
-                </span>
-                <span className="flex text-gray-500 items-center">
-                  Followers
-                </span>
-              </button>
-            </div>
-
-            {!ownProfile && (
-              // on click show list of common followers
-              <div>
-                {commonFollowersIds.length === 0 ? (
-                  <h2 className="text-gray-500 text-sm">
-                    Not follwed by anyone you're following
-                  </h2>
-                ) : (
-                  <button className="text-gray-500 text-sm hover:underline transition duration-200">
-                    {followersText}
-                  </button>
-                )}
-              </div>
-            )}
+            <ProfileFollowersClient
+              followers={followers}
+              following={following}
+              ownProfile={ownProfile}
+              profileUsername={params.username}
+              commonFollowersIds={commonFollowersIds}
+              followersText={followersText}
+            />
           </div>
 
           <div className="flex flex-row border-b justify-evenly">
