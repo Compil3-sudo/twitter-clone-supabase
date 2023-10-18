@@ -229,9 +229,9 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
             <div className="flex flex-row space-x-6">
               {/* TODO: onClick show following */}
-              <button className="flex flex-row space-x-1">
+              <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
                 <span className="font-semibold">
-                  {following ? following.length : 0}
+                  {following ? following.length : 0}{" "}
                 </span>
                 <span className="flex text-gray-500 items-center">
                   Following
@@ -239,9 +239,9 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               </button>
 
               {/* TODO: onClick show followers */}
-              <button className="flex flex-row space-x-1">
+              <button className="flex flex-row hover:underline transition ease-in-out whitespace-break-spaces">
                 <span className="font-semibold">
-                  {followers ? followers.length : 0}
+                  {followers ? followers.length : 0}{" "}
                 </span>
                 <span className="flex text-gray-500 items-center">
                   Followers
