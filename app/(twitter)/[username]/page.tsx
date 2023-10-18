@@ -172,9 +172,8 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               <div className="w-full h-full relative">
                 <Image
                   src={userProfile.avatar_url}
-                  objectFit="cover"
-                  layout="fill"
-                  className="rounded-full border-2 border-black "
+                  fill
+                  className="rounded-full object-cover border-2 border-black "
                   alt={`${userProfile.name}'s Profile Image`}
                 />
               </div>

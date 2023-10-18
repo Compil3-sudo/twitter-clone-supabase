@@ -91,9 +91,8 @@ export default function Avatar({
             <div className="w-full h-full relative">
               <Image
                 src={avatar_url}
-                objectFit="cover"
-                layout="fill"
-                className="rounded-full border-2 border-black"
+                fill
+                className="rounded-full object-cover border-2 border-black"
                 alt="Profile Image"
               />
             </div>

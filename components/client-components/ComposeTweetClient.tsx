@@ -55,9 +55,8 @@ const ComposeTweetClient = ({
           <div className="w-full h-full relative">
             <Image
               src={user.avatar_url}
-              objectFit="cover"
-              layout="fill"
-              className="rounded-full"
+              fill
+              className="rounded-full object-cover"
               alt="Profile Image"
             />
           </div>

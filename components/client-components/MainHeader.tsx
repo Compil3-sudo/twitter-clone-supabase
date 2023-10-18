@@ -17,7 +17,7 @@ const MainHeader = () => {
   };
 
   return (
-    <div className="top-0 sticky flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
+    <div className="top-0 sticky z-10 flex border-b w-full backdrop-filter backdrop-blur-md bg-opacity-70 bg-slate-950">
       <div className="flex flex-col w-full">
         <h1 className="text-lg p-4 font-bold">Home</h1>
         <div className="flex flex-row">
