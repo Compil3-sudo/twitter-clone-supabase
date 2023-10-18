@@ -102,6 +102,7 @@ const ProfileCommonFollowers = async ({
       ) : (
         commonFollowers.map((profile) => (
           <WhoToFollowProfile
+            key={profile.id}
             userId={currentUserProfile.id}
             followProfile={profile}
             isUserFollowingProfile={true}

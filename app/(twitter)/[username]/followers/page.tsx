@@ -76,8 +76,6 @@ const ProfileFollowers = async ({
     userFollowingIds.includes(followerId)
   );
 
-  console.log(commonFollowersIds);
-
   const { data: followersData, error: followersError } = await supabase
     .from("profiles")
     .select("*")
@@ -110,6 +108,7 @@ const ProfileFollowers = async ({
       ) : (
         userProfileFollowers.map((profile) => (
           <WhoToFollowProfile
+            key={profile.id}
             userId={currentUserProfile.id}
             followProfile={profile}
             isUserFollowingProfile={profile.isUserFollowingProfile}

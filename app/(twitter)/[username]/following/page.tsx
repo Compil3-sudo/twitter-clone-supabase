@@ -8,6 +8,10 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
+interface UserProfileFollowing extends Profile {
+  isUserFollowingProfile?: boolean;
+}
+
 const ProfileFollowing = async ({
   params,
 }: {
@@ -22,8 +26,6 @@ const ProfileFollowing = async ({
 
   // user must be logged in to see profile pages
   if (!currentUser) redirect("/");
-
-  console.log(params);
 
   const { data: currentUserProfile, error: currentUserProfileError } =
     await supabase
@@ -43,46 +45,46 @@ const ProfileFollowing = async ({
   if (error) console.log(error);
   if (!userProfile) redirect(`/${params.username}`);
 
-  const { data: following, error: followingError } = await supabase
+  const { data: following, error: followingIdsError } = await supabase
     .from("followers")
     .select("*")
     .eq("follower_id", userProfile.id);
 
   const ownProfile = currentUserProfile.username === userProfile.username;
 
-  let isUserFollowingProfile = false;
+  let userProfileFollowing: UserProfileFollowing[] = [];
   let commonFollowersIds = [] as Profile["id"][];
-  let commonFollowers = [] as Profile[];
 
-  if (!ownProfile) {
-    // who is the current user following
-    const { data: userFollowing, error: userFollowingError } = await supabase
-      .from("followers")
-      .select("followed_id")
-      .eq("follower_id", currentUserProfile.id);
+  // who is the current user following
+  const { data: userFollowing, error: userFollowingError } = await supabase
+    .from("followers")
+    .select("followed_id")
+    .eq("follower_id", currentUserProfile.id);
 
-    // the !! transforms it from object/undefined to true/false
-    isUserFollowingProfile = !!userFollowing?.find(
-      (followedId) => followedId.followed_id === userProfile.id
-    );
+  // determine whether the userProfile is being followed
+  // by people who the current user is also following
+  const userProfileFollowingIds =
+    following?.map((follower) => follower.followed_id) || [];
 
-    // determine whether the userProfile is being followed
-    // by people who the current user is also following
-    const userProfileFollowers =
-      followers?.map((follower) => follower.follower_id) || [];
-    const userFollowingIds =
-      userFollowing?.map((following) => following.followed_id) || [];
+  const userFollowingIds =
+    userFollowing?.map((following) => following.followed_id) || [];
 
-    // find common followers
-    commonFollowersIds = userProfileFollowers.filter((followerId) =>
-      userFollowingIds.includes(followerId)
-    );
+  // find common followers
+  commonFollowersIds = userProfileFollowingIds.filter((followerId) =>
+    userFollowingIds.includes(followerId)
+  );
 
-    const { data: commonFollowersData, error: commonFollowersError } =
-      await supabase.from("profiles").select("*").in("id", commonFollowersIds);
+  const { data: followersData, error: followersError } = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", userProfileFollowingIds);
 
-    if (commonFollowersData) commonFollowers = commonFollowersData;
-  }
+  if (followersData) userProfileFollowing = followersData;
+
+  userProfileFollowing = userProfileFollowing.map((profile) => ({
+    ...profile,
+    isUserFollowingProfile: commonFollowersIds.includes(profile.id),
+  }));
 
   return (
     <>
@@ -94,21 +96,19 @@ const ProfileFollowing = async ({
         followersActiveTab={"Following"}
         // followersActiveTab={FollowersTabs[3]}
       />
-      {commonFollowersIds.length === 0 ? (
+      {following && following.length === 0 ? (
         <>
           <div>
-            <h1>
-              @{userProfile.username} doesn't have any followers you know yet
-            </h1>
-            <h2>When someone you know follows them, they'll be listed here.</h2>
+            <h1>@{userProfile.username} isn't following anyone yet</h1>
           </div>
         </>
       ) : (
-        commonFollowers.map((profile) => (
+        userProfileFollowing.map((profile) => (
           <WhoToFollowProfile
+            key={profile.id}
             userId={currentUserProfile.id}
             followProfile={profile}
-            isUserFollowingProfile={isUserFollowingProfile}
+            isUserFollowingProfile={profile.isUserFollowingProfile}
             showBio={true}
           />
         ))
