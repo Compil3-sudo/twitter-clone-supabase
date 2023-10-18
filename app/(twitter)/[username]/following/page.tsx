@@ -64,7 +64,9 @@ const ProfileFollowing = async ({
   // determine whether the userProfile is being followed
   // by people who the current user is also following
   const userProfileFollowingIds =
-    following?.map((follower) => follower.followed_id) || [];
+    following
+      ?.filter((follower) => follower.followed_id !== currentUserProfile.id)
+      .map((follower) => follower.followed_id) || [];
 
   const userFollowingIds =
     userFollowing?.map((following) => following.followed_id) || [];
