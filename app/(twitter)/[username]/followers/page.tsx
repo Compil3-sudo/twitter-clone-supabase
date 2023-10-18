@@ -45,7 +45,7 @@ const ProfileFollowers = async ({
   if (error) console.log(error);
   if (!userProfile) redirect(`/${params.username}`);
 
-  const { data: followers, error: followersError } = await supabase
+  const { data: followers, error: followersIdsError } = await supabase
     .from("followers")
     .select("*")
     .eq("followed_id", userProfile.id);
@@ -55,42 +55,40 @@ const ProfileFollowers = async ({
   let userProfileFollowers: UserProfileFollowers[] = [];
   let commonFollowersIds = [] as Profile["id"][];
 
-  if (!ownProfile) {
-    // who is the current user following
-    const { data: userFollowing, error: userFollowingError } = await supabase
-      .from("followers")
-      .select("followed_id")
-      .eq("follower_id", currentUserProfile.id);
+  // who is the current user following
+  const { data: userFollowing, error: userFollowingError } = await supabase
+    .from("followers")
+    .select("followed_id")
+    .eq("follower_id", currentUserProfile.id);
 
-    // determine whether the userProfile is being followed
-    // by people who the current user is also following
-    const userProfileFollowersIds =
-      followers
-        ?.filter((follower) => follower.follower_id !== currentUserProfile.id)
-        .map((follower) => follower.follower_id) || [];
+  // determine whether the userProfile is being followed
+  // by people who the current user is also following
+  const userProfileFollowersIds =
+    followers
+      ?.filter((follower) => follower.follower_id !== currentUserProfile.id)
+      .map((follower) => follower.follower_id) || [];
 
-    const userFollowingIds =
-      userFollowing?.map((following) => following.followed_id) || [];
+  const userFollowingIds =
+    userFollowing?.map((following) => following.followed_id) || [];
 
-    // find common followers
-    commonFollowersIds = userProfileFollowersIds.filter((followerId) =>
-      userFollowingIds.includes(followerId)
-    );
+  // find common followers
+  commonFollowersIds = userProfileFollowersIds.filter((followerId) =>
+    userFollowingIds.includes(followerId)
+  );
 
-    console.log(commonFollowersIds);
+  console.log(commonFollowersIds);
 
-    const { data: followersData, error: followersError } = await supabase
-      .from("profiles")
-      .select("*")
-      .in("id", userProfileFollowersIds);
+  const { data: followersData, error: followersError } = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", userProfileFollowersIds);
 
-    if (followersData) userProfileFollowers = followersData;
+  if (followersData) userProfileFollowers = followersData;
 
-    userProfileFollowers = userProfileFollowers.map((profile) => ({
-      ...profile,
-      isUserFollowingProfile: commonFollowersIds.includes(profile.id),
-    }));
-  }
+  userProfileFollowers = userProfileFollowers.map((profile) => ({
+    ...profile,
+    isUserFollowingProfile: commonFollowersIds.includes(profile.id),
+  }));
 
   return (
     <>
