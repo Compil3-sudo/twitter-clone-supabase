@@ -153,6 +153,7 @@ const InfiniteScrollFeed = ({
               dataLength={tweets.length}
               next={loadMoreTweets}
               hasMore={hasMore}
+              className="no-scrollbar"
               loader={
                 <ImSpinner2
                   size={50}
