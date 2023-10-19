@@ -34,6 +34,12 @@ export default async function LoginPage() {
           <div className="flex justify-center mt-5">
             <Image src={Logo} width={192} height={192} alt="Logo" />
           </div>
+          <h3 className="mt-4">If you don't want to create an account,</h3>
+          <h3 className="mb-2">
+            you can also log in using the shared guest account:
+          </h3>
+          <h4>Email: guest@email.com</h4>
+          <h4>Password: 123456</h4>
         </div>
       </div>
       <Login />
