@@ -12,6 +12,30 @@ const Messages = async () => {
 
   const { data: messages, error } = await supabase.from("messages").select("*");
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  console.log(messages);
+
+  const { data: conversations, error: err } = await supabase
+    .from("user_conversations")
+    .select("*");
+
+  console.log(conversations);
+
+  // const conversationWith = conversations?.map((conversation) => {
+  //   const isSender = conversation.author_id === user?.id;
+
+  //   if (isSender) {
+  //     return conversation.target_id;
+  //   }
+  //   return conversation.author_id;
+  // });
+
+  // console.log(conversations);
+  // console.log(conversationWith);
+
   // useEffect(() => {
   //   setMessages(serverMessages);
   // }, [serverMessages]);
