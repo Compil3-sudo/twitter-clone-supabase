@@ -5,11 +5,14 @@ import { BiSearch } from "react-icons/bi";
 import Link from "next/link";
 import { BsThreeDots } from "react-icons/bs";
 import WhoToFollowProfile from "./client-components/WhoToFollowProfile";
+import SuggestProfilesPanel from "./client-components/SuggestProfilesPanel";
+import SuggestTrendingPanel from "./client-components/SuggestTrendingPanel";
 
 export const dynamic = "force-dynamic";
 
-const RightSidebar = async () => {
+const RightSidebar = async ({ params }: any) => {
   const supabase = createServerComponentClient<Database>({ cookies });
+  console.log(params);
 
   const {
     data: { user },
@@ -56,8 +59,7 @@ const RightSidebar = async () => {
       profile_limit: 3, // limit the number of profiles to fetch to 3
     });
 
-  console.log(followProfiles);
-  // console.log(followProfilesError);
+  if (followProfilesError) console.log(followProfilesError);
 
   return (
     <div className="hidden sticky top-0 overflow-y-scroll no-scrollbar h-screen lg:flex flex-col max-w-[350px] w-full mx-4">
@@ -71,50 +73,8 @@ const RightSidebar = async () => {
           />
         </div>
       </div>
-      <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-16">
-        <h2 className="p-2 text-lg font-bold">Who to Follow</h2>
-        {followProfiles?.map((followProfile) => (
-          <WhoToFollowProfile
-            key={followProfile.id}
-            userId={userId}
-            followProfile={followProfile}
-          />
-        ))}
-        <Link
-          href={"/"}
-          className="rounded-b-xl text-sky-500 hover:bg-white/10 transition duration-200 px-2 py-4"
-        >
-          Show more
-        </Link>
-      </div>
-      <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-5 mb-20">
-        <h2 className="p-2 text-lg font-bold">Trending</h2>
-        {Array(20)
-          .fill(null)
-          .map((_, index) => (
-            <div
-              key={index}
-              className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200"
-            >
-              <div className="flex w-full justify-between">
-                <div className="flex flex-col w-full">
-                  <h2 className="">Trend #{index}</h2>
-                </div>
-                <div className="flex flex-col w-fit justify-center items-end">
-                  <div className="self-end rounded-full p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10">
-                    <BsThreeDots />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        <Link
-          href={"/"}
-          className="rounded-b-xl text-sky-500 hover:bg-white/10 transition duration-200 px-2 py-4"
-        >
-          Show more
-        </Link>
-      </div>
+      <SuggestProfilesPanel followProfiles={followProfiles} userId={userId} />
+      <SuggestTrendingPanel />
     </div>
   );
 };
