@@ -1,6 +1,8 @@
 // "use client"
+import WhoToFollowProfile from "@/components/client-components/WhoToFollowProfile";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +25,20 @@ const Messages = async () => {
     .select("*");
 
   console.log(conversations);
+
+  const chatParticipantIds = conversations?.map(
+    (conversation) => conversation.user_id
+  );
+
+  console.log(chatParticipantIds);
+
+  const { data: chatParticipants, error: chatParticipantsError } =
+    await supabase
+      .from("profiles")
+      .select("*")
+      .in("id", chatParticipantIds as string[]);
+
+  console.log(chatParticipants);
 
   // const conversationWith = conversations?.map((conversation) => {
   //   const isSender = conversation.author_id === user?.id;
@@ -66,6 +82,33 @@ const Messages = async () => {
       <h1 className="text-3xl p-2">Messages</h1>
       <h1 className="text-xl p-2">Page not implemented yet</h1>
       <pre>{JSON.stringify(messages, null, 2)}</pre>
+      {chatParticipants?.map((participant) => (
+        <div
+          // onClick={} // navigate to conversation with messages
+          className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
+        >
+          <div className="flex-none overflow-hidden w-10 h-10 my-auto">
+            <div className="w-full h-full relative">
+              <Image
+                src={participant.avatar_url}
+                fill
+                className="rounded-full object-cover"
+                alt="Profile Image"
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-between">
+            <div className="flex flex-col w-full">
+              <div className="flex w-full">
+                <div className="flex flex-col w-full">
+                  <h2>{participant.name}</h2>
+                  <h2 className="text-gray-500">@{participant.username}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
