@@ -43,6 +43,24 @@ export interface Database {
           }
         ];
       };
+      conversations: {
+        Row: {
+          created_at: string;
+          id: string;
+          type: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          type: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          type?: string;
+        };
+        Relationships: [];
+      };
       followers: {
         Row: {
           followed_id: string;
@@ -123,6 +141,49 @@ export interface Database {
           },
           {
             foreignKeyName: "likes_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      messages: {
+        Row: {
+          conversation_id: string;
+          created_at: string;
+          id: string;
+          media_extension: string | null;
+          media_id: string | null;
+          text: string | null;
+          user_id: string;
+        };
+        Insert: {
+          conversation_id: string;
+          created_at?: string;
+          id?: string;
+          media_extension?: string | null;
+          media_id?: string | null;
+          text?: string | null;
+          user_id: string;
+        };
+        Update: {
+          conversation_id?: string;
+          created_at?: string;
+          id?: string;
+          media_extension?: string | null;
+          media_id?: string | null;
+          text?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey";
+            columns: ["conversation_id"];
+            referencedRelation: "conversations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_user_id_fkey";
             columns: ["user_id"];
             referencedRelation: "profiles";
             referencedColumns: ["id"];
@@ -283,6 +344,37 @@ export interface Database {
           }
         ];
       };
+      user_conversations: {
+        Row: {
+          conversation_id: string;
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          conversation_id: string;
+          created_at?: string;
+          user_id: string;
+        };
+        Update: {
+          conversation_id?: string;
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_conversations_conversation_id_fkey";
+            columns: ["conversation_id"];
+            referencedRelation: "conversations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_conversations_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -304,13 +396,21 @@ export interface Database {
       get_profiles_to_follow: {
         Args: {
           authenticated_user_id: string;
+          profile_limit: number;
         };
         Returns: {
           id: string;
           username: string;
           name: string;
+          bio: string;
           avatar_url: string;
         }[];
+      };
+      is_conversation_participant: {
+        Args: {
+          conversation_id: string;
+        };
+        Returns: boolean;
       };
     };
     Enums: {
