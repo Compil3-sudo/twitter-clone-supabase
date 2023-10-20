@@ -78,13 +78,15 @@ const Messages = async () => {
   // }, [supabase, messages]);
 
   return (
-    <div>
+    <>
       <h1 className="text-3xl p-2">Messages</h1>
       <h1 className="text-xl p-2">Page not implemented yet</h1>
       <pre>{JSON.stringify(messages, null, 2)}</pre>
       {chatParticipants?.map((participant) => (
         <div
-          // onClick={} // navigate to conversation with messages
+          key={participant.id}
+          // show last message ?
+          // onClick={} // navigate to conversation with messages. /messages/chatParticipantId ?
           className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
         >
           <div className="flex-none overflow-hidden w-10 h-10 my-auto">
@@ -102,14 +104,16 @@ const Messages = async () => {
               <div className="flex w-full">
                 <div className="flex flex-col w-full">
                   <h2>{participant.name}</h2>
-                  <h2 className="text-gray-500">@{participant.username}</h2>
+                  <h2 className="text-gray-500 text-sm">
+                    @{participant.username}
+                  </h2>
                 </div>
               </div>
             </div>
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 
