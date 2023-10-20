@@ -1,9 +1,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-import { BiSearch } from "react-icons/bi";
 import SuggestProfilesPanel from "./client-components/SuggestProfilesPanel";
 import SuggestTrendingPanel from "./client-components/SuggestTrendingPanel";
+import SearchInput from "./client-components/SearchInput";
 
 export const dynamic = "force-dynamic";
 
@@ -60,14 +60,7 @@ const RightSidebar = async () => {
   return (
     <div className="hidden sticky top-0 overflow-y-scroll no-scrollbar h-screen lg:flex flex-col max-w-[350px] w-full mx-4">
       <div className="fixed top-0 z-10 bg-slate-950 py-2 flex flex-col max-w-[350px] w-full">
-        <div className="group flex bg-[#16181C] rounded-full p-2 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
-          <BiSearch className="group-focus-within:text-blue-500" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-[#16181C] outline-none focus:bg-slate-950"
-          />
-        </div>
+        <SearchInput />
       </div>
       <SuggestProfilesPanel followProfiles={followProfiles} userId={userId} />
       <SuggestTrendingPanel />

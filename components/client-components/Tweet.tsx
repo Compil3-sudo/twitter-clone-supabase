@@ -42,7 +42,7 @@ const Tweet = ({
     if (tweet.media_id) {
       const downloadMedia = async () => {
         try {
-          const supabase = createClientComponentClient();
+          const supabase = createClientComponentClient<Database>();
           const path = `${tweet.author.id}/${tweet.media_id}.${tweet.media_extension}`;
 
           const { data, error } = await supabase.storage
