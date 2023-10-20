@@ -2,17 +2,13 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 import { BiSearch } from "react-icons/bi";
-import Link from "next/link";
-import { BsThreeDots } from "react-icons/bs";
-import WhoToFollowProfile from "./client-components/WhoToFollowProfile";
 import SuggestProfilesPanel from "./client-components/SuggestProfilesPanel";
 import SuggestTrendingPanel from "./client-components/SuggestTrendingPanel";
 
 export const dynamic = "force-dynamic";
 
-const RightSidebar = async ({ params }: any) => {
+const RightSidebar = async () => {
   const supabase = createServerComponentClient<Database>({ cookies });
-  console.log(params);
 
   const {
     data: { user },
