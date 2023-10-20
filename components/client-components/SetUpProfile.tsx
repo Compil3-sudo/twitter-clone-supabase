@@ -36,7 +36,7 @@ const SetUpProfile = ({ userProfile }: { userProfile: Profile }) => {
       const updatedProfile = {
         ...userProfile,
         name: updatedName ? updatedName : userProfile.name,
-        bio: updatedBio,
+        bio: updatedBio ? updatedBio : userProfile.bio,
       };
 
       const { error } = await supabase.from("profiles").upsert(updatedProfile);
