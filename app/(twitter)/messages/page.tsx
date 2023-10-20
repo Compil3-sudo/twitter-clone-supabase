@@ -12,6 +12,15 @@ const Messages = async () => {
   // const [messages, setMessages] = useState(serverMessages);
   const supabase = createServerComponentClient<Database>({ cookies });
 
+  //   create or replace function is_conversation_participant(conversation_id uuid)
+  //   returns boolean as $$
+  //    select exists(
+  //     select 1
+  //     from user_conversations
+  //     where conversation_id = is_conversation_participant.conversation_id and user_id = auth.uid()
+  //    );
+  // $$ language sql security definer;
+
   const { data: messages, error } = await supabase.from("messages").select("*");
 
   const {
