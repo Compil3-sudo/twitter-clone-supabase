@@ -38,7 +38,7 @@ const Connect = async () => {
           />
         ))
       ) : (
-        <h1>No Profiles to follow.</h1>
+        <h1 className="p-4 text-xl">No Profiles to follow.</h1>
       )}
     </>
   );
