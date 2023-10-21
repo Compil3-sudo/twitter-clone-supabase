@@ -12,6 +12,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<Profile[]>(
+    [] as Profile[]
+  );
   const { showSearchModal, changeShowModal } = useContext(
     SearchModalContext
   ) as SearchModalContextType;
@@ -19,24 +22,27 @@ const SearchInput = () => {
   const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
-    const searchRequest = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .like("name", searchTerm);
+    if (searchTerm !== "") {
+      const timer = setTimeout(async () => {
+        changeShowModal(true);
+        // Fetch search results based on searchTerm
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .ilike("name", `%${searchTerm}%`);
+        // .ilike("username", `%${searchTerm}%`);
+        // .filter("name", "ilike", `%${searchTerm}%`)
+        // .filter("name", .ilike.%${searchTerm}%")
+        // .or(`name.ilike.%${searchTerm}%`)
+        // .or(`username.ilike.%${searchTerm}%`);
 
-      return data;
-    };
+        if (data) {
+          setSearchResults(data);
+        }
+      }, 500);
 
-    const timer = setTimeout(() => {
-      changeShowModal(true);
-      // call function to make call to supabase
-      // fetch search results based on searchTerm
-      const searchResults = searchRequest();
-      console.log(searchResults);
-    }, 500);
-
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [searchTerm]);
 
   return (
@@ -50,8 +56,15 @@ const SearchInput = () => {
             >
               <VscClose size={25} />
             </div>
-            <section className="flex p-4">
-              Search results based on: {searchTerm}
+            <section className="flex flex-col p-4">
+              <h1 className="mb-4">
+                Search results based on search term: {searchTerm}
+              </h1>
+              {searchResults.map((profile) => (
+                <h2 key={profile.id}>
+                  {profile.name} @{profile.username}
+                </h2>
+              ))}
             </section>
           </div>
         </Modal>
