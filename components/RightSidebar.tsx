@@ -60,7 +60,7 @@ const RightSidebar = async () => {
   return (
     <div className="hidden sticky top-0 overflow-y-scroll no-scrollbar h-screen lg:flex flex-col max-w-[350px] w-full mx-4">
       <div className="fixed top-0 z-10 bg-slate-950 py-2 flex flex-col max-w-[350px] w-full">
-        <SearchInput />
+        <SearchInput currentUserId={user.id} />
       </div>
       <SuggestProfilesPanel followProfiles={followProfiles} userId={userId} />
       <SuggestTrendingPanel />

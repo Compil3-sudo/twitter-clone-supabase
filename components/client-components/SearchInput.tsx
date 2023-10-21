@@ -1,34 +1,27 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import {
-  SearchModalContext,
-  SearchModalContextType,
-} from "../context/SearchModalContext";
-import Modal from "./Modal";
-import { VscClose } from "react-icons/vsc";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const SearchInput = () => {
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Image from "next/image";
+
+const SearchInput = ({ currentUserId }: { currentUserId: Profile["id"] }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Profile[]>(
     [] as Profile[]
   );
-  const { showSearchModal, changeShowModal } = useContext(
-    SearchModalContext
-  ) as SearchModalContextType;
 
   const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
     if (searchTerm !== "") {
       const timer = setTimeout(async () => {
-        changeShowModal(true);
         // Fetch search results based on searchTerm
         const { data, error } = await supabase
           .from("profiles")
           .select("*")
+          .neq("id", currentUserId)
           .ilike("name", `%${searchTerm}%`);
         // .ilike("username", `%${searchTerm}%`);
         // .filter("name", "ilike", `%${searchTerm}%`)
@@ -47,39 +40,53 @@ const SearchInput = () => {
 
   return (
     <>
-      {showSearchModal && (
-        <Modal onClose={() => changeShowModal(false)}>
-          <div className="flex flex-col bg-slate-950 rounded-3xl px-2 py-4 sm:w-[600px] w-[300px]">
-            <div
-              onClick={() => changeShowModal(false)}
-              className="p-1 mx-4 rounded-full w-fit cursor-pointer text-gray-300 hover:bg-gray-500"
-            >
-              <VscClose size={25} />
-            </div>
-            <section className="flex flex-col p-4">
-              <h1 className="mb-4">
-                Search results based on search term: {searchTerm}
-              </h1>
-              {searchResults.map((profile) => (
-                <h2 key={profile.id}>
-                  {profile.name} @{profile.username}
-                </h2>
-              ))}
-            </section>
-          </div>
-        </Modal>
-      )}
-      <div className="group flex bg-[#16181C] rounded-full p-2 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
+      <div className="relative group flex bg-[#16181C] rounded-full p-2 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
         <BiSearch className="group-focus-within:text-blue-500" />
         <input
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            changeShowModal(false);
           }}
           type="text"
           placeholder="Search"
           className="bg-[#16181C] outline-none focus:bg-slate-950"
         />
+        {/* NEED TO DIFFERENTIATE BETWEEN SEARCH TO START CONVERSATION AND SERCH TO NAVIGATE TO PROFILE */}
+
+        {searchTerm && (
+          // <div className="fixed top-16 z-10 bg-slate-950 py-2 flex flex-col max-w-[350px] w-full">
+          <div className="absolute z-10 right-0 top-0 flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+            {searchResults.map((profile) => (
+              <div
+                key={profile.id}
+                // onClick={} // CREATE NEW conversation with user. If conversation already exists => navigate to conversation
+                className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
+              >
+                <div className="flex-none overflow-hidden w-10 h-10 my-auto">
+                  <div className="w-full h-full relative">
+                    <Image
+                      src={profile.avatar_url}
+                      fill
+                      className="rounded-full object-cover"
+                      alt="Profile Image"
+                    />
+                  </div>
+                </div>
+                <div className="flex w-full justify-between">
+                  <div className="flex flex-col w-full">
+                    <div className="flex w-full">
+                      <div className="flex flex-col w-full">
+                        <h2>{profile.name}</h2>
+                        <h2 className="text-gray-500 text-sm">
+                          @{profile.username}
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

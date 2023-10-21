@@ -1,5 +1,6 @@
 // "use client"
-import WhoToFollowProfile from "@/components/client-components/WhoToFollowProfile";
+
+import SearchInput from "@/components/client-components/SearchInput";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Image from "next/image";
@@ -31,7 +32,10 @@ const Messages = async () => {
 
   const { data: conversations, error: err } = await supabase
     .from("user_conversations")
-    .select("*");
+    .select("*")
+    .neq("user_id", user!.id); // filter out own profile, no conversation with yourself :)
+
+  // need a RCP function to fetch only the last message of each conversation with group by
 
   console.log(conversations);
 
@@ -49,17 +53,7 @@ const Messages = async () => {
 
   console.log(chatParticipants);
 
-  // const conversationWith = conversations?.map((conversation) => {
-  //   const isSender = conversation.author_id === user?.id;
-
-  //   if (isSender) {
-  //     return conversation.target_id;
-  //   }
-  //   return conversation.author_id;
-  // });
-
-  // console.log(conversations);
-  // console.log(conversationWith);
+  // FOR REAL TIME UPDATES:
 
   // useEffect(() => {
   //   setMessages(serverMessages);
@@ -89,8 +83,20 @@ const Messages = async () => {
   return (
     <div>
       <h1 className="text-3xl p-2">Messages</h1>
-      <h1 className="text-xl p-2">Page not implemented yet</h1>
-      <pre>{JSON.stringify(messages, null, 2)}</pre>
+      <h1 className="text-xl p-2">Work in progress</h1>
+      <div className="flex mx-4">
+        <SearchInput currentUserId={user!.id} />
+      </div>
+      {/* <pre>{JSON.stringify(messages, null, 2)}</pre> */}
+      {messages?.map((message) => (
+        <div key={message.id} className="my-6 mx-4">
+          <h2>id: {message.id}</h2>
+          <h2>conversation_id: {message.conversation_id}</h2>
+          <h2>user_id: {message.user_id}</h2>
+          <h2 className="font-bold">text: {message.text}</h2>
+          <h2>created_at: {message.created_at}</h2>
+        </div>
+      ))}
       {chatParticipants?.map((participant) => (
         <div
           key={participant.id}
