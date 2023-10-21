@@ -1,5 +1,5 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
-import WhoToFollowProfile from "@/components/client-components/WhoToFollowProfile";
+import SuggestedProfile from "@/components/client-components/SuggestedProfile";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
@@ -29,10 +29,10 @@ const Connect = async () => {
       <h1 className="text-xl p-4 font-bold">Who to follow</h1>
       {followProfiles && followProfiles.length > 0 ? (
         followProfiles.map((profile) => (
-          <WhoToFollowProfile
+          <SuggestedProfile
             key={profile.id}
             userId={userId}
-            followProfile={profile}
+            suggestedProfile={profile}
             isUserFollowingProfile={false}
             showBio={true}
           />

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import WhoToFollowProfile from "./WhoToFollowProfile";
+import SuggestedProfile from "./SuggestedProfile";
 import { usePathname } from "next/navigation";
 
 type SuggestProfilesPanelProps = {
@@ -31,10 +31,11 @@ const SuggestProfilesPanel = ({
     <div className="flex flex-col bg-[#16181C] rounded-xl pt-2 mt-16">
       <h2 className="p-2 text-lg font-bold">Who to Follow</h2>
       {followProfiles?.map((followProfile) => (
-        <WhoToFollowProfile
+        <SuggestedProfile
           key={followProfile.id}
           userId={userId}
-          followProfile={followProfile}
+          suggestedProfile={followProfile}
+          isUserFollowingProfile={false}
         />
       ))}
       <Link
