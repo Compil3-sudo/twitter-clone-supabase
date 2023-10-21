@@ -1,13 +1,8 @@
-// "use client"
-
-import SearchInput from "@/components/client-components/SearchInput";
-import SuggestedProfile from "@/components/client-components/SuggestedProfile";
+import MessagesClient from "@/components/client-components/MessagesClient";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
-
-// import {useState} from "react"
 
 const Messages = async () => {
   // const [messages, setMessages] = useState(serverMessages);
@@ -39,9 +34,8 @@ const Messages = async () => {
 
   console.log(conversations);
 
-  const chatParticipantIds = conversations?.map(
-    (conversation) => conversation.user_id
-  );
+  const chatParticipantIds =
+    conversations?.map((conversation) => conversation.user_id) || null;
 
   console.log(chatParticipantIds);
 
@@ -84,11 +78,7 @@ const Messages = async () => {
     <div>
       <h1 className="text-3xl p-2">Messages</h1>
       <h1 className="text-xl p-2">Work in progress</h1>
-      <div className="flex mx-4">
-        <SearchInput currentUserId={user!.id} />
-      </div>
-      {/* <pre>{JSON.stringify(messages, null, 2)}</pre> */}
-      {messages?.map((message) => (
+      {/* {messages?.map((message) => (
         <div key={message.id} className="my-6 mx-4">
           <h2>id: {message.id}</h2>
           <h2>conversation_id: {message.conversation_id}</h2>
@@ -96,45 +86,13 @@ const Messages = async () => {
           <h2 className="font-bold">text: {message.text}</h2>
           <h2>created_at: {message.created_at}</h2>
         </div>
-      ))}
-      {chatParticipants?.map((participant) => (
-        <SuggestedProfile
-          key={participant.id}
-          userId={user!.id}
-          suggestedProfile={participant}
-          // need client component here to pass onClick function
-          // onClickFunction={() => console.log("potato")}
-        />
-        // <div
-        //   key={participant.id}
-        //   // show last message ?
-        //   // onClick={} // navigate to conversation with messages. /messages/chatParticipantId ?
-        //   className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
-        // >
-        //   <div className="flex-none overflow-hidden w-10 h-10 my-auto">
-        //     <div className="w-full h-full relative">
-        //       <Image
-        //         src={participant.avatar_url}
-        //         fill
-        //         className="rounded-full object-cover"
-        //         alt="Profile Image"
-        //       />
-        //     </div>
-        //   </div>
-        //   <div className="flex w-full justify-between">
-        //     <div className="flex flex-col w-full">
-        //       <div className="flex w-full">
-        //         <div className="flex flex-col w-full">
-        //           <h2>{participant.name}</h2>
-        //           <h2 className="text-gray-500 text-sm">
-        //             @{participant.username}
-        //           </h2>
-        //         </div>
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div>
-      ))}
+      ))} */}
+
+      <MessagesClient
+        userId={user!.id}
+        chatParticipants={chatParticipants}
+        chatParticipantIds={chatParticipantIds}
+      />
     </div>
   );
 };

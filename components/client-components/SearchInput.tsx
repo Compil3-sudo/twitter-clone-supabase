@@ -6,7 +6,17 @@ import { BiSearch } from "react-icons/bi";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import SuggestedProfile from "./SuggestedProfile";
 
-const SearchInput = ({ currentUserId }: { currentUserId: Profile["id"] }) => {
+type SearchInputProps = {
+  currentUserId: Profile["id"];
+  chatFunction?: (id: Profile["id"]) => void;
+  getIcon?: (id: Profile["id"]) => JSX.Element;
+};
+
+const SearchInput = ({
+  currentUserId,
+  chatFunction,
+  getIcon,
+}: SearchInputProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Profile[]>(
     [] as Profile[]
@@ -33,6 +43,47 @@ const SearchInput = ({ currentUserId }: { currentUserId: Profile["id"] }) => {
     }
   }, [searchTerm]);
 
+  let content;
+
+  if (getIcon && chatFunction) {
+    // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
+    // display chat icon
+    content = searchTerm && (
+      <div className="absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+        {searchResults.length > 0 ? (
+          searchResults.map((profile) => (
+            <SuggestedProfile
+              key={profile.id}
+              userId={currentUserId}
+              suggestedProfile={profile}
+              onClickFunction={() => chatFunction(profile.id)}
+              icon={getIcon(profile.id)}
+            />
+          ))
+        ) : (
+          <h1>No results found.</h1>
+        )}
+      </div>
+    );
+  } else {
+    // navigate to profile on click
+    content = searchTerm && (
+      <div className="absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+        {searchResults.length > 0 ? (
+          searchResults.map((profile) => (
+            <SuggestedProfile
+              key={profile.id}
+              userId={currentUserId}
+              suggestedProfile={profile}
+            />
+          ))
+        ) : (
+          <h1>No results found.</h1>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="relative group flex bg-[#16181C] rounded-full p-2 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
@@ -45,52 +96,8 @@ const SearchInput = ({ currentUserId }: { currentUserId: Profile["id"] }) => {
           placeholder="Search"
           className="bg-[#16181C] outline-none focus:bg-slate-950"
         />
-        {/* NEED TO DIFFERENTIATE BETWEEN SEARCH TO START CONVERSATION AND SERCH TO NAVIGATE TO PROFILE */}
 
-        {searchTerm && (
-          <div className="absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
-            {searchResults.length > 0 ? (
-              searchResults.map((profile) => (
-                <SuggestedProfile
-                  key={profile.id}
-                  userId={currentUserId}
-                  suggestedProfile={profile}
-                  onClickFunction={() => console.log("potato")}
-                />
-                // <div
-                //   key={profile.id}
-                //   // onClick={} // CREATE NEW conversation with user. If conversation already exists => navigate to conversation
-                //   className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
-                // >
-                //   <div className="flex-none overflow-hidden w-10 h-10 my-auto">
-                //     <div className="w-full h-full relative">
-                //       <Image
-                //         src={profile.avatar_url}
-                //         fill
-                //         className="rounded-full object-cover"
-                //         alt="Profile Image"
-                //       />
-                //     </div>
-                //   </div>
-                //   <div className="flex w-full justify-between">
-                //     <div className="flex flex-col w-full">
-                //       <div className="flex w-full">
-                //         <div className="flex flex-col w-full">
-                //           <h2>{profile.name}</h2>
-                //           <h2 className="text-gray-500 text-sm">
-                //             @{profile.username}
-                //           </h2>
-                //         </div>
-                //       </div>
-                //     </div>
-                //   </div>
-                // </div>
-              ))
-            ) : (
-              <h1>No results found.</h1>
-            )}
-          </div>
-        )}
+        {content}
       </div>
     </>
   );
