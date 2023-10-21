@@ -11,17 +11,23 @@ import { useRouter } from "next/navigation";
 const MessagesClient = ({
   userId,
   chatParticipants,
-  chatParticipantIds,
+  usersConversationDictionary,
 }: {
   userId: Profile["id"];
   chatParticipants: Profile[] | null;
-  chatParticipantIds: Profile["id"][] | null;
+  usersConversationDictionary: Record<string, string>;
 }) => {
   const router = useRouter();
 
+  const navigateToChat = (chatParticipantId: Profile["id"]) => {
+    const conversationId = usersConversationDictionary[chatParticipantId];
+
+    router.push(`/messages/${conversationId}`);
+  };
+
   // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
   const chatFunction = (id: Profile["id"]) => {
-    if (chatParticipantIds?.includes(id)) {
+    if (usersConversationDictionary[id]) {
       console.log("navigate to chat");
       //  router.push("/")
     } else {
@@ -30,7 +36,7 @@ const MessagesClient = ({
   };
 
   const getChatIcon = (id: Profile["id"]) => {
-    if (chatParticipantIds?.includes(id)) {
+    if (usersConversationDictionary[id]) {
       return <BiSolidMessageSquareDetail size={25} />;
     } else {
       return <BiMessageSquareDetail size={25} />;
@@ -52,9 +58,7 @@ const MessagesClient = ({
             key={participant.id}
             userId={userId}
             suggestedProfile={participant}
-            // need client component here to pass onClick function
-            // navigate to conversation with messages. /messages/chatParticipantId ?
-            onClickFunction={() => console.log("potato")}
+            onClickFunction={() => navigateToChat(participant.id)}
           />
         ))
       ) : (

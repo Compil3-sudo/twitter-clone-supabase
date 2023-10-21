@@ -30,9 +30,16 @@ const Messages = async () => {
     .select("*")
     .neq("user_id", user!.id); // filter out own profile, no conversation with yourself :)
 
-  // need a RCP function to fetch only the last message of each conversation with group by
+  // TODO: need a RCP function to fetch only the last message of each conversation with group by
 
   console.log(conversations);
+
+  const usersConversationDictionary: Record<string, string> = {};
+
+  conversations?.forEach((conversation) => {
+    usersConversationDictionary[conversation.user_id] =
+      conversation.conversation_id;
+  });
 
   const chatParticipantIds =
     conversations?.map((conversation) => conversation.user_id) || null;
@@ -91,7 +98,7 @@ const Messages = async () => {
       <MessagesClient
         userId={user!.id}
         chatParticipants={chatParticipants}
-        chatParticipantIds={chatParticipantIds}
+        usersConversationDictionary={usersConversationDictionary}
       />
     </div>
   );
