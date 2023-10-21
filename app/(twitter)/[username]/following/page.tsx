@@ -1,7 +1,7 @@
 import ArrowHeader, {
   FollowersTabs,
 } from "@/components/client-components/ArrowHeader";
-import WhoToFollowProfile from "@/components/client-components/WhoToFollowProfile";
+import SuggestedProfile from "@/components/client-components/SuggestedProfile";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -99,17 +99,20 @@ const ProfileFollowing = async ({
         // followersActiveTab={FollowersTabs[3]}
       />
       {following && following.length === 0 ? (
-        <>
-          <div>
-            <h1>@{userProfile.username} isn't following anyone yet</h1>
-          </div>
-        </>
+        <div className="p-2">
+          <h1 className="text-xl font-semibold">
+            @{userProfile.username} isn't following anyone yet
+          </h1>
+          <h2 className="text-gray-500 text-sm">
+            When they start following someone, they'll be listed here.
+          </h2>
+        </div>
       ) : (
         userProfileFollowing.map((profile) => (
-          <WhoToFollowProfile
+          <SuggestedProfile
             key={profile.id}
             userId={currentUserProfile.id}
-            followProfile={profile}
+            suggestedProfile={profile}
             isUserFollowingProfile={profile.isUserFollowingProfile}
             showBio={true}
           />
