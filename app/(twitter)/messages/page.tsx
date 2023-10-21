@@ -1,9 +1,9 @@
 // "use client"
 
 import SearchInput from "@/components/client-components/SearchInput";
+import SuggestedProfile from "@/components/client-components/SuggestedProfile";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -98,35 +98,42 @@ const Messages = async () => {
         </div>
       ))}
       {chatParticipants?.map((participant) => (
-        <div
+        <SuggestedProfile
           key={participant.id}
-          // show last message ?
-          // onClick={} // navigate to conversation with messages. /messages/chatParticipantId ?
-          className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
-        >
-          <div className="flex-none overflow-hidden w-10 h-10 my-auto">
-            <div className="w-full h-full relative">
-              <Image
-                src={participant.avatar_url}
-                fill
-                className="rounded-full object-cover"
-                alt="Profile Image"
-              />
-            </div>
-          </div>
-          <div className="flex w-full justify-between">
-            <div className="flex flex-col w-full">
-              <div className="flex w-full">
-                <div className="flex flex-col w-full">
-                  <h2>{participant.name}</h2>
-                  <h2 className="text-gray-500 text-sm">
-                    @{participant.username}
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          userId={user!.id}
+          suggestedProfile={participant}
+          // need client component here to pass onClick function
+          // onClickFunction={() => console.log("potato")}
+        />
+        // <div
+        //   key={participant.id}
+        //   // show last message ?
+        //   // onClick={} // navigate to conversation with messages. /messages/chatParticipantId ?
+        //   className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
+        // >
+        //   <div className="flex-none overflow-hidden w-10 h-10 my-auto">
+        //     <div className="w-full h-full relative">
+        //       <Image
+        //         src={participant.avatar_url}
+        //         fill
+        //         className="rounded-full object-cover"
+        //         alt="Profile Image"
+        //       />
+        //     </div>
+        //   </div>
+        //   <div className="flex w-full justify-between">
+        //     <div className="flex flex-col w-full">
+        //       <div className="flex w-full">
+        //         <div className="flex flex-col w-full">
+        //           <h2>{participant.name}</h2>
+        //           <h2 className="text-gray-500 text-sm">
+        //             @{participant.username}
+        //           </h2>
+        //         </div>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
       ))}
     </div>
   );
