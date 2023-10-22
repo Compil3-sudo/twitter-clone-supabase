@@ -1,3 +1,4 @@
+import ArrowHeader from "@/components/client-components/ArrowHeader";
 import MessagesClient from "@/components/client-components/MessagesClient";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
@@ -83,7 +84,7 @@ const Messages = async () => {
 
   return (
     <div>
-      <h1 className="text-3xl p-2">Messages</h1>
+      <ArrowHeader title="Messages" />
       <h1 className="text-xl p-2">Work in progress</h1>
       {/* {messages?.map((message) => (
         <div key={message.id} className="my-6 mx-4">
