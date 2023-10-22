@@ -51,7 +51,7 @@ export interface Database {
         };
         Insert: {
           created_at?: string;
-          id?: string;
+          id: string;
           type: string;
         };
         Update: {

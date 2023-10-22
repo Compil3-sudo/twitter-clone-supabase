@@ -2,6 +2,8 @@ import ArrowHeader from "@/components/client-components/ArrowHeader";
 import MessagesClient from "@/components/client-components/MessagesClient";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 export const dynamic = "force-dynamic";
 
@@ -23,17 +25,18 @@ const Messages = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  if (!user) redirect("/");
 
-  console.log(messages);
+  // console.log(messages);
 
   const { data: conversations, error: err } = await supabase
     .from("user_conversations")
     .select("*")
-    .neq("user_id", user!.id); // filter out own profile, no conversation with yourself :)
+    .neq("user_id", user.id); // filter out own profile, no conversation with yourself :)
 
   // TODO: need a RCP function to fetch only the last message of each conversation with group by
 
-  console.log(conversations);
+  // console.log(conversations);
 
   const usersConversationDictionary: Record<string, string> = {};
 
@@ -45,7 +48,7 @@ const Messages = async () => {
   const chatParticipantIds =
     conversations?.map((conversation) => conversation.user_id) || null;
 
-  console.log(chatParticipantIds);
+  // console.log(chatParticipantIds);
 
   const { data: chatParticipants, error: chatParticipantsError } =
     await supabase
@@ -53,7 +56,30 @@ const Messages = async () => {
       .select("*")
       .in("id", chatParticipantIds as string[]);
 
-  console.log(chatParticipants);
+  // console.log(chatParticipants);
+
+  const createNewChat = async (id: Profile["id"]) => {
+    "use server";
+
+    // create a conversationId in conversations with type: direct_message (one-to-one chat)
+    const conversationId = uuidv4();
+    const { data: conversation, error: conversationError } = await supabase
+      .from("conversations")
+      .insert({ id: conversationId, type: "direct_message" });
+
+    // add current user and selected participant to chat
+    const { data: addCurrentUser, error: addCurrentUserError } = await supabase
+      .from("user_conversations")
+      .insert({ user_id: user.id, conversation_id: conversationId });
+
+    const { data: addParticipant, error: addParticipantError } = await supabase
+      .from("user_conversations")
+      .insert({ user_id: id, conversation_id: conversationId });
+
+    console.log(conversationError);
+    console.log(addCurrentUserError);
+    console.log(addParticipantError);
+  };
 
   // FOR REAL TIME UPDATES:
 
@@ -100,6 +126,7 @@ const Messages = async () => {
         userId={user!.id}
         chatParticipants={chatParticipants}
         usersConversationDictionary={usersConversationDictionary}
+        createNewChat={createNewChat}
       />
     </div>
   );

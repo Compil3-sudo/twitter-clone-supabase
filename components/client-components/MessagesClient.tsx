@@ -12,10 +12,12 @@ const MessagesClient = ({
   userId,
   chatParticipants,
   usersConversationDictionary,
+  createNewChat,
 }: {
   userId: Profile["id"];
   chatParticipants: Profile[] | null;
   usersConversationDictionary: Record<string, string>;
+  createNewChat: (id: Profile["id"]) => void;
 }) => {
   const router = useRouter();
 
@@ -28,10 +30,10 @@ const MessagesClient = ({
   // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
   const chatFunction = (id: Profile["id"]) => {
     if (usersConversationDictionary[id]) {
-      console.log("navigate to chat");
-      //  router.push("/")
+      navigateToChat(id);
     } else {
-      console.log("create a new chat");
+      // TODO: OPTIONAL: conversations type: direct_message OR group_chat
+      createNewChat(id);
     }
   };
 
