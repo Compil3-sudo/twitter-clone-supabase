@@ -27,13 +27,21 @@ const MessagesClient = ({
     router.push(`/messages/${conversationId}`);
   };
 
+  const createNewChatServer = async (id: Profile["id"]) => {
+    try {
+      await createNewChat(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
   const chatFunction = (id: Profile["id"]) => {
     if (usersConversationDictionary[id]) {
       navigateToChat(id);
     } else {
       // TODO: OPTIONAL: conversations type: direct_message OR group_chat
-      createNewChat(id);
+      createNewChatServer(id);
     }
   };
 

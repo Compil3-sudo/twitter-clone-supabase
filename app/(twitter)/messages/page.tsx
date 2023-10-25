@@ -1,6 +1,10 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import MessagesClient from "@/components/client-components/MessagesClient";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  createServerActionClient,
+  createServerComponentClient,
+} from "@supabase/auth-helpers-nextjs";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -61,24 +65,37 @@ const Messages = async () => {
   const createNewChat = async (id: Profile["id"]) => {
     "use server";
 
+    const supabaseActionServer = createServerActionClient<Database>({
+      cookies,
+    });
+
     // create a conversationId in conversations with type: direct_message (one-to-one chat)
     const conversationId = uuidv4();
-    const { data: conversation, error: conversationError } = await supabase
-      .from("conversations")
-      .insert({ id: conversationId, type: "direct_message" });
+    const { data: conversation, error: conversationError } =
+      await supabaseActionServer
+        .from("conversations")
+        .insert({ id: conversationId, type: "direct_message" });
 
     // add current user and selected participant to chat
-    const { data: addCurrentUser, error: addCurrentUserError } = await supabase
-      .from("user_conversations")
-      .insert({ user_id: user.id, conversation_id: conversationId });
+    const { data: addCurrentUser, error: addCurrentUserError } =
+      await supabaseActionServer
+        .from("user_conversations")
+        .insert({ user_id: user.id, conversation_id: conversationId });
 
-    const { data: addParticipant, error: addParticipantError } = await supabase
-      .from("user_conversations")
-      .insert({ user_id: id, conversation_id: conversationId });
+    const { data: addParticipant, error: addParticipantError } =
+      await supabaseActionServer
+        .from("user_conversations")
+        .insert({ user_id: id, conversation_id: conversationId });
 
     console.log(conversationError);
     console.log(addCurrentUserError);
     console.log(addParticipantError);
+
+    revalidatePath("/messages");
+
+    if (conversationError) throw conversationError;
+    if (addCurrentUserError) throw addCurrentUserError;
+    if (addParticipantError) throw addParticipantError;
   };
 
   // FOR REAL TIME UPDATES:
