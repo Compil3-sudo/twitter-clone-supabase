@@ -1,6 +1,13 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import ComposeMessageClient from "@/components/client-components/ComposeMessageClient";
+import {
+  createServerActionClient,
+  createServerComponentClient,
+} from "@supabase/auth-helpers-nextjs";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 export const dynamic = "force-dynamic";
 
@@ -23,12 +30,13 @@ const Conversation = async ({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  if (!user) redirect("/");
 
   const { data: conversation, error: err } = await supabase
     .from("user_conversations")
     .select("*")
     .eq("conversation_id", conversation_id)
-    .neq("user_id", user!.id);
+    .neq("user_id", user.id);
 
   const chatParticipantIds =
     conversation?.map((conversation) => conversation.user_id) || [];
@@ -50,6 +58,58 @@ const Conversation = async ({
       chatParticipantProfile = data;
     }
   }
+
+  const sendMessage = async (formData: FormData) => {
+    "use server";
+
+    const supabaseServerAction = createServerActionClient<Database>({
+      cookies,
+    });
+
+    let messageText = formData.get("messageInput"); // textArea name
+    const media = formData.get("media") as File;
+    let fileExt = null;
+
+    if (!messageText && !media) return null;
+
+    let mediaId = null;
+    if (!messageText) {
+      messageText = null;
+    } else {
+      messageText = messageText.toString();
+    }
+
+    if (media) {
+      mediaId = uuidv4();
+
+      fileExt = media.name.split(".").pop();
+      const filePath = `${user.id}/${mediaId}.${fileExt}`;
+
+      const { error: uploadError } = await supabaseServerAction.storage
+        .from(`tweets`)
+        .upload(filePath, media);
+
+      if (uploadError) {
+        console.log(uploadError);
+        throw uploadError;
+      }
+    }
+
+    const { error } = await supabaseServerAction.from("messages").insert({
+      conversation_id: conversation_id,
+      user_id: user.id,
+      text: messageText,
+      media_id: mediaId,
+      media_extension: fileExt,
+    });
+
+    if (error) {
+      console.log(error);
+    }
+
+    revalidatePath(`/messages/${conversation_id}`);
+    return error;
+  };
 
   return (
     <>
@@ -78,12 +138,7 @@ const Conversation = async ({
           )}
         </div>
 
-        <div className="flex flex-col p-2">
-          <input
-            className=" w-full bottom-2 p-2 rounded-xl bg-[#16181C] outline-none"
-            placeholder="Start a new message"
-          />
-        </div>
+        <ComposeMessageClient serverAction={sendMessage} />
       </div>
     </>
   );

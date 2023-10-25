@@ -99,8 +99,7 @@ const CustomTextArea = ({
             onChange={handleChange}
             maxLength={characterLimit}
             name={txtAreaName}
-            // add invisible scrollbar
-            className="bg-transparent border-none outline-none resize-none pt-2"
+            className="bg-transparent no-scrollbar border-none outline-none resize-none pt-2"
             placeholder={txtAreaPlaceholder}
           />
           {media && (
