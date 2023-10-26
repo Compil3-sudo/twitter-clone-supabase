@@ -80,10 +80,10 @@ const Conversation = async ({
       mediaId = uuidv4();
 
       fileExt = media.name.split(".").pop();
-      const filePath = `${user.id}/${mediaId}.${fileExt}`;
+      const filePath = `${conversation_id}/${mediaId}.${fileExt}`;
 
       const { error: uploadError } = await supabaseServerAction.storage
-        .from(`tweets`)
+        .from(`messages`)
         .upload(filePath, media);
 
       if (uploadError) {

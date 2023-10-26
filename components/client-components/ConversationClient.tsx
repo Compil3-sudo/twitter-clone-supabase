@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import ArrowHeader from "./ArrowHeader";
 import ComposeMessageClient from "./ComposeMessageClient";
+import MessageMedia from "./MessageMedia";
 
 const ConversationClient = ({
   messages,
@@ -61,12 +62,13 @@ const ConversationClient = ({
           <ArrowHeader title={`Conversation with ${chatTitle}`} />
 
           {messages?.map((message) =>
+            // message author is other chat participant
             message.user_id === chatParticipantProfile.id ? (
               <div
                 key={message.id}
                 className="flex flex-col p-2 m-2 max-w-fit w-3/4 border rounded-xl bg-[#26292B]"
               >
-                {/* TODO: IMPORTANT: Add message media */}
+                {message.media_id && <MessageMedia message={message} />}
                 <span className="break-words">
                   {chatParticipantProfile.name}: {message.text}
                 </span>
@@ -76,11 +78,12 @@ const ConversationClient = ({
                 </span>
               </div>
             ) : (
+              // message author is current user
               <div
                 key={message.id}
                 className="self-end flex flex-col max-w-fit w-3/4 border p-2 m-2 rounded-xl bg-blue-500"
               >
-                {/* TODO: IMPORTANT: Add message media */}
+                {message.media_id && <MessageMedia message={message} />}
                 <span className="break-words">{message.text}</span>
                 <span className="text-right">
                   {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
