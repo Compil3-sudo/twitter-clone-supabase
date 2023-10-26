@@ -11,7 +11,6 @@ const ConversationClient = ({
   messages: Message[] | null;
   chatParticipantProfile: Profile | null;
 }) => {
-  // const [messages, setMessages] = useState(serverMessages);
   if (!chatParticipantProfile) return;
 
   const supabase = createClientComponentClient();
@@ -37,32 +36,6 @@ const ConversationClient = ({
       supabase.removeChannel(channel);
     };
   }, [supabase, router]);
-  // FOR REAL TIME UPDATES:
-
-  // useEffect(() => {
-  //   setMessages(serverMessages);
-  // }, [serverMessages]);
-
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel("*")
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "INSERT", schema: "public", table: "messages" },
-  //       (payload) => {
-  //         const newMessage = payload.new as Message;
-
-  //         if (!messages.find((message) => message.id === newMessage.id)) {
-  //           setMessages([...messages, newMessage]);
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [supabase, messages]);
 
   return (
     <>
