@@ -26,7 +26,8 @@ export default function Avatar({
       setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
+        setUploading(false);
+        return;
       }
 
       const helper = avatar_url.split("/");
