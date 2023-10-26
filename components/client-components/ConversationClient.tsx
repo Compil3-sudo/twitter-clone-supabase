@@ -24,14 +24,46 @@ const ConversationClient = ({
   const router = useRouter();
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    // Scroll to the bottom when the component mounts
+  // Function to save the scroll position to local storage
+  const saveScrollPosition = () => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-      // chatContainerRef.current.scrollIntoView();
+      localStorage.setItem(
+        "chatScrollPosition",
+        chatContainerRef.current.scrollHeight.toString()
+      );
     }
+  };
+
+  // Function to restore the scroll position from local storage
+  const restoreScrollPosition = () => {
+    const savedPosition = localStorage.getItem("chatScrollPosition");
+    if (savedPosition) {
+      // window.element.scrollTo(0, parseInt(savedPosition));
+      document
+        .getElementById("chatContainer")
+        ?.scroll(0, parseInt(savedPosition));
+    }
+  };
+
+  useEffect(() => {
+    // Restore scroll position when the component mounts
+    restoreScrollPosition();
   }, []);
+
+  useEffect(() => {
+    // Save scroll position when the component unmounts
+    return saveScrollPosition;
+  }, []);
+
+  // useEffect(() => {
+  //   // Scroll to the bottom when the component mounts
+  //   if (chatContainerRef.current) {
+  //     // chatContainerRef.current.scrollTop =
+  //     //   chatContainerRef.current.scrollHeight;
+  //     chatContainerRef.current.scrollIntoView();
+  //     // window.scrollTo({ top: chatContainerRef.current.scrollHeight });
+  //   }
+  // }, []);
 
   useEffect(() => {
     const channel = supabase
@@ -60,6 +92,7 @@ const ConversationClient = ({
       <div className="flex flex-col justify-between h-screen">
         <div
           ref={chatContainerRef}
+          id="chatContainer"
           className="flex flex-col overflow-auto no-scrollbar"
         >
           <ArrowHeader title={`Conversation with ${chatTitle}`} />
