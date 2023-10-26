@@ -114,24 +114,32 @@ const Conversation = async ({
   return (
     <>
       <div className="flex flex-col justify-between h-screen">
-        <div className="flex flex-col">
+        <div className="flex flex-col overflow-auto no-scrollbar">
           <ArrowHeader title={`Conversation with ${chatTitle}`} />
 
           {messages?.map((message) =>
             message.user_id === chatParticipantProfile.id ? (
-              <div className="flex flex-col p-2 m-2 w-fit border rounded-xl bg-[#26292B]">
+              <div
+                key={message.id}
+                className="flex flex-col p-2 m-2 w-fit border rounded-xl bg-[#26292B]"
+              >
                 <h2>
                   {chatParticipantProfile.name}: {message.text}
                 </h2>
                 <span className="text-left">
-                  {message.created_at.slice(11, 19)}
+                  {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
+                  {/* {message.created_at.slice(11, 19)} */}
                 </span>
               </div>
             ) : (
-              <div className="self-end flex flex-col w-fit border p-2 m-2 rounded-xl bg-blue-500">
+              <div
+                key={message.id}
+                className="self-end flex flex-col w-fit border p-2 m-2 rounded-xl bg-blue-500"
+              >
                 <h2>Me: {message.text}</h2>
                 <span className="text-right">
-                  {message.created_at.slice(11, 19)}
+                  {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
+                  {/* {message.created_at.slice(11, 19)} */}
                 </span>
               </div>
             )
