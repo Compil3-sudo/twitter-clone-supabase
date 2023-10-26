@@ -22,38 +22,39 @@ const ConversationClient = ({
 
   const supabase = createClientComponentClient();
   const router = useRouter();
-  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  // const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const chatBottomRef = useRef<HTMLDivElement | null>(null);
 
-  // Function to save the scroll position to local storage
-  const saveScrollPosition = () => {
-    if (chatContainerRef.current) {
-      localStorage.setItem(
-        "chatScrollPosition",
-        chatContainerRef.current.scrollHeight.toString()
-      );
-    }
-  };
+  // // Function to save the scroll position to local storage
+  // const saveScrollPosition = () => {
+  //   if (chatContainerRef.current) {
+  //     localStorage.setItem(
+  //       "chatScrollPosition",
+  //       chatContainerRef.current.scrollHeight.toString()
+  //     );
+  //   }
+  // };
 
-  // Function to restore the scroll position from local storage
-  const restoreScrollPosition = () => {
-    const savedPosition = localStorage.getItem("chatScrollPosition");
-    if (savedPosition) {
-      // window.element.scrollTo(0, parseInt(savedPosition));
-      document
-        .getElementById("chatContainer")
-        ?.scroll(0, parseInt(savedPosition));
-    }
-  };
+  // // Function to restore the scroll position from local storage
+  // const restoreScrollPosition = () => {
+  //   const savedPosition = localStorage.getItem("chatScrollPosition");
+  //   if (savedPosition) {
+  //     // window.element.scrollTo(0, parseInt(savedPosition));
+  //     document
+  //       .getElementById("chatContainer")
+  //       ?.scroll(0, parseInt(savedPosition));
+  //   }
+  // };
 
-  useEffect(() => {
-    // Restore scroll position when the component mounts
-    restoreScrollPosition();
-  }, []);
+  // useEffect(() => {
+  //   // Restore scroll position when the component mounts
+  //   restoreScrollPosition();
+  // }, []);
 
-  useEffect(() => {
-    // Save scroll position when the component unmounts
-    return saveScrollPosition;
-  }, []);
+  // useEffect(() => {
+  //   // Save scroll position when the component unmounts
+  //   return saveScrollPosition;
+  // }, []);
 
   // useEffect(() => {
   //   // Scroll to the bottom when the component mounts
@@ -64,6 +65,15 @@ const ConversationClient = ({
   //     // window.scrollTo({ top: chatContainerRef.current.scrollHeight });
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (messages && chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [messages?.length]);
 
   useEffect(() => {
     const channel = supabase
@@ -77,7 +87,6 @@ const ConversationClient = ({
         },
         (payload) => {
           router.refresh();
-          // chatContainerRef.current?.scrollIntoView();
         }
       )
       .subscribe();
@@ -91,8 +100,8 @@ const ConversationClient = ({
     <>
       <div className="flex flex-col justify-between h-screen">
         <div
-          ref={chatContainerRef}
-          id="chatContainer"
+          // ref={chatContainerRef}
+          // id="chatContainer"
           className="flex flex-col overflow-auto no-scrollbar"
         >
           <ArrowHeader title={`Conversation with ${chatTitle}`} />
@@ -126,7 +135,7 @@ const ConversationClient = ({
               </div>
             )
           )}
-          {/* <div ref={chatContainerRef} /> */}
+          <div ref={chatBottomRef} />
         </div>
 
         <ComposeMessageClient serverAction={serverAction} />
