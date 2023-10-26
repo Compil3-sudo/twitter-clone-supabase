@@ -7,6 +7,8 @@ import {
 } from "react-icons/bi";
 import SuggestedProfile from "./SuggestedProfile";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const MessagesClient = ({
   userId,
@@ -19,6 +21,7 @@ const MessagesClient = ({
   usersConversationDictionary: Record<string, string>;
   createNewChat: (id: Profile["id"]) => void;
 }) => {
+  const supabase = createClientComponentClient();
   const router = useRouter();
 
   const navigateToChat = (chatParticipantId: Profile["id"]) => {
@@ -52,6 +55,27 @@ const MessagesClient = ({
       return <BiMessageSquareDetail size={25} />;
     }
   };
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime user_conversations")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "user_conversations",
+        },
+        (payload) => {
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
 
   return (
     <>
