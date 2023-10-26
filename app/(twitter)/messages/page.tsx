@@ -93,6 +93,7 @@ const Messages = async () => {
       <h1 className="text-xl p-2">
         Testing if everything works as expected. Fixing potential bugs
       </h1>
+      <h2>Need to fix media bug: messages do not contain media</h2>
 
       <MessagesClient
         userId={user!.id}
