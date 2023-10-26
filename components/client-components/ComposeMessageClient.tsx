@@ -5,6 +5,21 @@ import { useState, useRef, KeyboardEvent } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { GoFileMedia } from "react-icons/go";
 import { VscClose } from "react-icons/vsc";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { init } from "emoji-mart";
+import { BsEmojiSmile } from "react-icons/bs";
+
+init({ data });
+
+type EmojiType = {
+  id: string;
+  keywords: string[];
+  name: string;
+  native: string;
+  shortcodes: string;
+  unified: string;
+};
 
 const ComposeMessageClient = ({
   serverAction,
@@ -17,6 +32,7 @@ const ComposeMessageClient = ({
   const [uploading, setUploading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showMaxWarning, setShowMaxWarning] = useState(false);
+  const [showEmojiMenu, setShowEmojiMenu] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
   const messageMaxLength = 401;
 
@@ -84,6 +100,13 @@ const ComposeMessageClient = ({
     sendMessage(formData);
   };
 
+  const addEmoji = (emoji: EmojiType) => {
+    if (messageRef.current) {
+      messageRef.current.value = messageRef.current.value + emoji.native;
+      setIsButtonDisabled(false);
+    }
+  };
+
   const sendMessage = async (formData: FormData) => {
     setSubmitting(true);
     if (
@@ -124,8 +147,22 @@ const ComposeMessageClient = ({
             disabled={uploading}
           />
         </label>
-
-        {/* TODO: OPTIONAL: add emojis ? */}
+        <div
+          onClick={() => setShowEmojiMenu(true)}
+          className="relative my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer"
+        >
+          <BsEmojiSmile size={20} />
+          {showEmojiMenu && (
+            <div className="absolute bottom-12 left-0">
+              <Picker
+                data={data}
+                onClickOutside={() => setShowEmojiMenu(false)}
+                onEmojiSelect={(emoji: EmojiType) => addEmoji(emoji)}
+                previewEmoji={"wave"}
+              />
+            </div>
+          )}
+        </div>
 
         <div className="flex flex-col w-full">
           {media && (
