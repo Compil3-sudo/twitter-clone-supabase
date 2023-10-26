@@ -23,14 +23,10 @@ const Messages = async () => {
   //    );
   // $$ language sql security definer;
 
-  const { data: messages, error } = await supabase.from("messages").select("*");
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/");
-
-  // console.log(messages);
 
   const { data: conversations, error: err } = await supabase
     .from("user_conversations")
@@ -38,8 +34,6 @@ const Messages = async () => {
     .neq("user_id", user.id); // filter out own profile, no conversation with yourself :)
 
   // TODO: need a RCP function to fetch only the last message of each conversation with group by
-
-  // console.log(conversations);
 
   const usersConversationDictionary: Record<string, string> = {};
 
@@ -51,15 +45,11 @@ const Messages = async () => {
   const chatParticipantIds =
     conversations?.map((conversation) => conversation.user_id) || null;
 
-  // console.log(chatParticipantIds);
-
   const { data: chatParticipants, error: chatParticipantsError } =
     await supabase
       .from("profiles")
       .select("*")
       .in("id", chatParticipantIds as string[]);
-
-  // console.log(chatParticipants);
 
   const createNewChat = async (id: Profile["id"]) => {
     "use server";
@@ -100,7 +90,9 @@ const Messages = async () => {
   return (
     <div>
       <ArrowHeader title="Messages" />
-      <h1 className="text-xl p-2">Work in progress</h1>
+      <h1 className="text-xl p-2">
+        Testing if everything works as expected. Fixing potential bugs
+      </h1>
 
       <MessagesClient
         userId={user!.id}
