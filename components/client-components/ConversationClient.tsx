@@ -27,7 +27,7 @@ const ConversationClient = ({
   useEffect(() => {
     if (messages && chatBottomRef.current) {
       chatBottomRef.current.scrollIntoView({
-        behavior: "smooth",
+        behavior: "auto",
         block: "end",
       });
     }
