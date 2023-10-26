@@ -1,5 +1,3 @@
-import ArrowHeader from "@/components/client-components/ArrowHeader";
-import ComposeMessageClient from "@/components/client-components/ComposeMessageClient";
 import ConversationClient from "@/components/client-components/ConversationClient";
 import {
   createServerActionClient,
@@ -112,18 +110,12 @@ const Conversation = async ({
 
   return (
     <>
-      <div className="flex flex-col justify-between h-screen">
-        <div className="flex flex-col overflow-auto no-scrollbar">
-          <ArrowHeader title={`Conversation with ${chatTitle}`} />
-
-          <ConversationClient
-            messages={messages}
-            chatParticipantProfile={chatParticipantProfile}
-          />
-        </div>
-
-        <ComposeMessageClient serverAction={sendMessage} />
-      </div>
+      <ConversationClient
+        messages={messages}
+        chatTitle={chatTitle}
+        chatParticipantProfile={chatParticipantProfile}
+        serverAction={sendMessage}
+      />
     </>
   );
 };
