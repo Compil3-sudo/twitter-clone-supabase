@@ -1,7 +1,7 @@
 "use client";
 
 import { PostgrestError } from "@supabase/supabase-js";
-import { useState, useRef } from "react";
+import { useState, useRef, KeyboardEvent } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { GoFileMedia } from "react-icons/go";
 import { VscClose } from "react-icons/vsc";
@@ -16,7 +16,9 @@ const ComposeMessageClient = ({
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const messageMaxLength = 280;
+  const [showMaxWarning, setShowMaxWarning] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const messageMaxLength = 401;
 
   const handleChange = () => {
     if (messageRef.current) {
@@ -26,11 +28,31 @@ const ComposeMessageClient = ({
         messageMaxLength
       )}px`;
 
+      setShowMaxWarning(false);
+      if (messageRef.current.value.length === messageMaxLength) {
+        setIsButtonDisabled(true);
+        setShowMaxWarning(true);
+        return;
+      }
+
       if (submitting || (!messageRef.current.value.length && !media)) {
         setIsButtonDisabled(true);
       } else {
         setIsButtonDisabled(false);
       }
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent new line
+      if (messageRef.current) {
+        if (messageRef.current.value.length === messageMaxLength) return;
+        // reset textarea height
+        messageRef.current.style.height = "auto";
+      }
+      // Trigger the form submission with custom handleSubmit function
+      formRef.current?.dispatchEvent(new Event("submit", { bubbles: true }));
     }
   };
 
@@ -66,12 +88,13 @@ const ComposeMessageClient = ({
     setSubmitting(true);
     if (
       messageRef.current &&
-      messageRef.current.value.length <= messageMaxLength
+      messageRef.current.value.length < messageMaxLength
     ) {
       try {
         const responseError = await serverAction(formData);
         messageRef.current.value = "";
         setMedia(null);
+        messageRef.current.style.height = "auto"; // reset textarea height
 
         if (responseError) {
           console.log(responseError.message);
@@ -84,7 +107,7 @@ const ComposeMessageClient = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-2 mb-2">
+    <form ref={formRef} onSubmit={handleSubmit} className="p-2 mb-2">
       <div className="flex flex-row w-full bg-[#16181C] rounded-xl items-center p-1">
         <label
           htmlFor="addMedia"
@@ -134,12 +157,19 @@ const ComposeMessageClient = ({
           <textarea
             ref={messageRef}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
             maxLength={messageMaxLength}
             name={"messageInput"}
             className="flex-grow w-full p-1 pl-4 bg-[#16181C] no-scrollbar border-none outline-none resize-none"
             placeholder={"Start a new message"}
             rows={1}
           />
+
+          {showMaxWarning && (
+            <span className="text-red-500 self-end py-2">
+              Message too long.
+            </span>
+          )}
         </div>
 
         <button
