@@ -64,7 +64,7 @@ const ConversationClient = ({
             message.user_id === chatParticipantProfile.id ? (
               <div
                 key={message.id}
-                className="flex flex-col p-2 m-2 w-fit border rounded-xl bg-[#26292B]"
+                className="flex flex-col p-2 m-2 max-w-fit w-3/4 border rounded-xl bg-[#26292B]"
               >
                 {/* TODO: IMPORTANT: Add message media */}
                 <span className="break-words">
@@ -78,10 +78,10 @@ const ConversationClient = ({
             ) : (
               <div
                 key={message.id}
-                className="self-end flex flex-col w-fit border p-2 m-2 rounded-xl bg-blue-500"
+                className="self-end flex flex-col max-w-fit w-3/4 border p-2 m-2 rounded-xl bg-blue-500"
               >
                 {/* TODO: IMPORTANT: Add message media */}
-                <span className="break-words">Me: {message.text}</span>
+                <span className="break-words">{message.text}</span>
                 <span className="text-right">
                   {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
                   {/* {message.created_at.slice(11, 19)} */}
