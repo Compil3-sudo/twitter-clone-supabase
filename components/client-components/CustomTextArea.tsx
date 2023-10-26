@@ -34,7 +34,9 @@ const CustomTextArea = ({
   const [uploading, setUploading] = useState(false);
 
   const isButtonDisabled =
-    submitting || (!txtAreaTextRef.current?.value.length && !media);
+    submitting ||
+    (!txtAreaTextRef.current?.value.length && !media) ||
+    remainingChars < 0;
 
   const countCharacters = () => {
     setRemainingChars(txtAreaMaxLength - txtAreaTextRef.current!.value.length);
@@ -83,6 +85,8 @@ const CustomTextArea = ({
     if (media) {
       formData.append("media", media);
     }
+
+    setRemainingChars(txtAreaMaxLength); // reset remainingChars
 
     formAction(formData);
   };

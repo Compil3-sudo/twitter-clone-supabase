@@ -34,6 +34,7 @@ const ComposeTweetClient = ({
       try {
         const responseError = await serverAction(formData);
         tweetTextRef.current.value = "";
+        tweetTextRef.current.style.height = "auto"; // reset textArea height
         setMedia(null);
 
         if (showComposeTweetModal) changeComposeModal(false);
