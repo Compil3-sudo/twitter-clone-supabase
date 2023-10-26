@@ -11,4 +11,5 @@ declare global {
     likes: number;
     replies: number;
   };
+  type Message = DB["public"]["Tables"]["messages"]["Row"];
 }

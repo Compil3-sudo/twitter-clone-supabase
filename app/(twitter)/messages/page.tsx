@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from "uuid";
 export const dynamic = "force-dynamic";
 
 const Messages = async () => {
-  // const [messages, setMessages] = useState(serverMessages);
   const supabase = createServerComponentClient<Database>({ cookies });
 
   //   create or replace function is_conversation_participant(conversation_id uuid)
@@ -98,46 +97,10 @@ const Messages = async () => {
     if (addParticipantError) throw addParticipantError;
   };
 
-  // FOR REAL TIME UPDATES:
-
-  // useEffect(() => {
-  //   setMessages(serverMessages);
-  // }, [serverMessages]);
-
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel("*")
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "INSERT", schema: "public", table: "messages" },
-  //       (payload) => {
-  //         const newMessage = payload.new as Message;
-
-  //         if (!messages.find((message) => message.id === newMessage.id)) {
-  //           setMessages([...messages, newMessage]);
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [supabase, messages]);
-
   return (
     <div>
       <ArrowHeader title="Messages" />
       <h1 className="text-xl p-2">Work in progress</h1>
-      {/* {messages?.map((message) => (
-        <div key={message.id} className="my-6 mx-4">
-          <h2>id: {message.id}</h2>
-          <h2>conversation_id: {message.conversation_id}</h2>
-          <h2>user_id: {message.user_id}</h2>
-          <h2 className="font-bold">text: {message.text}</h2>
-          <h2>created_at: {message.created_at}</h2>
-        </div>
-      ))} */}
 
       <MessagesClient
         userId={user!.id}

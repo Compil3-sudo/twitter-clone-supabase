@@ -1,5 +1,6 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import ComposeMessageClient from "@/components/client-components/ComposeMessageClient";
+import ConversationClient from "@/components/client-components/ConversationClient";
 import {
   createServerActionClient,
   createServerComponentClient,
@@ -25,8 +26,6 @@ const Conversation = async ({
     .eq("conversation_id", conversation_id)
     .order("created_at", { ascending: true });
 
-  console.log(messages);
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -42,7 +41,7 @@ const Conversation = async ({
     conversation?.map((conversation) => conversation.user_id) || [];
 
   let chatTitle = "";
-  let chatParticipantProfile: Profile;
+  let chatParticipantProfile: Profile | null = null;
 
   if (chatParticipantIds.length > 1) {
     chatTitle = "Group";
@@ -117,33 +116,10 @@ const Conversation = async ({
         <div className="flex flex-col overflow-auto no-scrollbar">
           <ArrowHeader title={`Conversation with ${chatTitle}`} />
 
-          {messages?.map((message) =>
-            message.user_id === chatParticipantProfile.id ? (
-              <div
-                key={message.id}
-                className="flex flex-col p-2 m-2 w-fit border rounded-xl bg-[#26292B]"
-              >
-                <h2>
-                  {chatParticipantProfile.name}: {message.text}
-                </h2>
-                <span className="text-left">
-                  {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
-                  {/* {message.created_at.slice(11, 19)} */}
-                </span>
-              </div>
-            ) : (
-              <div
-                key={message.id}
-                className="self-end flex flex-col w-fit border p-2 m-2 rounded-xl bg-blue-500"
-              >
-                <h2>Me: {message.text}</h2>
-                <span className="text-right">
-                  {/* TODO: IMPORTANT: Either fix timezone or remove time completely */}
-                  {/* {message.created_at.slice(11, 19)} */}
-                </span>
-              </div>
-            )
-          )}
+          <ConversationClient
+            messages={messages}
+            chatParticipantProfile={chatParticipantProfile}
+          />
         </div>
 
         <ComposeMessageClient serverAction={sendMessage} />
