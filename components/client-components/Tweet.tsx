@@ -159,7 +159,7 @@ const Tweet = ({
           {/* Tweet header - author - name @username * created_x time ago */}
 
           {/* Tweet content */}
-          <div className="">{tweet.text}</div>
+          <div className="break-words">{tweet.text}</div>
           {/* add tweet media - image / video ? later */}
           {tweet.media_id && (
             <>
