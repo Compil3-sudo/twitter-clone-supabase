@@ -57,16 +57,17 @@ const ConversationClient = ({
 
   return (
     <>
-      <div className="flex flex-col justify-between h-screen">
-        <div className="flex flex-col overflow-auto no-scrollbar">
-          <ArrowHeader title={`Conversation with ${chatTitle}`} />
-
+      <ArrowHeader title={`Conversation with ${chatTitle}`} />
+      <div className="flex flex-col justify-between h-full overflow-auto no-scrollbar">
+        <div className="flex flex-col">
           {messages?.map((message) =>
             // message author is other chat participant
             message.user_id === chatParticipantProfile.id ? (
               <div
                 key={message.id}
-                className="flex flex-col p-2 m-2 max-w-fit w-3/4 border rounded-xl bg-[#26292B]"
+                className={`flex flex-col ${
+                  message.media_id ? "aspect-square" : "max-w-fit"
+                } w-3/4 border p-2 m-2 rounded-xl bg-[#26292B]`}
               >
                 {message.media_id && <MessageMedia message={message} />}
                 <span className="break-words">
@@ -81,7 +82,9 @@ const ConversationClient = ({
               // message author is current user
               <div
                 key={message.id}
-                className="self-end flex flex-col max-w-fit w-3/4 border p-2 m-2 rounded-xl bg-blue-500"
+                className={`self-end flex flex-col ${
+                  message.media_id ? "aspect-square" : "max-w-fit"
+                } w-3/4 border p-2 m-2 rounded-xl bg-blue-500`}
               >
                 {message.media_id && <MessageMedia message={message} />}
                 <span className="break-words">{message.text}</span>
@@ -92,11 +95,10 @@ const ConversationClient = ({
               </div>
             )
           )}
-          <div ref={chatBottomRef} />
         </div>
-
-        <ComposeMessageClient serverAction={serverAction} />
       </div>
+      <ComposeMessageClient serverAction={serverAction} />
+      <div ref={chatBottomRef} />
     </>
   );
 };

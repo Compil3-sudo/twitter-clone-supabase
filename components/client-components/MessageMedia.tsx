@@ -1,6 +1,7 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ImSpinner2 } from "react-icons/im";
 
@@ -43,14 +44,27 @@ const MessageMedia = ({ message }: { message: Message }) => {
     <>
       {mediaUrl ? (
         mediaType === "image" ? (
-          <img src={mediaUrl} alt="Media Preview" className="w-full h-auto" />
+          // variable height unfortunately makes scroll behavior
+          // not scroll to bottom after images load :(
+          // <img src={mediaUrl} alt="Media" className="w-full h-auto" />
+          <div
+            style={{ paddingBottom: "100%" }} // Maintain a 1:1 aspect ratio
+            className="relative"
+          >
+            <Image
+              src={mediaUrl}
+              fill
+              className="rounded-xl object-contain"
+              alt="Media"
+            />
+          </div>
         ) : mediaType === "video" ? (
           <video controls>
             <source src={mediaUrl} type={`video/${message.media_extension}`} />
           </video>
         ) : null
       ) : (
-        <ImSpinner2 size={50} className="animate-spin mx-auto mt-8" /> // white color for better contrast; user's own messages are blue
+        <ImSpinner2 size={50} className="aspect-square mx-auto my-auto" /> // white color for better contrast; user's own messages are blue
       )}
     </>
   );

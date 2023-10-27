@@ -193,7 +193,7 @@ const Tweet = ({
               ) : (
                 <ImSpinner2
                   size={50}
-                  className="animate-spin text-blue-500 mx-auto mt-8"
+                  className="animate-spin text-blue-500 mx-auto my-8"
                 />
               )}
             </>

@@ -130,7 +130,11 @@ const ComposeMessageClient = ({
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="p-2 mb-2">
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="pb-4 pt-2 px-2 border-t sticky bottom-0 bg-slate-950"
+    >
       <div className="flex flex-row w-full bg-[#16181C] rounded-xl items-center p-1">
         <label
           htmlFor="addMedia"
