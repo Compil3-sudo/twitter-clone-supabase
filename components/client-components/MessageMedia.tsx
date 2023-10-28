@@ -64,7 +64,12 @@ const MessageMedia = ({ message }: { message: Message }) => {
           </video>
         ) : null
       ) : (
-        <ImSpinner2 size={50} className="aspect-square mx-auto my-auto" /> // white color for better contrast; user's own messages are blue
+        <div className="flex w-full aspect-square align-middle">
+          <ImSpinner2
+            size={50}
+            className="animate-spin aspect-square mx-auto my-auto"
+          />
+        </div>
       )}
     </>
   );
