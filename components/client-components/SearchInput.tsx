@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -21,8 +21,28 @@ const SearchInput = ({
   const [searchResults, setSearchResults] = useState<Profile[]>(
     [] as Profile[]
   );
+  const [showSearchMenu, setShowSearchMenu] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const supabase = createClientComponentClient<Database>();
+
+  // Close the menu when clicking outside of the search input
+  useEffect(() => {
+    const closeMenuOnOutsideClick = (e: MouseEvent) => {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(e.target as Node)
+      ) {
+        setShowSearchMenu(false);
+      }
+    };
+
+    document.addEventListener("click", closeMenuOnOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", closeMenuOnOutsideClick);
+    };
+  }, []);
 
   useEffect(() => {
     if (searchTerm !== "") {
@@ -36,6 +56,7 @@ const SearchInput = ({
 
         if (data) {
           setSearchResults(data);
+          setShowSearchMenu(true);
         }
       }, 500);
 
@@ -45,11 +66,17 @@ const SearchInput = ({
 
   let content;
 
-  if (getIcon && chatFunction) {
+  if (searchTerm === "") {
+    content = showSearchMenu && (
+      <div className="absolute z-10 right-0 top-0 flex flex-col max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+        <h2 className="text-center my-4">Search for people</h2>
+      </div>
+    );
+  } else if (getIcon && chatFunction) {
     // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
     // display chat icon
-    content = searchTerm && (
-      <div className="hidden group-focus-within:flex flex-col absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+    content = showSearchMenu && (
+      <div className="absolute z-10 right-0 top-0 flex flex-col max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
         {searchResults.length > 0 ? (
           searchResults.map((profile) => (
             <SuggestedProfile
@@ -67,8 +94,8 @@ const SearchInput = ({
     );
   } else {
     // navigate to profile on click
-    content = searchTerm && (
-      <div className="hidden group-focus-within:flex flex-col absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+    content = showSearchMenu && (
+      <div className="absolute z-10 right-0 top-0 flex flex-col max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
         {searchResults.length > 0 ? (
           searchResults.map((profile) => (
             <SuggestedProfile
@@ -90,6 +117,13 @@ const SearchInput = ({
         <BiSearch className="group-focus-within:text-blue-500" />
 
         <input
+          ref={searchInputRef}
+          onClick={() => {
+            // Show the menu when the input is clicked & it has results
+            if (searchResults.length > 0) {
+              setShowSearchMenu(true);
+            }
+          }}
           onChange={(e) => {
             setSearchTerm(e.target.value);
           }}
