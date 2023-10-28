@@ -51,7 +51,7 @@ const Messages = async () => {
       .select("*")
       .in("id", chatParticipantIds as string[]);
 
-  const createNewChat = async (id: Profile["id"]) => {
+  const createNewChat = async (participantId: Profile["id"]) => {
     "use server";
 
     const supabaseActionServer = createServerActionClient<Database>({
@@ -74,26 +74,20 @@ const Messages = async () => {
     const { data: addParticipant, error: addParticipantError } =
       await supabaseActionServer
         .from("user_conversations")
-        .insert({ user_id: id, conversation_id: conversationId });
-
-    console.log(conversationError);
-    console.log(addCurrentUserError);
-    console.log(addParticipantError);
+        .insert({ user_id: participantId, conversation_id: conversationId });
 
     revalidatePath("/messages");
 
     if (conversationError) throw conversationError;
     if (addCurrentUserError) throw addCurrentUserError;
     if (addParticipantError) throw addParticipantError;
+
+    redirect(`/messages/${conversationId}`);
   };
 
   return (
     <div>
       <ArrowHeader title="Messages" />
-      <h1 className="text-xl p-2">
-        Testing if everything works as expected. Fixing potential bugs
-      </h1>
-      <h2>Need to fix media bug: messages do not contain media</h2>
 
       <MessagesClient
         userId={user!.id}

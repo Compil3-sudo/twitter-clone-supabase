@@ -19,7 +19,7 @@ const MessagesClient = ({
   userId: Profile["id"];
   chatParticipants: Profile[] | null;
   usersConversationDictionary: Record<string, string>;
-  createNewChat: (id: Profile["id"]) => void;
+  createNewChat: (participantId: Profile["id"]) => void;
 }) => {
   const supabase = createClientComponentClient();
   const router = useRouter();
@@ -30,21 +30,22 @@ const MessagesClient = ({
     router.push(`/messages/${conversationId}`);
   };
 
-  const createNewChatServer = async (id: Profile["id"]) => {
+  const createNewChatServer = async (participantId: Profile["id"]) => {
     try {
-      await createNewChat(id);
+      await createNewChat(participantId);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
-  const chatFunction = (id: Profile["id"]) => {
-    if (usersConversationDictionary[id]) {
-      navigateToChat(id);
+  // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile & then navigate to it
+  const chatFunction = (participantId: Profile["id"]) => {
+    console.log(participantId);
+    if (usersConversationDictionary[participantId]) {
+      navigateToChat(participantId);
     } else {
       // TODO: OPTIONAL: conversations type: direct_message OR group_chat
-      createNewChatServer(id);
+      createNewChatServer(participantId);
     }
   };
 
