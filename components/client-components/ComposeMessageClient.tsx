@@ -165,7 +165,9 @@ const ComposeMessageClient = ({
         >
           <BsEmojiSmile size={20} />
           {showEmojiMenu && (
-            <div className="absolute bottom-12 left-0">
+            <div
+              className={`absolute ${media ? "bottom-36" : "bottom-12"} left-0`}
+            >
               <Picker
                 data={data}
                 onClickOutside={() => setShowEmojiMenu(false)}
