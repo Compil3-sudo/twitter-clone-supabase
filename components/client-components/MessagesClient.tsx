@@ -40,7 +40,6 @@ const MessagesClient = ({
 
   // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile & then navigate to it
   const chatFunction = (participantId: Profile["id"]) => {
-    console.log(participantId);
     if (usersConversationDictionary[participantId]) {
       navigateToChat(participantId);
     } else {

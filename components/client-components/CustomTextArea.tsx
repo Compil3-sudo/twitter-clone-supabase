@@ -35,7 +35,7 @@ const CustomTextArea = ({
 
   const isButtonDisabled =
     submitting ||
-    (!txtAreaTextRef.current?.value.length && !media) ||
+    (txtAreaTextRef.current?.value.trim() === "" && !media) ||
     remainingChars < 0;
 
   const countCharacters = () => {
