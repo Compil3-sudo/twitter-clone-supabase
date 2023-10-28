@@ -1,7 +1,7 @@
 "use client";
 
 import { PostgrestError } from "@supabase/supabase-js";
-import { useState, useRef, KeyboardEvent } from "react";
+import { useState, useRef, KeyboardEvent, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { GoFileMedia } from "react-icons/go";
 import { VscClose } from "react-icons/vsc";
@@ -51,7 +51,7 @@ const ComposeMessageClient = ({
         return;
       }
 
-      if (submitting || (!messageRef.current.value.length && !media)) {
+      if (submitting || (messageRef.current.value.trim() === "" && !media)) {
         setIsButtonDisabled(true);
       } else {
         setIsButtonDisabled(false);
@@ -68,7 +68,11 @@ const ComposeMessageClient = ({
         messageRef.current.style.height = "auto";
       }
       // Trigger the form submission with custom handleSubmit function
-      formRef.current?.dispatchEvent(new Event("submit", { bubbles: true }));
+      // prevent spamming "Enter" => only 1 message is sent
+      if (!isButtonDisabled) {
+        setIsButtonDisabled(true);
+        formRef.current?.dispatchEvent(new Event("submit", { bubbles: true }));
+      }
     }
   };
 
@@ -91,13 +95,15 @@ const ComposeMessageClient = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("messageInput", messageRef.current!.value);
-    if (media) {
-      formData.append("media", media);
-    }
+    if (messageRef.current) {
+      const formData = new FormData();
+      formData.append("messageInput", messageRef.current.value.trim());
+      if (media) {
+        formData.append("media", media);
+      }
 
-    sendMessage(formData);
+      sendMessage(formData);
+    }
   };
 
   const addEmoji = (emoji: EmojiType) => {
@@ -109,8 +115,10 @@ const ComposeMessageClient = ({
 
   const sendMessage = async (formData: FormData) => {
     setSubmitting(true);
+    setIsButtonDisabled(true);
     if (
       messageRef.current &&
+      messageRef.current.value !== "" &&
       messageRef.current.value.length < messageMaxLength
     ) {
       try {
