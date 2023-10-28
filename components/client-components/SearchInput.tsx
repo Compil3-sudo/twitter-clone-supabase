@@ -49,7 +49,7 @@ const SearchInput = ({
     // IF profile in chatParticipants => navigate to chat (has different icon), ELSE create NEW chat with profile
     // display chat icon
     content = searchTerm && (
-      <div className="absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+      <div className="hidden group-focus-within:flex flex-col absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
         {searchResults.length > 0 ? (
           searchResults.map((profile) => (
             <SuggestedProfile
@@ -68,7 +68,7 @@ const SearchInput = ({
   } else {
     // navigate to profile on click
     content = searchTerm && (
-      <div className="absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto flex flex-col mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
+      <div className="hidden group-focus-within:flex flex-col absolute z-10 right-0 top-0 max-h-[60vh] h-auto overflow-auto mt-12 bg-slate-950 border rounded-lg shadow-sm shadow-white/50 max-w-[350px] w-full">
         {searchResults.length > 0 ? (
           searchResults.map((profile) => (
             <SuggestedProfile
@@ -88,6 +88,7 @@ const SearchInput = ({
     <>
       <div className="relative group flex bg-[#16181C] rounded-full p-2 px-4 items-center space-x-3 border focus-within:bg-slate-950 focus-within:border-blue-500">
         <BiSearch className="group-focus-within:text-blue-500" />
+
         <input
           onChange={(e) => {
             setSearchTerm(e.target.value);
