@@ -58,7 +58,7 @@ const ConversationClient = ({
   return (
     <>
       <ArrowHeader title={`Conversation with ${chatTitle}`} />
-      <div className="flex flex-col justify-between h-full overflow-auto no-scrollbar">
+      <div className="flex flex-col flex-grow justify-between h-full overflow-auto no-scrollbar">
         <div className="flex flex-col">
           {messages?.map((message) =>
             // message author is other chat participant
