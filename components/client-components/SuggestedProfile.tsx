@@ -3,6 +3,7 @@
 import Image from "next/image";
 import FollowButton from "./FollowButton";
 import { useRouter } from "next/navigation";
+import { throttle } from "lodash";
 
 type SuggestedProfileProps = {
   userId: string;
@@ -33,10 +34,20 @@ const SuggestedProfile = ({
     router.push(`/${suggestedProfile.username}`);
   };
 
+  const handleClick = () => {
+    if (onClickFunction) {
+      // prevent spamming click => only 1 conversation with that profile can be created
+      const throttledClick = throttle(onClickFunction, 1000);
+      throttledClick();
+    } else {
+      navigateToProfile();
+    }
+  };
+
   return (
     <div
       // onClick navigateToProfile OR create conversation OR go to conversation
-      onClick={onClickFunction ? onClickFunction : navigateToProfile}
+      onClick={handleClick}
       className="flex space-x-3 p-2 w-full justify-center hover:bg-white/10 transition duration-200 cursor-pointer"
     >
       <div

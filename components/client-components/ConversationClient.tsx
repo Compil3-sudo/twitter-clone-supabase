@@ -21,7 +21,7 @@ const ConversationClient = ({
 }) => {
   if (!chatParticipantProfile) return;
 
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const router = useRouter();
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
 

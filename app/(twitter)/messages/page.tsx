@@ -1,13 +1,8 @@
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import MessagesClient from "@/components/client-components/MessagesClient";
-import {
-  createServerActionClient,
-  createServerComponentClient,
-} from "@supabase/auth-helpers-nextjs";
-import { revalidatePath } from "next/cache";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 
 export const dynamic = "force-dynamic";
 
@@ -51,40 +46,6 @@ const Messages = async () => {
       .select("*")
       .in("id", chatParticipantIds as string[]);
 
-  const createNewChat = async (participantId: Profile["id"]) => {
-    "use server";
-
-    const supabaseActionServer = createServerActionClient<Database>({
-      cookies,
-    });
-
-    // create a conversationId in conversations with type: direct_message (one-to-one chat)
-    const conversationId = uuidv4();
-    const { data: conversation, error: conversationError } =
-      await supabaseActionServer
-        .from("conversations")
-        .insert({ id: conversationId, type: "direct_message" });
-
-    // add current user and selected participant to chat
-    const { data: addCurrentUser, error: addCurrentUserError } =
-      await supabaseActionServer
-        .from("user_conversations")
-        .insert({ user_id: user.id, conversation_id: conversationId });
-
-    const { data: addParticipant, error: addParticipantError } =
-      await supabaseActionServer
-        .from("user_conversations")
-        .insert({ user_id: participantId, conversation_id: conversationId });
-
-    revalidatePath("/messages");
-
-    if (conversationError) throw conversationError;
-    if (addCurrentUserError) throw addCurrentUserError;
-    if (addParticipantError) throw addParticipantError;
-
-    redirect(`/messages/${conversationId}`);
-  };
-
   return (
     <div>
       <ArrowHeader title="Messages" />
@@ -93,7 +54,6 @@ const Messages = async () => {
         userId={user!.id}
         chatParticipants={chatParticipants}
         usersConversationDictionary={usersConversationDictionary}
-        createNewChat={createNewChat}
       />
     </div>
   );
