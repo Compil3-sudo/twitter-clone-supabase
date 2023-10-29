@@ -12,4 +12,12 @@ declare global {
     replies: number;
   };
   type Message = DB["public"]["Tables"]["messages"]["Row"];
+  type EmojiType = {
+    id: string;
+    keywords: string[];
+    name: string;
+    native: string;
+    shortcodes: string;
+    unified: string;
+  };
 }

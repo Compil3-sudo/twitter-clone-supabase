@@ -12,15 +12,6 @@ import { BsEmojiSmile } from "react-icons/bs";
 
 init({ data });
 
-type EmojiType = {
-  id: string;
-  keywords: string[];
-  name: string;
-  native: string;
-  shortcodes: string;
-  unified: string;
-};
-
 const ComposeMessageClient = ({
   serverAction,
 }: {

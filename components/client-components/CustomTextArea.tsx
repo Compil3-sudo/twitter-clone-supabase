@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BsEmojiSmile } from "react-icons/bs";
 import { GoFileMedia } from "react-icons/go";
 import { VscClose } from "react-icons/vsc";
+import Picker from "@emoji-mart/react";
+import emojiData from "@emoji-mart/data";
+import { init } from "emoji-mart";
+
+init({ emojiData });
 
 type CustomTextAreaProps = {
   formAction: (formData: FormData) => void;
@@ -30,10 +36,12 @@ const CustomTextArea = ({
   const txtAreaMaxLength = 280;
   const characterLimit = 350;
   const maxTextAreaHeight = 300;
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [remainingChars, setRemainingChars] = useState(txtAreaMaxLength);
+  const [showEmojiMenu, setShowEmojiMenu] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const isButtonDisabled =
+  const buttonStatus =
     submitting ||
     (txtAreaTextRef.current?.value.trim() === "" && !media) ||
     remainingChars < 0;
@@ -59,6 +67,16 @@ const CustomTextArea = ({
         txtAreaTextRef.current.scrollHeight,
         maxTextAreaHeight
       )}px`;
+
+      setIsButtonDisabled(buttonStatus);
+    }
+  };
+
+  const addEmoji = (emoji: EmojiType) => {
+    if (txtAreaTextRef.current) {
+      txtAreaTextRef.current.value =
+        txtAreaTextRef.current.value + emoji.native;
+      setIsButtonDisabled(false);
     }
   };
 
@@ -69,16 +87,20 @@ const CustomTextArea = ({
 
     if (!event.target.files || event.target.files.length === 0) {
       setUploading(false);
+      setIsButtonDisabled(buttonStatus);
       return;
     }
 
     const selectedMedia = event.target.files[0];
     onUploadMedia(selectedMedia);
+    setIsButtonDisabled(false);
     setUploading(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitting) return;
+    setIsButtonDisabled(true);
 
     const formData = new FormData();
     formData.append(txtAreaName, txtAreaTextRef.current!.value);
@@ -110,7 +132,11 @@ const CustomTextArea = ({
           {media && (
             <div className="my-4 relative">
               <div
-                onClick={() => onRemoveMedia()}
+                onClick={() => {
+                  onRemoveMedia();
+                  if (!txtAreaTextRef.current?.value.length || submitting)
+                    setIsButtonDisabled(true);
+                }}
                 className="absolute right-2 top-2 w-fit p-2 bg-slate-700 hover:bg-opacity-90 rounded-full cursor-pointer"
               >
                 <VscClose size={20} />
@@ -131,21 +157,40 @@ const CustomTextArea = ({
         </div>
 
         <div className="flex flex-row justify-between mt-4">
-          <label
-            htmlFor="addMedia"
-            className="my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer"
-          >
-            <GoFileMedia size={20} />
-            <input
-              type="file"
-              id="addMedia"
-              name="media"
-              className="hidden absolute"
-              accept="image/* video/mp4"
-              onChange={uploadMedia}
-              disabled={uploading}
-            />
-          </label>
+          <div className="flex">
+            <label
+              htmlFor="addMedia"
+              className="my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer"
+            >
+              <GoFileMedia size={20} />
+              <input
+                type="file"
+                id="addMedia"
+                name="media"
+                className="hidden absolute"
+                accept="image/* video/mp4"
+                onChange={uploadMedia}
+                disabled={uploading}
+              />
+            </label>
+
+            <div
+              onClick={() => setShowEmojiMenu(true)}
+              className="relative my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer"
+            >
+              <BsEmojiSmile size={20} />
+              {showEmojiMenu && (
+                <div className="absolute top-12 left-0">
+                  <Picker
+                    data={emojiData}
+                    onClickOutside={() => setShowEmojiMenu(false)}
+                    onEmojiSelect={(emoji: EmojiType) => addEmoji(emoji)}
+                    previewEmoji={"wave"}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="flex">
             {remainingChars <= 20 && remainingChars > 0 ? (
