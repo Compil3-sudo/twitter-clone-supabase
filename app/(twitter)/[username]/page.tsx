@@ -11,11 +11,11 @@ import SetUpProfile from "@/components/client-components/SetUpProfile";
 import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
 import InfiniteScrollFeed from "@/components/client-components/InfiniteScrollFeed";
 import ProfileFollowersClient from "@/components/client-components/ProfileFollowersClient";
+import getAllUsers from "@/lib/getAllUsers";
 
 export const dynamic = "force-dynamic";
 
 // TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
-// nextjs seems to make a static page => currently changes only occurr after refresh
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const supabase = createServerComponentClient<Database>({ cookies });
 
@@ -281,16 +281,11 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
 export default ProfilePage;
 
-// export async function generateStaticParams() {
-//   const supabase = createServerComponentClient<Database>({ cookies });
-// const params = useParams();
-// console.log(params);
+export async function generateStaticParams() {
+  // generate all profile pages with SSG
+  const allUsers = await getAllUsers();
 
-// get user posts here ?
-
-// const tweets = await supabase.from("tweets").select("*").eq("user_id");
-
-// return posts.map((post) => ({
-//   slug: post.slug,
-// }));
-// }
+  return allUsers?.map((user) => ({
+    username: user.username,
+  }));
+}
