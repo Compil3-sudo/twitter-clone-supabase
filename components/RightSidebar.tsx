@@ -16,10 +16,7 @@ const RightSidebar = async () => {
   if (!user) return;
   const userId = user.id;
 
-  // TODO: improve algorithm suggestion, based on mutual connections
-  // could add other factors ?
-
-  // for now just get 3 profiles and exclude the authenticated user
+  // just get 3 profiles and exclude the authenticated user
   // only suggest "unknown" profile => auth user is not already following them
 
   // SUPABASE FUNCTION

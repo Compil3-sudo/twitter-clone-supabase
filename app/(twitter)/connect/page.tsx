@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 export const dynamic = "force-dynamic";
 
 const Connect = async () => {
-  // TODO: OPTIONAL - nice feature add tabs for follow anyone? & follow for you with custom suggestions for auth user?
   const supabase = createServerComponentClient<Database>({ cookies });
 
   const {

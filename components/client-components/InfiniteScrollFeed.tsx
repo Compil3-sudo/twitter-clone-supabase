@@ -50,7 +50,7 @@ const InfiniteScrollFeed = ({
     if (option === InfiniteScrollFeedOption[0]) {
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
+        .select("*, author: profiles(*), likes(user_id), replies(user_id)")
         .order("created_at", { ascending: false })
         .limit(limit)
         .range(from, to);
@@ -79,7 +79,7 @@ const InfiniteScrollFeed = ({
 
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
+        .select("*, author: profiles(*), likes(user_id), replies(user_id)")
         .in("user_id", userFollowingIds) // for following tab
         .order("created_at", { ascending: false })
         .limit(limit)
@@ -109,7 +109,7 @@ const InfiniteScrollFeed = ({
 
       const { data, error } = await supabase
         .from("tweets")
-        .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
+        .select("*, author: profiles(*), likes(user_id), replies(user_id)")
         .eq("user_id", userProfileId) // for profile - own or different
         .order("created_at", { ascending: false })
         .limit(limit)

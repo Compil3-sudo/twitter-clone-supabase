@@ -17,7 +17,6 @@ import { ImSpinner2 } from "react-icons/im";
 
 export const dynamic = "force-dynamic";
 
-// TODO: IMPORTANT!! - make sure profile page updates / revalidates when it changes
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const supabase = createServerComponentClient<Database>({ cookies });
 
@@ -142,7 +141,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     followersText = generateFollowersText(commonFollowers);
   }
 
-  // TODO: fix - this no longer works because of limit...
+  // this no longer works because of limit...
   // const numberOfPosts = profileTweets?.length; // this no longer works because of limit...
   const numberOfPosts = 0; // this no longer works because of limit...
   return (

@@ -33,7 +33,7 @@ export default async function Home() {
 
   const { data, error } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)")
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -58,7 +58,7 @@ export default async function Home() {
   // only fetch tweets, where tweet author is followed by currentUser
   const { data: following, error: followingError } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id), replies(user_id)") // TODO: IMPORTANT: check if nested replies affects count
+    .select("*, author: profiles(*), likes(user_id), replies(user_id)")
     .in("user_id", userFollowingIds)
     .order("created_at", { ascending: false })
     .limit(10);

@@ -65,7 +65,6 @@ const MessagesClient = ({
     if (usersConversationDictionary[participantId]) {
       navigateToChat(participantId);
     } else {
-      // TODO: OPTIONAL: conversations type: direct_message OR group_chat
       createNewChat(participantId);
     }
   };

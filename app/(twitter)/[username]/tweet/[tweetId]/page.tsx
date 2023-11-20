@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
-import getAllUsers from "@/lib/getAllUsers";
 import supabaseClient from "@/app/utils/supabaseClient";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +33,6 @@ const TweetPage = async ({
     .single();
 
   if (!currentUserProfile) redirect("/");
-
-  // TODO: ONLY PASS USER'S USERNAME AND ID
-  // TWEET COMPONENT NEEDS USER'S USERNAME
-  // OTHER COMPONENTS ONLY NEED THE USER'S ID
 
   const { data: tweet, error: tweetError } = await supabase
     .from("tweets")

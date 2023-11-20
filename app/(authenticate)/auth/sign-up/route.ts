@@ -13,9 +13,6 @@ export async function POST(request: Request) {
   const password = String(formData.get("password"));
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
-  // IMPORTANT: TODO: do NOT allow users to try to sign-up with email, when they already signed-up with github
-  // ^ why does this not throw an error ?
-
   const default_avatar_url =
     process.env.NEXT_PUBLIC_SUPABASE_URL +
     "/storage/v1/object/public/avatars/twitter_default_avatar.png";
