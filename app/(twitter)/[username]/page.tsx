@@ -285,7 +285,7 @@ export async function generateStaticParams() {
   // generate all profile pages with SSG
   const allUsers = await getAllUsers();
 
-  return allUsers?.map((user) => ({
+  return allUsers.map((user) => ({
     username: user.username,
   }));
 }

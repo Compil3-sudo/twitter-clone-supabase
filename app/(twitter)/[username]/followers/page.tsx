@@ -1,7 +1,6 @@
-import ArrowHeader, {
-  FollowersTabs,
-} from "@/components/client-components/ArrowHeader";
+import ArrowHeader from "@/components/client-components/ArrowHeader";
 import SuggestedProfile from "@/components/client-components/SuggestedProfile";
+import getAllUsers from "@/lib/getAllUsers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -125,3 +124,12 @@ const ProfileFollowers = async ({
 };
 
 export default ProfileFollowers;
+
+export async function generateStaticParams() {
+  // generate all profile pages with SSG
+  const allUsers = await getAllUsers();
+
+  return allUsers.map((user) => ({
+    username: user.username,
+  }));
+}
