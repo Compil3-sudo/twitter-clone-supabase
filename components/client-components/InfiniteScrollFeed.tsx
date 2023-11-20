@@ -138,7 +138,7 @@ const InfiniteScrollFeed = ({
   };
 
   useEffect(() => {
-    fetchTweets();
+    if (page === 0) fetchTweets();
   }, []);
 
   useEffect(() => {
