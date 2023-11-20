@@ -76,15 +76,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     );
   }
 
-  const { data: following, error: followingError } = await supabase
-    .from("followers")
-    .select("*")
-    .eq("follower_id", userProfile.id);
+  // const { data: following, error: followingError } = await supabase
+  //   .from("followers")
+  //   .select("*")
+  //   .eq("follower_id", userProfile.id);
 
-  const { data: followers, error: followersError } = await supabase
-    .from("followers")
-    .select("*")
-    .eq("followed_id", userProfile.id);
+  // const { data: followers, error: followersError } = await supabase
+  //   .from("followers")
+  //   .select("*")
+  //   .eq("followed_id", userProfile.id);
 
   const ownProfile = currentUserProfile.username === userProfile.username;
 
@@ -124,22 +124,22 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
     // determine whether the userProfile is being followed
     // by people who the current user is also following
-    const userProfileFollowers =
-      followers?.map((follower) => follower.follower_id) || [];
-    const userFollowingIds =
-      userFollowing?.map((following) => following.followed_id) || [];
+    // const userProfileFollowers =
+    //   followers?.map((follower) => follower.follower_id) || [];
+    // const userFollowingIds =
+    //   userFollowing?.map((following) => following.followed_id) || [];
 
-    // find common followers
-    commonFollowersIds = userProfileFollowers.filter((followerId) =>
-      userFollowingIds.includes(followerId)
-    );
+    // // find common followers
+    // commonFollowersIds = userProfileFollowers.filter((followerId) =>
+    //   userFollowingIds.includes(followerId)
+    // );
 
-    const { data: commonFollowersData, error: commonFollowersError } =
-      await supabase.from("profiles").select("*").in("id", commonFollowersIds);
+    // const { data: commonFollowersData, error: commonFollowersError } =
+    //   await supabase.from("profiles").select("*").in("id", commonFollowersIds);
 
-    if (commonFollowersData) commonFollowers = commonFollowersData;
+    // if (commonFollowersData) commonFollowers = commonFollowersData;
 
-    followersText = generateFollowersText(commonFollowers);
+    // followersText = generateFollowersText(commonFollowers);
   }
 
   // const { data, error: userTweetsError } = await supabase
@@ -230,14 +230,14 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               Joined {userProfile.created_at.slice(0, 10)}
             </p>
 
-            <ProfileFollowersClient
+            {/* <ProfileFollowersClient
               followers={followers}
               following={following}
               ownProfile={ownProfile}
               profileUsername={params.username}
               commonFollowersIds={commonFollowersIds}
               followersText={followersText}
-            />
+            /> */}
           </div>
 
           <div className="flex flex-row border-b justify-evenly">
