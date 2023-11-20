@@ -12,6 +12,8 @@ import ComposeReplyServer from "@/components/server-components/ComposeReplyServe
 import InfiniteScrollFeed from "@/components/client-components/InfiniteScrollFeed";
 import ProfileFollowersClient from "@/components/client-components/ProfileFollowersClient";
 import getAllUsers from "@/lib/getAllUsers";
+import { Suspense } from "react";
+import { ImSpinner2 } from "react-icons/im";
 
 export const dynamic = "force-dynamic";
 
@@ -140,23 +142,23 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     followersText = generateFollowersText(commonFollowers);
   }
 
-  const { data, error: userTweetsError } = await supabase
-    .from("tweets")
-    .select("*, author: profiles(*), likes(user_id), replies(user_id)")
-    .eq("user_id", userProfile.id)
-    .order("created_at", { ascending: false })
-    .limit(10);
+  // const { data, error: userTweetsError } = await supabase
+  //   .from("tweets")
+  //   .select("*, author: profiles(*), likes(user_id), replies(user_id)")
+  //   .eq("user_id", userProfile.id)
+  //   .order("created_at", { ascending: false })
+  //   .limit(10);
 
-  const profileTweets =
-    data?.map((tweet) => ({
-      ...tweet,
-      author: tweet.author!,
-      user_has_liked: !!tweet.likes.find(
-        (like) => like.user_id === currentUserProfile.id
-      ),
-      likes: tweet.likes.length,
-      replies: tweet.replies.length,
-    })) ?? [];
+  // const profileTweets =
+  //   data?.map((tweet) => ({
+  //     ...tweet,
+  //     author: tweet.author!,
+  //     user_has_liked: !!tweet.likes.find(
+  //       (like) => like.user_id === currentUserProfile.id
+  //     ),
+  //     likes: tweet.likes.length,
+  //     replies: tweet.replies.length,
+  //   })) ?? [];
 
   // TODO: fix - this no longer works because of limit...
   // const numberOfPosts = profileTweets?.length; // this no longer works because of limit...
@@ -266,14 +268,24 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
 
-        <InfiniteScrollFeed
-          user={currentUserProfile}
-          firstTweetsPage={profileTweets}
-          ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
-          // option={InfiniteScrollFeedOption[2]} // nextjs server forbidden...
-          option={"Profile"}
-          userProfileId={userProfile.id}
-        />
+        <Suspense
+          fallback={
+            <ImSpinner2
+              size={50}
+              className="animate-spin text-blue-500 mx-auto mt-8"
+            />
+          }
+        >
+          <InfiniteScrollFeed
+            user={currentUserProfile}
+            // firstTweetsPage={profileTweets}
+            firstTweetsPage={[] as TweetWithAuthor[]}
+            ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
+            // option={InfiniteScrollFeedOption[2]} // nextjs server forbidden...
+            option={"Profile"}
+            userProfileId={userProfile.id}
+          />
+        </Suspense>
       </div>
     </>
   );
