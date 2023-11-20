@@ -76,15 +76,15 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
     );
   }
 
-  // const { data: following, error: followingError } = await supabase
-  //   .from("followers")
-  //   .select("*")
-  //   .eq("follower_id", userProfile.id);
+  const { data: following, error: followingError } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("follower_id", userProfile.id);
 
-  // const { data: followers, error: followersError } = await supabase
-  //   .from("followers")
-  //   .select("*")
-  //   .eq("followed_id", userProfile.id);
+  const { data: followers, error: followersError } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("followed_id", userProfile.id);
 
   const ownProfile = currentUserProfile.username === userProfile.username;
 
@@ -124,41 +124,23 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
 
     // determine whether the userProfile is being followed
     // by people who the current user is also following
-    // const userProfileFollowers =
-    //   followers?.map((follower) => follower.follower_id) || [];
-    // const userFollowingIds =
-    //   userFollowing?.map((following) => following.followed_id) || [];
+    const userProfileFollowers =
+      followers?.map((follower) => follower.follower_id) || [];
+    const userFollowingIds =
+      userFollowing?.map((following) => following.followed_id) || [];
 
-    // // find common followers
-    // commonFollowersIds = userProfileFollowers.filter((followerId) =>
-    //   userFollowingIds.includes(followerId)
-    // );
+    // find common followers
+    commonFollowersIds = userProfileFollowers.filter((followerId) =>
+      userFollowingIds.includes(followerId)
+    );
 
-    // const { data: commonFollowersData, error: commonFollowersError } =
-    //   await supabase.from("profiles").select("*").in("id", commonFollowersIds);
+    const { data: commonFollowersData, error: commonFollowersError } =
+      await supabase.from("profiles").select("*").in("id", commonFollowersIds);
 
-    // if (commonFollowersData) commonFollowers = commonFollowersData;
+    if (commonFollowersData) commonFollowers = commonFollowersData;
 
-    // followersText = generateFollowersText(commonFollowers);
+    followersText = generateFollowersText(commonFollowers);
   }
-
-  // const { data, error: userTweetsError } = await supabase
-  //   .from("tweets")
-  //   .select("*, author: profiles(*), likes(user_id), replies(user_id)")
-  //   .eq("user_id", userProfile.id)
-  //   .order("created_at", { ascending: false })
-  //   .limit(10);
-
-  // const profileTweets =
-  //   data?.map((tweet) => ({
-  //     ...tweet,
-  //     author: tweet.author!,
-  //     user_has_liked: !!tweet.likes.find(
-  //       (like) => like.user_id === currentUserProfile.id
-  //     ),
-  //     likes: tweet.likes.length,
-  //     replies: tweet.replies.length,
-  //   })) ?? [];
 
   // TODO: fix - this no longer works because of limit...
   // const numberOfPosts = profileTweets?.length; // this no longer works because of limit...
@@ -173,12 +155,12 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
           <div className="relative h-48 bg-slate-600 w-full">
             <div className="absolute bottom-0 left-0 -mb-[70px] ml-4 flex-none overflow-hidden w-36 h-36">
               <div className="w-full h-full relative">
-                {/* <Image
+                <Image
                   src={userProfile.avatar_url}
                   fill
                   className="rounded-full object-cover border-2 border-black "
                   alt={`${userProfile.name}'s Profile Image`}
-                /> */}
+                />
               </div>
             </div>
           </div>
@@ -230,14 +212,14 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
               Joined {userProfile.created_at.slice(0, 10)}
             </p>
 
-            {/* <ProfileFollowersClient
+            <ProfileFollowersClient
               followers={followers}
               following={following}
               ownProfile={ownProfile}
               profileUsername={params.username}
               commonFollowersIds={commonFollowersIds}
               followersText={followersText}
-            /> */}
+            />
           </div>
 
           <div className="flex flex-row border-b justify-evenly">
@@ -278,7 +260,6 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
         >
           <InfiniteScrollFeed
             user={currentUserProfile}
-            // firstTweetsPage={profileTweets}
             firstTweetsPage={[] as TweetWithAuthor[]}
             ComposeReply={<ComposeReplyServer user={currentUserProfile} />}
             // option={InfiniteScrollFeedOption[2]} // nextjs server forbidden...
