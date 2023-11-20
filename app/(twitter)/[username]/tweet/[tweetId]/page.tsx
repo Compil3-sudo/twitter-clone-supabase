@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import ArrowHeader from "@/components/client-components/ArrowHeader";
 import ComposeReplyServer from "@/components/server-components/ComposeReplyServer";
+import getAllUsers from "@/lib/getAllUsers";
+import supabaseClient from "@/app/utils/supabaseClient";
 
 export const dynamic = "force-dynamic";
 
@@ -136,3 +138,34 @@ const TweetPage = async ({
 };
 
 export default TweetPage;
+
+export async function generateStaticParams() {
+  // generate all tweet pages with SSG
+  const { data: allUsers, error: allUsersError } = await supabaseClient
+    .from("profiles")
+    .select("id, username");
+
+  const { data: allTweets, error: tweetError } = await supabaseClient
+    .from("tweets")
+    .select("id, user_id");
+
+  if (tweetError || allUsersError) {
+    console.log(allUsersError);
+    console.log(tweetError);
+    return [];
+  }
+
+  const paths: { params: { username: string; tweetId: string } }[] = [];
+
+  allUsers?.forEach((user) => {
+    const userTweets = allTweets?.filter((tweet) => tweet.user_id === user.id);
+
+    userTweets?.forEach((tweet) => {
+      paths.push({
+        params: { username: user.username, tweetId: tweet.id },
+      });
+    });
+  });
+
+  return paths;
+}
