@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { GoFileMedia } from 'react-icons/go';
 import { VscClose } from 'react-icons/vsc';
@@ -22,6 +22,25 @@ type CustomTextAreaProps = {
   txtAreaName: string;
 };
 
+function useOutsideClickHandler(
+  ref: React.RefObject<HTMLElement>,
+  callBack: () => void
+) {
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      console.log(ref);
+      console.log(event.target);
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        callBack();
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref]);
+}
+
 const CustomTextArea = ({
   formAction,
   txtAreaTextRef,
@@ -40,6 +59,8 @@ const CustomTextArea = ({
   const [remainingChars, setRemainingChars] = useState(txtAreaMaxLength);
   const [showEmojiMenu, setShowEmojiMenu] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  useOutsideClickHandler(pickerRef, () => setShowEmojiMenu(false));
 
   const buttonStatus =
     submitting ||
@@ -179,6 +200,7 @@ const CustomTextArea = ({
 
             <div
               onClick={() => setShowEmojiMenu(true)}
+              ref={pickerRef}
               className='relative my-auto p-2 hover:bg-blue-500/20 rounded-full transition ease-out text-blue-500 cursor-pointer'
             >
               <BsEmojiSmile size={20} />
@@ -186,7 +208,7 @@ const CustomTextArea = ({
                 <div className='absolute top-12 left-0 z-10'>
                   <Picker
                     data={emojiData}
-                    onClickOutside={() => setShowEmojiMenu(false)}
+                    // onClickOutside={() => setShowEmojiMenu(false)} // buggy library feature. use useOutsideClickHandler instead
                     onEmojiSelect={(emoji: EmojiType) => addEmoji(emoji)}
                     previewEmoji={'wave'}
                   />
