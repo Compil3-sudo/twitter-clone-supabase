@@ -6,16 +6,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-        port: "",
-        pathname: "**",
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: '',
+        pathname: '**',
       },
       {
-        protocol: "https",
-        hostname: "tkucuunzwysyuqynjhwt.supabase.co",
-        port: "",
-        pathname: "**",
+        protocol: 'https',
+        hostname: 'yufkhkayhpmgpszsnyab.supabase.co',
+        port: '',
+        pathname: '**',
       },
     ],
   },
